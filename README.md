@@ -220,14 +220,14 @@ This skill provides adapter files for the following AI coding tools:
 
 | Tool / 工具 | Format / 格式 | Adapter / 适配文件 | Status / 状态 |
 |---|---|---|---|
-| **Trae** / Trae IDE | SKILL.md (YAML frontmatter) | \SKILL.md\ | ✅ Native / 原生 |
-| **Claude Code** | SKILL.md (YAML frontmatter) | \dapters/claude-code/SKILL.md\ | ✅ Compatible / 兼容 |
-| **Cursor** | .mdc (Cursor Rules) | \dapters/cursor/audit-driven-development.mdc\ | ✅ Adapted / 已适配 |
-| **Codex (OpenAI)** | AGENTS.md | \dapters/codex/AGENTS.md\ | ✅ Adapted / 已适配 |
-| **OpenCode** | AGENTS.md | \dapters/opencode/AGENTS.md\ | ✅ Adapted / 已适配 |
-| **GitHub Copilot** | copilot-instructions.md | \dapters/github-copilot/copilot-instructions.md\ | ✅ Adapted / 已适配 |
-| **Windsurf** | .windsurfrules | \dapters/windsurf/.windsurfrules\ | ✅ Adapted / 已适配 |
-| **Generic** | AGENTS.md | \dapters/AGENTS.md\ | ✅ Universal / 通用 |
+| **Trae** / Trae IDE | SKILL.md (YAML frontmatter) | `SKILL.md` | ✅ Native / 原生 |
+| **Claude Code** | SKILL.md (YAML frontmatter) | `adapters/claude-code/SKILL.md` | ✅ Compatible / 兼容 |
+| **Cursor** | .mdc (Cursor Rules) | `adapters/cursor/audit-driven-development.mdc` | ✅ Adapted / 已适配 |
+| **Codex (OpenAI)** | AGENTS.md | `adapters/codex/AGENTS.md` | ✅ Adapted / 已适配 |
+| **OpenCode** | AGENTS.md | `adapters/opencode/AGENTS.md` | ✅ Adapted / 已适配 |
+| **GitHub Copilot** | copilot-instructions.md | `adapters/github-copilot/copilot-instructions.md` | ✅ Adapted / 已适配 |
+| **Windsurf** | .windsurfrules | `adapters/windsurf/.windsurfrules` | ✅ Adapted / 已适配 |
+| **Generic** | AGENTS.md | `adapters/AGENTS.md` | ✅ Universal / 通用 |
 
 ---
 
@@ -240,26 +240,26 @@ This skill supports multiple AI coding tools. Choose your tool below.
 
 | Tool / 工具 | Adapter File / 适配文件 | Install Path / 安装路径 |
 |---|---|---|
-| **Trae** | \SKILL.md\ | \.trae/skills/audit-driven-development/SKILL.md\ |
-| **Claude Code** | \dapters/claude-code/SKILL.md\ | \.claude/skills/audit-driven-development/SKILL.md\ |
-| **Cursor** | \dapters/cursor/audit-driven-development.mdc\ | \.cursor/rules/audit-driven-development.mdc\ |
-| **Codex (OpenAI)** | \dapters/codex/AGENTS.md\ | \AGENTS.md\ (project root / 项目根目录) |
-| **OpenCode** | \dapters/opencode/AGENTS.md\ | \AGENTS.md\ (project root / 项目根目录) |
-| **GitHub Copilot** | \dapters/github-copilot/copilot-instructions.md\ | \.github/copilot-instructions.md\ |
-| **Windsurf** | \dapters/windsurf/.windsurfrules\ | \.windsurfrules\ (project root / 项目根目录) |
-| **Generic AGENTS.md** | \dapters/AGENTS.md\ | \AGENTS.md\ (project root / 项目根目录) |
+| **Trae** | `SKILL.md` | `.trae/skills/audit-driven-development/SKILL.md` |
+| **Claude Code** | `adapters/claude-code/SKILL.md` | `.claude/skills/audit-driven-development/SKILL.md` |
+| **Cursor** | `adapters/cursor/audit-driven-development.mdc` | `.cursor/rules/audit-driven-development.mdc` |
+| **Codex (OpenAI)** | `adapters/codex/AGENTS.md` | `AGENTS.md` (project root / 项目根目录) |
+| **OpenCode** | `adapters/opencode/AGENTS.md` | `AGENTS.md` (project root / 项目根目录) |
+| **GitHub Copilot** | `adapters/github-copilot/copilot-instructions.md` | `.github/copilot-instructions.md` |
+| **Windsurf** | `adapters/windsurf/.windsurfrules` | `.windsurfrules` (project root / 项目根目录) |
+| **Generic AGENTS.md** | `adapters/AGENTS.md` | `AGENTS.md` (project root / 项目根目录) |
 
 ---
 
 ### Trae / Trae IDE
 
-1. Copy \SKILL.md\ to your Trae skills directory:
-   将 \SKILL.md\ 复制到 Trae skills 目录:
+1. Copy `SKILL.md` to your Trae skills directory:
+   将 `SKILL.md` 复制到 Trae skills 目录:
 
-   \\ash
+   ```bash
    mkdir -p .trae/skills/audit-driven-development
    cp SKILL.md .trae/skills/audit-driven-development/SKILL.md
-   \
+   ```
 2. Trae will auto-discover the skill on next session.
    Trae 会在下次会话自动发现该 skill。
 
@@ -268,10 +268,11 @@ This skill supports multiple AI coding tools. Choose your tool below.
 For Trae Solo, place the skill in the project-level skills directory:
 对于 Trae Solo，将 skill 放在项目级 skills 目录:
 
-\\ash
+```bash
 mkdir -p .trae/skills/audit-driven-development
 cp SKILL.md .trae/skills/audit-driven-development/SKILL.md
-\
+```
+
 ---
 
 ### Claude Code / Claude Code
@@ -282,10 +283,10 @@ Claude Code 使用与 Trae 相同的 SKILL.md 格式（YAML frontmatter + markdo
 1. Copy the adapter file to your Claude Code skills directory:
    将适配文件复制到 Claude Code skills 目录:
 
-   \\ash
+   ```bash
    mkdir -p .claude/skills/audit-driven-development
    cp adapters/claude-code/SKILL.md .claude/skills/audit-driven-development/SKILL.md
-   \
+   ```
 2. Claude Code will auto-discover the skill. Invoke it by describing the audit task in chat.
    Claude Code 会自动发现该 skill。在聊天中描述审查任务即可调用。
 
@@ -293,71 +294,71 @@ Claude Code 使用与 Trae 相同的 SKILL.md 格式（YAML frontmatter + markdo
 
 ### Cursor / Cursor
 
-Cursor uses \.mdc\ files with frontmatter (\description\, \globs\, \lwaysApply\).
-Cursor 使用 \.mdc\ 文件，支持 frontmatter（\description\、\globs\、\lwaysApply\）。
+Cursor uses `.mdc` files with frontmatter (`description`, `globs`, `alwaysApply`).
+Cursor 使用 `.mdc` 文件，支持 frontmatter（`description`、`globs`、`alwaysApply`）。
 
 1. Copy the adapter file to your Cursor rules directory:
    将适配文件复制到 Cursor rules 目录:
 
-   \\ash
+   ```bash
    mkdir -p .cursor/rules
    cp adapters/cursor/audit-driven-development.mdc .cursor/rules/audit-driven-development.mdc
-   \
-2. The rule is configured with \lwaysApply: false\ — it activates when you @ mention it or when Cursor detects relevant context.
-   该 rule 配置为 \lwaysApply: false\ — 在你 @ 提及或 Cursor 检测到相关上下文时激活。
+   ```
+2. The rule is configured with `alwaysApply: false` — it activates when you @ mention it or when Cursor detects relevant context.
+   该 rule 配置为 `alwaysApply: false` — 在你 @ 提及或 Cursor 检测到相关上下文时激活。
 
-3. To make it always active, change \lwaysApply\ to \	rue\ in the frontmatter.
-   若要始终激活，将 frontmatter 中的 \lwaysApply\ 改为 \	rue\。
+3. To make it always active, change `alwaysApply` to `true` in the frontmatter.
+   若要始终激活，将 frontmatter 中的 `alwaysApply` 改为 `true`。
 
 ---
 
 ### Codex (OpenAI) / Codex
 
-Codex uses \AGENTS.md\ in the project root (pure markdown, no frontmatter).
-Codex 使用项目根目录的 \AGENTS.md\（纯 markdown，无 frontmatter）。
+Codex uses `AGENTS.md` in the project root (pure markdown, no frontmatter).
+Codex 使用项目根目录的 `AGENTS.md`（纯 markdown，无 frontmatter）。
 
 1. Copy the adapter file to your project root:
    将适配文件复制到项目根目录:
 
-   \\ash
+   ```bash
    cp adapters/codex/AGENTS.md AGENTS.md
-   \
-2. Codex auto-loads \AGENTS.md\ on session start.
-   Codex 在会话启动时自动加载 \AGENTS.md\。
+   ```
+2. Codex auto-loads `AGENTS.md` on session start.
+   Codex 在会话启动时自动加载 `AGENTS.md`。
 
-3. For sub-directory specific rules, place additional \AGENTS.md\ files in subdirectories.
-   若需要子目录专属规则，在子目录中放置额外的 \AGENTS.md\ 文件。
+3. For sub-directory specific rules, place additional `AGENTS.md` files in subdirectories.
+   若需要子目录专属规则，在子目录中放置额外的 `AGENTS.md` 文件。
 
 ---
 
 ### OpenCode / OpenCode
 
-OpenCode is compatible with the \AGENTS.md\ convention (same as Codex).
-OpenCode 兼容 \AGENTS.md\ 约定（与 Codex 相同）。
+OpenCode is compatible with the `AGENTS.md` convention (same as Codex).
+OpenCode 兼容 `AGENTS.md` 约定（与 Codex 相同）。
 
 1. Copy the adapter file to your project root:
    将适配文件复制到项目根目录:
 
-   \\ash
+   ```bash
    cp adapters/opencode/AGENTS.md AGENTS.md
-   \
-2. OpenCode auto-loads \AGENTS.md\ on session start (v2026.01+ supports sub-directory lazy loading).
-   OpenCode 在会话启动时自动加载 \AGENTS.md\（v2026.01+ 支持子目录懒加载）。
+   ```
+2. OpenCode auto-loads `AGENTS.md` on session start (v2026.01+ supports sub-directory lazy loading).
+   OpenCode 在会话启动时自动加载 `AGENTS.md`（v2026.01+ 支持子目录懒加载）。
 
 ---
 
 ### GitHub Copilot / GitHub Copilot
 
-GitHub Copilot uses \.github/copilot-instructions.md\ (pure markdown, no frontmatter).
-GitHub Copilot 使用 \.github/copilot-instructions.md\（纯 markdown，无 frontmatter）。
+GitHub Copilot uses `.github/copilot-instructions.md` (pure markdown, no frontmatter).
+GitHub Copilot 使用 `.github/copilot-instructions.md`（纯 markdown，无 frontmatter）。
 
-1. Copy the adapter file to your \.github\ directory:
-   将适配文件复制到 \.github\ 目录:
+1. Copy the adapter file to your `.github` directory:
+   将适配文件复制到 `.github` 目录:
 
-   \\ash
+   ```bash
    mkdir -p .github
    cp adapters/github-copilot/copilot-instructions.md .github/copilot-instructions.md
-   \
+   ```
 2. Copilot reads this file before each chat session and follows the instructions.
    Copilot 在每次聊天前读取此文件并遵循其中的指令。
 
@@ -365,28 +366,29 @@ GitHub Copilot 使用 \.github/copilot-instructions.md\（纯 markdown，无 fro
 
 ### Windsurf / Windsurf
 
-Windsurf uses \.windsurfrules\ in the project root (pure markdown, no frontmatter).
-Windsurf 使用项目根目录的 \.windsurfrules\（纯 markdown，无 frontmatter）。
+Windsurf uses `.windsurfrules` in the project root (pure markdown, no frontmatter).
+Windsurf 使用项目根目录的 `.windsurfrules`（纯 markdown，无 frontmatter）。
 
 1. Copy the adapter file to your project root:
    将适配文件复制到项目根目录:
 
-   \\ash
+   ```bash
    cp adapters/windsurf/.windsurfrules .windsurfrules
-   \
-2. Windsurf auto-loads \.windsurfrules\ on session start.
-   Windsurf 在会话启动时自动加载 \.windsurfrules\。
+   ```
+2. Windsurf auto-loads `.windsurfrules` on session start.
+   Windsurf 在会话启动时自动加载 `.windsurfrules`。
 
 ---
 
 ### Generic AGENTS.md / 通用 AGENTS.md
 
-For any tool that supports the \AGENTS.md\ convention (compatible with Codex, OpenCode, and other tools).
-适用于任何支持 \AGENTS.md\ 约定的工具（兼容 Codex、OpenCode 等）。
+For any tool that supports the `AGENTS.md` convention (compatible with Codex, OpenCode, and other tools).
+适用于任何支持 `AGENTS.md` 约定的工具（兼容 Codex、OpenCode 等）。
 
-\\ash
+```bash
 cp adapters/AGENTS.md AGENTS.md
-\
+```
+
 ---
 
 ### Verification / 验证
@@ -394,9 +396,9 @@ cp adapters/AGENTS.md AGENTS.md
 After installation, invoke in your tool's chat:
 安装后，在工具的聊天中调用:
 
-\Audit the current implementation against the design specs.
-审查当前实现与设计文档的对齐。
-\
+`Audit the current implementation against the design specs.`
+`审查当前实现与设计文档的对齐。`
+
 The skill will activate automatically when it detects implementation completion or audit-related requests.
 当检测到实施完成或审查相关请求时，skill 会自动激活。
 
