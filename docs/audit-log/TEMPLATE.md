@@ -52,9 +52,14 @@ Issues reported by subagents that turned out NOT to be real problems after manua
 
 subagent 报告但人工复核后确认不是真问题的项。
 
-| # | Finding / 发现 | Why False Positive / 为何误报 | Root Cause / 根因 |
-|---|---|---|---|
-| | | | |
+| # | Finding / 发现 | FP Type / 误报类型 | Why False Positive / 为何误报 | Root Cause / 根因 |
+|---|---|---|---|---|
+| | | over-aggressive / factual-error / scope-error | | |
+
+**FP Type Classification / 误报类型分类** (added v0.2.1):
+- **over-aggressive**: Subagent 报告了一个真实存在的代码特征，但将其判定为问题的标准过严（如："API 不兼容"但实际可共存）。提示 prompt 需要调整 severity 判定逻辑。
+- **factual-error**: Subagent 报告的事实错误（如：声称文件 X 中包含某代码但实际没有）。提示 evidence pointer 规则未被遵循。
+- **scope-error**: Subagent 报告的问题真实存在，但不在当前审计范围内（如：审计 .py 代码却报告 .md 文档问题）。提示 INPUT CONTRACT 的范围界定需要更精确。
 
 ---
 

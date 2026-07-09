@@ -55,8 +55,12 @@ Actions that can be completed within days, addressing the most critical gaps.
 
 每项增强都是 ADD 现有框架的可插拔扩展——非替换。全部在 Trae Skill + Subagent 边界内实现。每项功能有硬性成本上限。
 
+**Note / 注**: P0.4 and P0.5 were added in v0.2.1 as immediate fixes from the Code_Hub audit (2026-07-10). They are numbered P0.x because they address blind spots discovered during a real audit, but are placed in the P2 tier for organizational clarity — they are already implemented.
+
 | ID | Action / 动作 | Addresses / 回应 | Traced to V2 / V2 溯源 | Cost / 成本 |
 |---|---|---|---|---|
+| **P0.4** | Subagent prompt: DIMENSION 6 (build config + ADR execution) / 构建配置 + ADR 执行审计维度 | Limitation 1+2 | Code_Hub case log FN-1/FN-2 root cause | 0.5 day |
+| **P0.5** | FP tracking: type classification (over-aggressive / factual-error / scope-error) / FP 分类跟踪 | Limitation 2+3 | Code_Hub case log §7 FP analysis gap | 0.5 day |
 | **P2.9** | OSS benchmark / OSS 基准测试 | Limitation 3 | — (existing) | 1 week |
 | **P2.8'** | Lens System + Typed Subagent / 透镜分级 + 类型化 Subagent | Limitation 2 | V2#3 (透镜分级) + P2.8 (类型化) | 3 days |
 | **P2.10** | Deterministic Assist Layer / 确定性辅助层 | Limitation 2 | V2#4 | 2 days |
@@ -118,6 +122,29 @@ Actions that can be completed within days, addressing the most critical gaps.
 **Benefit / 收益**: First step toward ground truth. Proves detection rate on own project before expecting others to adopt.
 
 **Status / 状态**: ✅ Implemented in v0.1.1 (see `docs/audit-log/`)
+
+### P0.4 — Subagent Prompt: DIMENSION 6 (Build Config + ADR Execution Audit) / 构建配置 + ADR 执行审计
+
+**Problem / 问题**: Code_Hub 审计发现两个 FN（FN-1: pyproject.toml 包名→目录映射不一致, FN-2: event_system.py 无迁移前测试）均涉及构建配置文件和 ADR 决策执行验证。当前 Subagent prompt 的 5 维度未覆盖这两个区域。
+
+**Fix / 修复**:
+- Template 1 (Module Audit): 新增 DIMENSION 6 — 检查 pyproject.toml/Cargo.toml/package.json 等构建配置的元数据一致性 + ADR 决策执行验证（每个 ADR 的 "Decision:" 项是否在代码中落地）
+- Template 2 (Cross-Module): 新增 CHECK 5 — ADR Decision Execution 交叉验证
+
+**Benefit / 收益**: 消除 Code_Hub 审计中发现的 prompt 盲区，将 FN-1/FN-2 类型的漏报在源头捕获。
+
+**Status / 状态**: ✅ Implemented in v0.2.1 (see `SKILL.md` Template 1 DIMENSION 6 + Template 2 CHECK 5)
+
+### P0.5 — FP Tracking: Type Classification / FP 分类跟踪
+
+**Problem / 问题**: Code_Hub 审计首次量化了 FP 率（8.7%），但 FP 模板仅记录了 "Why FP" 和 "Root Cause"，未区分 FP 类型（over-aggressive / factual-error / scope-error），导致无法系统性诊断 Subagent 的哪类偏差需要 prompt 修正。
+
+**Fix / 修复**:
+- TEMPLATE.md §5: 新增 "FP Type" 列（over-aggressive / factual-error / scope-error），附带每种类型的定义和纠正方向
+
+**Benefit / 收益**: 分类 FP 后，可统计每类 FP 占比，针对性优化 prompt（如 over-aggressive 占比高 → 调整 severity 阈值；factual-error 占比高 → 强化 evidence pointer 规则）。
+
+**Status / 状态**: ✅ Implemented in v0.2.1 (see `docs/audit-log/TEMPLATE.md` §5)
 
 ---
 
@@ -525,6 +552,7 @@ These constraints were derived from the V1 post-mortem and govern all P2/P3 impl
 
 | Date / 日期 | Version / 版本 | Change / 变更 |
 |---|---|---|
-| 2026-07-09 | v0.2→v0.5 roadmap | Integrated V2 pragmatic enhancement proposal. P2 restructured: P2.9 prioritized as gate item, P2.8+P2.8' merged into Lens-Typed-Subagent system, P2.10-P2.12 added (deterministic assist, inter-rater, iterative audit, fix tracking). P3 added (semantic guards, numeric scoring, cross-project reuse). Design constraints section added. / 整合 V2 务实增强方案。P2 层重构：P2.9 提升为门控项，P2.8 与 V2#3 合并为透镜-类型化 Subagent 系统，新增 P2.10-P2.12。新增 P3 层。新增设计约束章节。 |
-| 2026-07-09 | v0.2 | P1.4/P1.5/P1.6 implemented. ReasoningChain schema, Spec Mining Fallback module, Structured Audit Protocol (JSON Schema + Appendix B). Dogfooding self-audit case log added. / P1.4/P1.5/P1.6 实施。 |
-| 2026-07-06 | v0.1.1 | Initial roadmap created. P0.1/P0.2/P0.3 implemented. / 初始路线图创建。P0.1/P0.2/P0.3 实施。 |
+| 2026-07-10 | v0.2.1 | P0.4/P0.5 implemented. Subagent prompt DIMENSION 6 (build config + ADR execution audit) + CHECK 5 added. FP template upgraded with type classification (over-aggressive / factual-error / scope-error). Code_Hub audit retrospective case log added. / P0.4/P0.5 实施。Subagent prompt 新增 DIMENSION 6（构建配置+ADR执行审计）+ CHECK 5。FP 模板升级。Code_Hub 审计复盘 case log 添加。 |
+| 2026-07-09 | v0.2→v0.5 roadmap | Integrated V2 pragmatic enhancement proposal. / 整合 V2 务实增强方案。 |
+| 2026-07-09 | v0.2 | P1.4/P1.5/P1.6 implemented. / P1.4/P1.5/P1.6 实施。 |
+| 2026-07-06 | v0.1.1 | Initial roadmap created. P0.1/P0.2/P0.3 implemented. / 初始路线图创建。 |

@@ -608,6 +608,14 @@ DIMENSION 5: Cross-Module Contracts / 跨模块契约
 - Check: ADR invariants (dependency graph, unique entry points)
 - For each violation: record file:line + ADR section
 
+DIMENSION 6: Build Config + ADR Execution Audit / 构建配置 + ADR 执行审计 (added v0.2.1)
+- Check: Build config metadata (pyproject.toml, Cargo.toml, package.json, CMakeLists.txt, Makefile) — package name vs directory name consistency, dependency version co-installability across packages, missing required metadata fields (e.g., py.typed for PEP 561 compliance)
+- Check: ADR Decision Execution — for each ADR's "Decision:" section, extract action items and verify each is reflected in code. An unimplemented ADR decision is a P0 (the ADR IS the design spec).
+  - Read all ADRs → extract "Decision:" items
+  - For each: grep the codebase to confirm the decision is implemented
+  - Record: ADR §Decision# + expected (what ADR says) vs actual (what code does)
+- For each mismatch: record spec_ref (e.g., "ADR-001 §Decision4") + evidence
+
 OUTPUT CONTRACT / 输出契约 (MANDATORY / 强制格式):
 
 **v0.2+**: Output MUST be valid JSON conforming to `schemas/audit-finding.schema.json` (see Appendix B). The schema enforces:
@@ -687,6 +695,14 @@ CHECK 3: Interface Contracts / 接口契约
 CHECK 4: Session Isolation / Session 隔离 (if applicable)
 - Verify cross-session state isolation
 - For each leak: record the state field + how it leaks
+
+CHECK 5: ADR Decision Execution / ADR 决策执行审计 (added v0.2.1)
+- For each ADR in <ADR_PATHS>:
+  - Extract every "Decision:" item (numbered or bulleted)
+  - For each decision: grep the codebase to confirm it is implemented
+  - An unimplemented ADR decision is a P0 — the ADR IS the design spec
+  - Record: ADR §Decision# + expected (what the ADR decided) vs actual (what code does)
+- Example: ADR-001 decides "core package defines IDataManager Protocol" → grep for IDataManager in packages/core/ → if absent, P0
 
 OUTPUT CONTRACT / 输出契约:
 Same as Template 1 (severity, category, evidence, spec_ref, claim, confidence, fix_cost).
