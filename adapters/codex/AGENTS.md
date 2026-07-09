@@ -253,6 +253,14 @@ digraph audit_cycle {
 
 **修复后预期评分提升**必须在审查报告中标注（如 Memory: C+ → B+）。
 
+**v0.5+ Numeric Score / 0-100 数值评分** (P3.2, see `docs/implementation-plan.md` §4.2):
+```
+score = max(0, 100 - (P0_count * 20 + P1_count * 8 + P2_count * 3 + P3_count * 1))
+```
+Maps approximately: A+ = 95+, A = 85-94, B+ = 75-84, B = 65-74, C+ = 55-64, F = <40.
+
+**v0.5+ 数值评分** (P3.2，见 `docs/implementation-plan.md` §4.2)：从 finding 计数加权计算 0-100 分。追加式 `scores.json` + Mermaid 趋势图。
+
 ## ADR Dependency Graph Invariants
 
 ADR（架构决策记录）定义的依赖图不变式是审查的核心。检查方法：
@@ -440,6 +448,10 @@ fix: resolve N P0 blockers from code quality audit
 
 ## Process: Step-by-Step
 
+**v0.2 baseline.** For v0.3+ enhancements (lens system, iterative audit, deterministic assist, inter-rater reliability, verify mode), see `docs/implementation-plan.md`. All v0.3+ features are additive and opt-in.
+
+**v0.2 基线。** v0.3+ 增强（透镜系统、迭代审查、确定性辅助、双投票、验证模式）见 `docs/implementation-plan.md`。所有 v0.3+ 功能均为附加、可选。
+
 ### Step 1: Inventory
 1. 收集所有设计文档（spec / ADR / 架构文档）
 2. 列出模块清单 + 对应 spec
@@ -449,34 +461,42 @@ fix: resolve N P0 blockers from code quality audit
 ### Step 2: Audit (Parallel Subagents)
 **对每个模块派发独立 subagent**:
 - 输入：模块代码 + 对应 spec
-- 输出：评分 + 问题列表 + 测试盲区
+- 输出：`ModuleAuditResult` JSON（per Appendix B schema）
 
 **跨模块契约审查派发独立 subagent**:
 - 输入：ADR + 架构文档 + 所有模块代码
-- 输出：不变式违反列表 + 传递依赖链
+- 输出：`ModuleAuditResult` JSON（category = contract）
+
+**v0.3+ Lens Mode / 透镜模式**: When `--lens` parameter is set, subagents are dispatched per lens per module (not per module). See `docs/implementation-plan.md` §2.2 (P2.8').
+
+**v0.2 常规模式**: Generic subagent per module. **v0.3+ 透镜模式**: Typed subagent per lens per module.
 
 ### Step 3: Aggregate + Prioritize
-1. 汇总所有 subagent 报告
+1. 汇总所有 subagent `ModuleAuditResult` JSON
 2. 按 P0/P1/P2/P3 分级
 3. 按 Tier 1/2/3 排序
 4. 识别"低成本高影响"修复（1 行修复的 P0 优先）
 
 ### Step 4: Fix Baseline
 1. 写入 `docs/audit/YYYY-MM-DD-code-quality-audit.md`
-2. 填充修复跟踪表（状态 ⬜）
-3. 提交基线 commit
+2. 生成 `issues.json`（v0.4+, P2.12）— 机器可读修复跟踪
+3. 填充修复跟踪表（状态 ⬜）
+4. 提交基线 commit
 
-### Step 5: Fix P0 Blockers (Iterative)
+### Step 5: Fix P0 Blockers
 1. 按修复成本排序 Tier 1（1 行修复优先）
 2. 逐项修复
 3. 每项修复后立即重跑测试
-4. 更新跟踪表（状态 ✅ + commit_hash）
+4. 更新跟踪表（状态 ✅ + commit_hash）+ `issues.json` status → `fixed`
+
+**v0.4+ Verify Mode / 验证模式**: After fixing, run `audit --verify --file <fixed_file>` to re-audit only the fixed file. Confirms fix without full re-audit. See `docs/implementation-plan.md` §3.4 (P2.12).
 
 ### Step 6: Final Report
 1. 更新审查报告（所有 P0 状态 ✅）
 2. 标注修复后预期评分提升
-3. 提交最终 commit
-4. 输出下一步选项（契约测试 / P1 修复 / 实证阶段）
+3. **v0.5+**: Append numeric score to `docs/audit/scores.json` (P3.2)
+4. 提交最终 commit
+5. 输出下一步选项（契约测试 / P1 修复 / 实证阶段）
 
 ## Critical Anti-Patterns
 
@@ -497,18 +517,22 @@ fix: resolve N P0 blockers from code quality audit
 
 ## Boundaries with Other Skills
 
-| 能力 | 由本 skill 覆盖 | 由其他 skill 覆盖 |
-|---|---|---|
-| 代码与设计文档对齐 | ✅ | - |
-| 多维度审查 + 评分 | ✅ | - |
-| 修复优先级矩阵 | ✅ | - |
-| ADR 依赖图不变式 | ✅ | - |
-| 测试盲区识别 | ✅ | - |
-| 通用代码质量 | - | code-review-excellence |
-| 单 Task TDD | - | test-driven-development |
-| 实施计划编写 | - | writing-plans |
-| 实施计划执行 | - | executing-plans |
-| 规格管理 | - | OpenSpec / Spec Kit |
+| 能力 | 由本 skill 覆盖 | 由其他 skill 覆盖 | v0.3+ 增强 |
+|---|---|---|---|
+| 代码与设计文档对齐 | ✅ | - | Lens: design_align |
+| 多维度审查 + 评分 | ✅ | - | 0-100 数值评分 (v0.5) |
+| 修复优先级矩阵 | ✅ | - | Iterative audit (v0.4) |
+| ADR 依赖图不变式 | ✅ | - | Lens: contract |
+| 测试盲区识别 | ✅ | - | Lens: blind_spot |
+| 跨模块契约一致性 | ✅ | - | Lens: contract + inter-rater (v0.4) |
+| 错误处理完整性 | v0.3+ | - | Lens: error_handle |
+| 数据验证/边界条件 | v0.3+ | - | Lens: boundary |
+| 语义守卫检查 | v0.5+ | - | P3.1 guards.yml |
+| 通用代码质量 | - | code-review-excellence | - |
+| 单 Task TDD | - | test-driven-development | - |
+| 实施计划编写 | - | writing-plans | - |
+| 实施计划执行 | - | executing-plans | - |
+| 规格管理 | - | OpenSpec / Spec Kit | - |
 
 ## Integration
 

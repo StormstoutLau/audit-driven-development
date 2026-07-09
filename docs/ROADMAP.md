@@ -3,9 +3,9 @@
 > **The audit skill itself must be audited.**
 > **审查 skill 本身也必须被审查。**
 
-This document records the systematic improvement plan for the `audit-driven-development` skill, addressing three limitations identified on 2026-07-06.
+This document records the systematic improvement plan for the `audit-driven-development` skill, addressing three limitations identified on 2026-07-06. Updated 2026-07-09 with V2 pragmatic enhancement tier (integrating the V2 proposal's seven upgrades into P2/P3 layers).
 
-本文档记录 `audit-driven-development` skill 的系统性改进计划，回应 2026-07-06 识别的三项局限。
+本文档记录 `audit-driven-development` skill 的系统性改进计划，回应 2026-07-06 识别的三项局限。2026-07-09 更新，吸收 V2 务实增强方案到 P2/P3 层。
 
 ---
 
@@ -37,7 +37,9 @@ Actions that can be completed within days, addressing the most critical gaps.
 | **P0.2** | Spec Quality Gate (Phase 0) / 设计文档质量门 (Phase 0) | Limitation 1 | 2 days |
 | **P0.3** | Self-audit case log / 自我审计案例日志 | Limitation 3 | Low (template + first instance) |
 
-### P1 — v0.2 (Aligned with DLQ introduction / 与 DLQ 引入同期)
+**Status / 状态**: ✅ All P0 items implemented in v0.1.1
+
+### P1 — v0.2 (Foundation / 基础层)
 
 | ID | Action / 动作 | Addresses / 回应 | Cost / 成本 |
 |---|---|---|---|
@@ -45,13 +47,30 @@ Actions that can be completed within days, addressing the most critical gaps.
 | **P1.5** | Spec Mining Fallback / 设计文档反向挖掘 | Limitation 1 | 3-5 days |
 | **P1.6** | Structured audit protocol (JSON schema) / 结构化审计协议 | Limitation 2+3 | 2 days |
 
-### P2 — v0.3+ (Aligned with dual-workstation parallelism / 与双工作站并行同期)
+**Status / 状态**: ✅ All P1 items implemented in v0.2
 
-| ID | Action / 动作 | Addresses / 回应 | Cost / 成本 |
-|---|---|---|---|
-| **P2.7** | Inter-rater reliability (dual subagent voting) / 双 subagent 投票 | Limitation 2 | 3 days |
-| **P2.8** | Subagent specialization (typed agents) / Subagent 类型化 | Limitation 2 | 2 days |
-| **P2.9** | OSS benchmark (recall/precision on known bugs) / OSS 基准测试 | Limitation 3 | 1 week |
+### P2 — v0.3–v0.4 (Pragmatic Enhancement / 务实增强层)
+
+**Design philosophy / 设计哲学**: Every enhancement is a pluggable extension to ADD's existing framework — not a replacement. All implementations stay within the Trae Skill + Subagent boundary. Hard cost caps on every feature.
+
+每项增强都是 ADD 现有框架的可插拔扩展——非替换。全部在 Trae Skill + Subagent 边界内实现。每项功能有硬性成本上限。
+
+| ID | Action / 动作 | Addresses / 回应 | Traced to V2 / V2 溯源 | Cost / 成本 |
+|---|---|---|---|---|
+| **P2.9** | OSS benchmark / OSS 基准测试 | Limitation 3 | — (existing) | 1 week |
+| **P2.8'** | Lens System + Typed Subagent / 透镜分级 + 类型化 Subagent | Limitation 2 | V2#3 (透镜分级) + P2.8 (类型化) | 3 days |
+| **P2.10** | Deterministic Assist Layer / 确定性辅助层 | Limitation 2 | V2#4 | 2 days |
+| **P2.7** | Inter-rater reliability / 双 Subagent 投票 | Limitation 2 | — (existing) | 3 days |
+| **P2.11** | Iterative Audit / 迭代审查 | Limitation 2 | V2#1 | 1 day |
+| **P2.12** | Fix Tracking JSON + `--verify` mode / 修复跟踪 JSON 化 | Limitation 3 | V2#5 | 1 day |
+
+### P3 — v0.5 (Rules + Scoring Ecosystem / 规则+评分生态)
+
+| ID | Action / 动作 | Addresses / 回应 | Traced to V2 / V2 溯源 | Cost / 成本 |
+|---|---|---|---|---|
+| **P3.1** | Semantic Guards engine / 语义守卫引擎 | Limitation 1 | V2#2 | 3 days |
+| **P3.2** | Numeric scoring + trend tracking / 量化评分 + 趋势追踪 | Limitation 3 | V2#6 | 1 day |
+| **P3.3** | Cross-project guard reuse / 跨项目规则复用 | Limitation 1 | V2#7 | 2 days |
 
 ---
 
@@ -148,26 +167,283 @@ Machine-aggregatable, comparable, benchmarkable.
 
 ## P2 Details / P2 层详情
 
-### P2.7 — Inter-Rater Reliability
+### P2.9 — OSS Benchmark / OSS 基准测试 (v0.3)
 
-Same module audited by 2 independent subagents. Disagreement > threshold escalates to third arbiter subagent. Output agreement rate (Cohen's kappa) as audit quality metric.
+**Why first / 为何优先**: No benchmark → all quality claims are unverifiable. P2.9 is the only P2 item addressing Limitation 3 (output has no baseline). Before adding any new capability, we must establish ground truth for the existing one.
 
-### P2.8 — Subagent Specialization
+没有基准 → 所有质量声明无法验证。P2.9 是唯一回应局限 3（输出无基准）的 P2 项。在添加任何新能力前，必须先为现有能力建立 ground truth。
 
-Replace generic subagents with typed experts:
-- **ADR Guardian**: dependency graph invariants only
-- **Signature Checker**: signature consistency only
-- **Blind Spot Hunter**: test blind spots only
-- **Corrective Tracker**: spec corrective items only
+**Fix / 修复**:
+- Select 3 OSS projects with known bug history (fixed issues in git history)
+- Selection criteria: (a) has tests, (b) has ADRs or equivalent design docs, (c) ≥50 commits, (d) ≥3 known bugs in history
+- Candidate pools: Python CLI tools, small web frameworks, data processing libraries
+- Run ADD audit on each project's buggy commit, measure:
+  - **Recall**: known bugs detected / total known bugs
+  - **Precision**: true problems / total reported (requires manual FP classification)
+  - **Prioritization**: what % of P0 findings are real bugs
+- Output: 3 case logs + 1 aggregated benchmark report in `docs/benchmark/`
 
-### P2.9 — OSS Benchmark
+**成本控制**: 3 projects × ~2 hours each = ~6 hours total. Cap each audit at 5 subagents × 1 round.
 
-Select 3-5 OSS projects with known bug history (fixed issues). Run audit, compare:
-- Recall: known bugs detected / total known bugs
-- Precision: true problems / total reported
-- Kappa across subagent configurations
+**Dependency / 依赖**: P2.9 depends on P1.6 (JSON schema) for machine-readable output — ✅ already done.
 
-Public results as case study.
+### P2.8' — Lens System + Typed Subagent / 透镜分级 + 类型化 Subagent (v0.3)
+
+**Why merge / 为何合并**: Original P2.8 (Typed Subagent) and V2#3 (Lens Grading) describe the same problem from different angles — P2.8 from "who audits" (specialized agents), V2#3 from "what to audit" (lens enablement). A lens-driven typed subagent system unifies both: each lens maps to 1 typed subagent, each subagent covers exactly 1 lens. This avoids the complexity of "multi-agent weighted fusion" while keeping the benefit of specialization.
+
+原始 P2.8（Subagent 类型化）和 V2#3（透镜分级）从不同角度描述同一问题——P2.8 从"谁审查"（专业化 Agent），V2#3 从"审查什么"（透镜开关）。透镜驱动的类型化 Subagent 统一两者：每个透镜对应 1 个类型化 Subagent，每个 Subagent 只覆盖 1 个透镜。这避免了"多 Agent 加权融合"的复杂性，同时保持了专业化的收益。
+
+**Lens Model / 透镜模型**:
+
+Core Lens（默认开启，5 个，每个对应 1 个 Typed Subagent）:
+
+| Lens / 透镜 | Typed Subagent | Checks / 检查内容 | Maps to Category |
+|---|---|---|---|
+| 设计对齐 | Design Aligner | Signature consistency + behavior consistency vs spec | signature + behavior |
+| 跨模块契约 | Contract Guardian | ADR invariants, dependency graph, unique entry points | contract |
+| 错误处理完整性 | Error Handler | Exception coverage, error propagation, retry logic | behavior (subset) |
+| 数据验证/边界 | Boundary Checker | Input validation, null checks, edge cases, type safety | behavior (subset) |
+| 修正项追踪 | Corrective Tracker | Spec corrective items reflected in code | corrective |
+
+Extension Lens（按需开启，通过 `--lens` 参数）:
+
+| Lens / 透镜 | Enabled by / 开启方式 | Checks / 检查内容 |
+|---|---|---|
+| 测试盲区 | always-on (merged into each core subagent's dimension 4) | Blind spot detection (existing SKILL.md blind spot rules) |
+| 安全扫描 | `--lens security` | XSS, injection, unsafe eval, hardcoded secrets |
+| 架构健康 | `--lens architecture` | Circular deps (via madge/dependency-cruiser output), layer violations |
+
+**Output**: Each typed subagent produces a `ModuleAuditResult` JSON (per existing schema in P1.6). The main agent aggregates all lens results into one `AuditReport`.
+
+**Why NOT "24 lenses"**: Cost explosion (24 × full codebase × per-iteration = unsustainable). 5 core + 2 extension = 7 max at any time. Core lens always on, extension lens opt-in.
+
+**Why NOT "multi-agent weighted fusion"**: Trae Skill cannot do multi-agent parallelism. Each typed subagent is a sequential subagent dispatch — the main agent calls them one by one (or limited parallelism within existing Trae subagent model). No "weighted fusion" needed because lenses are non-overlapping by design.
+
+### P2.10 — Deterministic Assist Layer / 确定性辅助层 (v0.4)
+
+**Problem / 问题**: Subagents operate on AI inference alone. File selection, line-number accuracy, and rule recall are all probabilistic. A single hallucinated line number invalidates an evidence pointer (violating the Iron Rule in Appendix A).
+
+**Fix / 修复**: Add 3 deterministic helper scripts that run BEFORE subagent dispatch. Subagents receive pre-verified inputs.
+
+**Script 1: File Selector / 文件选择器** (`scripts/audit_files.py`)
+```
+Input:  --spec <spec.md> --module <module_name> --base <git_commit>
+Output: JSON list of files to audit, generated deterministically via:
+       1. Parse spec.md → extract module name → map to file glob
+       2. glob the glob → get file list
+       3. git diff <base>..HEAD --name-only → get changed files
+       4. Intersection of (2) and (3) = audit scope
+Cost cap: max 50 files per module. If >50, warn and pick top 50 by git churn.
+```
+
+**Script 2: Line Verifier / 行号验证器** (`scripts/verify_lines.py`)
+```
+Input:  --finding-json <finding.json> --repo <path>
+Output: verified.json with line_number_confirmed: true/false
+       1. Read the claimed file
+       2. Check if the claimed line content matches a keyword from the finding claim
+       3. If mismatch, search within ±20 lines for the nearest match
+       4. Flag low-confidence findings (no keyword match within ±20 lines)
+```
+
+**Script 3: Rule Index / 规则索引** (`scripts/rule_index.py`)
+```
+Input:  --spec <spec.md> --adrs <dir>
+Output: rule_index.json (keyword → constraint mapping)
+       1. Parse spec.md → extract all "must" / "must not" / "threshold" statements
+       2. Parse ADRs → extract all invariant statements
+       3. Index by keyword for fast lookup
+Purpose: Subagent queries index instead of "memorizing" all rules
+```
+
+**Integration / 集成**: These scripts are NOT subagent tasks. They are deterministic pre-processing run by the main agent via `RunCommand` before any subagent dispatch. If any script fails or times out (cap: 30 seconds each), the audit proceeds without its output — no blocking dependency.
+
+### P2.7 — Inter-Rater Reliability / 双 Subagent 投票 (v0.4)
+
+Same module audited by 2 independent subagents (different lens assignments, so not fully overlapping). Agreement measured per dimension. Disagreement on severity >1 level escalates to manual review flag.
+
+**Why after P2.8'**: Inter-rater reliability requires typed subagents to be meaningful — comparing two generic subagents tells us nothing. After P2.8' (lens system), inter-rater reliability measures agreement between lens-specific agents on their shared dimensions.
+
+**Method / 方法**:
+1. Subagent A audits module X with Lens Set {design, contract, error}
+2. Subagent B audits module X with Lens Set {boundary, corrective, blind_spot}
+3. Dimensions `signature` + `behavior` appear in both A and B (overlap zone)
+4. On overlap dimensions, compare findings. Agreement rate = |intersection| / |union|
+5. Cohen's kappa calculated per overlapping dimension
+
+**Cost cap / 成本上限**: Max 2 subagents per module. No third arbiter subagent (v0.4 scope is measurement, not resolution). Resolution deferred to v0.5+.
+
+### P2.11 — Iterative Audit / 迭代审查 (v0.4)
+
+**Problem / 问题**: Current audit is single-pass. When P0 findings are fixed, new P0s may emerge from the fix itself (regression). But unlimited iteration is cost-prohibitive.
+
+**Fix / 修复**: Configurable bounded iteration between Step 2 (Audit) and Step 3 (Aggregate).
+
+```
+Parameters (in SKILL.md config section):
+  --max_rounds <n>       default=2, max=5
+  --stop_condition <s>   "p0_zero" (default) or "p0_p1_zero"
+  --incremental_only     only re-audit files touched in previous round (default=true)
+
+Algorithm:
+  round = 1
+  changed_files = <full scope>
+  while round <= max_rounds:
+    audit(changed_files)
+    fix(all P0 findings)
+    changed_files = files modified during fix
+    if stop_condition met or changed_files is empty:
+      break
+    round += 1
+  if round == max_rounds and stop_condition not met:
+    warn: "Audit stopped at max_rounds={max_rounds}. {n} P0 items remaining. Manual review recommended."
+```
+
+**Integration with P2.8'**: Round 1 uses core lens. Round 2 optionally switches to a different core lens subset (e.g., Round 1 = design+contract, Round 2 = error+boundary+corrective).
+
+**Cost cap / 成本上限**: max_rounds=5, incremental_only=true means worst case = 5 × (50 files max) subagent passes. Default config: 2 rounds.
+
+### P2.12 — Fix Tracking JSON + `--verify` Mode / 修复跟踪 JSON 化 (v0.4)
+
+**Problem / 问题**: Phase 4 (Fix Baseline) uses a Markdown table. No machine-readable state. No incremental re-audit — must re-run full audit to confirm a fix.
+
+**Fix / 修复**:
+
+1. **issues.json** — Machine-readable replacement for the Markdown tracking table:
+
+```json
+{
+  "audit_id": "2026-07-09-example-v0.1.0",
+  "issues": [
+    {
+      "id": "BRIDGE-P0-1",
+      "file": "bridge/__init__.py",
+      "line": 23,
+      "severity": "P0",
+      "category": "contract",
+      "claim": "bridge imports from memory, violating ADR-001 §3.1",
+      "status": "open",
+      "fix_commit": null,
+      "verified_at": null
+    }
+  ]
+}
+```
+
+2. **`--verify` mode** — Incremental re-audit of fixed files only:
+
+```
+Command: audit verify --file bridge/__init__.py
+Effect:  Dispatch 1 subagent to audit only bridge/__init__.py against its spec section
+         If the subagent reports 0 findings for the previously-fixed issue ID → status → "verified"
+         If the subagent re-reports the issue → status remains "open", escalate to user
+```
+
+3. **State machine** per issue:
+   `open` → `in_progress` → `fixed` (with commit) → `verified` (after --verify pass)
+
+**Integration with P1.6**: issues.json conforms to the existing `AuditFinding` schema — the `status` field is the only addition. This is backward-compatible.
+
+---
+
+## P3 Details / P3 层详情
+
+### P3.1 — Semantic Guards Engine / 语义守卫引擎 (v0.5)
+
+**Problem / 问题**: Even with Spec Mining (P1.5) and Spec Quality Gate (P0.2), the ADD skill has no way to enforce project-specific, human-authored rules that AI cannot infer from code or git history. Example: "All public API endpoints must document request/response schema" — this is a semantic constraint, not derivable from code patterns.
+
+**Fix / 修复**:
+
+1. **guards.yml** — Human-authored rule file in `docs/audit/guards.yml`:
+
+```yaml
+# Semantic Guards for Project X
+# Human-authored. AI checks compliance, does NOT auto-generate rules.
+version: "1.0"
+
+guards:
+  - id: "G001"
+    description: "All public API endpoints MUST document request/response schema"
+    scope: "src/api/**/*.ts"
+    severity: "critical"
+    check: "For each file matching scope, verify that every exported route handler has a JSDoc @schema tag or equivalent"
+    
+  - id: "G002"
+    description: "Database write operations MUST execute within a transaction"
+    scope: "src/repository/**/*.ts"
+    severity: "blocker"
+    check: "For each file matching scope, verify that INSERT/UPDATE/DELETE calls are wrapped in transaction blocks"
+```
+
+2. **Guard Check Subagent** — New typed subagent (extension of lens system):
+   - Input: guards.yml + scope files
+   - Output: `ModuleAuditResult` where category = `"guard"`
+   - Severity mapping: `critical` → P1, `blocker` → P0, `warning` → P2
+
+3. **Guard template** (`docs/audit/guards.template.yml`): Starter file with common guard patterns (API docs, transaction safety, error logging, input validation). Users copy and customize.
+
+**Human-in-the-loop / 人机协作**:
+- AI NEVER auto-generates guards. The audit report may SUGGEST new guards (Appendix section: "Recommended Guards"), but they stay as suggestions until a human copies them into guards.yml.
+- guards.yml is a version-controlled text file. Changes go through PR review like any other code.
+
+**Relationship to existing Phase 0 Spec Quality Gate**: Phase 0 scores the spec's quality. guards.yml is a separate, always-applied check layer independent of spec quality. A project can have A-tier spec AND a guards.yml — they are complementary.
+
+### P3.2 — Numeric Scoring + Trend Tracking / 量化评分 + 趋势追踪 (v0.5)
+
+**Problem / 问题**: A+ ~ F letter grades are too coarse. No trend over time. A project going from B+ to B+ across 3 audits could mean "stable" or "regressing with offsetting improvements" — indistinguishable.
+
+**Fix / 修复**:
+
+1. **0–100 numeric score**: Derived from finding count weighted by severity.
+```
+score = max(0, 100 - (P0_count * 20 + P1_count * 8 + P2_count * 3 + P3_count * 1))
+```
+Maps approximately: A+ = 95+, A = 85-94, B+ = 75-84, B = 65-74, C+ = 55-64, F = <40
+
+2. **scores.json** — Append-only time series:
+```json
+[
+  {"date": "2026-07-04", "project": "Factor_Miner", "version": "v0.1.0", "score": 68, "grade": "B+"},
+  {"date": "2026-07-09", "project": "Factor_Miner", "version": "v0.1.1", "score": 82, "grade": "A-"}
+]
+```
+
+3. **Mermaid trend chart** — Auto-generated in audit report footer:
+```mermaid
+xychart-beta
+  title "Audit Score Trend"
+  x-axis ["v0.1.0", "v0.1.1", "v0.2.0"]
+  y-axis "Score" 0 --> 100
+  line [68, 82, 91]
+```
+
+**Cost / 成本**: Pure data processing. No AI involvement. Scores computed from the existing JSON output in P1.6.
+
+### P3.3 — Cross-Project Guard Reuse / 跨项目规则复用 (v0.5)
+
+**Problem / 问题**: A team maintaining 5 projects needs the same guards (e.g., transaction safety, API doc requirements) in all 5. Copy-pasting guards.yml across repos is fragile.
+
+**Fix / 修复**: Two-layer guard architecture:
+
+```
+docs/audit/
+├── guards.common.yml     ← references external template (optional)
+└── guards.project.yml    ← project-specific overrides
+```
+
+`guards.common.yml` supports an `extends` directive:
+```yaml
+extends: "@myteam/audit-rules/guards.base.yml"  # or local path: "../shared-rules/guards.base.yml"
+
+guards:
+  # Project-specific guards only. Common guards are inherited from extends.
+  - id: "P001"
+    description: "This project additionally requires..."
+```
+
+**Resolution / 合并逻辑**: `scripts/merge_guards.py` resolves extends → merges with project guards → outputs `guards.effective.yml`. Subagent reads only the effective file.
+
+**Deferral rationale / 为何延迟到 v0.5**: This feature is only useful when (a) the guard system is validated (P3.1) AND (b) there are ≥2 active projects using ADD. Both conditions are currently unmet. H2 2026 target.
 
 ---
 
@@ -177,22 +453,42 @@ Do not chase stars. Chase **verifiable case studies**:
 
 1. **Factor_Miner** (existing, 2026-07-04 audit) → track detection rate over subsequent audits
 2. **Ben Wan's project** → one pilot audit, public report
-3. **1 OSS project** (with ADR + tests) → public audit report + detection rate
+3. **1 OSS project** (with ADR + tests) → public audit report + detection rate (P2.9)
 4. **Accept external issues** → improvement backlog, each issue maps to a P0/P1/P2 item
 
 Star count is a lagging indicator. **Reproducible detection rate** is the leading indicator.
 
 Star 数是滞后指标，**可复现的检出率**是领先指标。
 
+**Updated 2026-07-09**: P2.9 (OSS benchmark) is now the highest-priority P2 item. Items 2-4 remain aspirational. The benchmark is the gate: if ADD cannot demonstrate recall >80% on 3 OSS projects, further feature development is premature.
+
 ---
 
 ## Version Anchors / 版本锚定
 
-| Version / 版本 | Scope / 范围 | P Items / 包含项 |
-|---|---|---|
-| v0.1.1 | Immediate fixes / 立即修复 | P0.1, P0.2, P0.3 |
-| v0.2 | DLQ introduction / DLQ 引入 | P1.4, P1.5, P1.6 |
-| v0.3+ | Dual-workstation parallelism / 双工作站并行 | P2.7, P2.8, P2.9 |
+| Version / 版本 | Scope / 范围 | P Items / 包含项 | Est. Calendar (业余) |
+|---|---|---|---|
+| v0.1.1 | Immediate fixes / 立即修复 | P0.1, P0.2, P0.3 | Done |
+| v0.2 | Foundation / 基础层 | P1.4, P1.5, P1.6 | Done |
+| v0.3 | Core Verification / 核心验证 | P2.9 (benchmark), P2.8' (lens+typed) | ~2 weeks (业余 ~1 month) |
+| v0.4 | Pragmatic Enhancement / 务实增强 | P2.10 (deterministic), P2.7 (inter-rater), P2.11 (iterative), P2.12 (fix tracking) | ~2 weeks (业余 ~1 month) |
+| v0.5 | Rules + Scoring Ecosystem / 规则+评分生态 | P3.1 (guards), P3.2 (scoring), P3.3 (cross-project) | ~2 weeks (业余 ~1.5 months) |
+
+Total: ~6 weeks full-time equivalent ≈ **3–4 calendar months** at hobby-project pace. Each version is independently shippable.
+
+---
+
+## Design Constraints / 设计约束
+
+These constraints were derived from the V1 post-mortem and govern all P2/P3 implementation decisions.
+
+这些约束来自 V1 方案评审，约束所有 P2/P3 实施决策。
+
+1. **Trae Skill boundary / Trae Skill 边界**: All features MUST work within SKILL.md + RunCommand + Subagent dispatch. No external schedulers, no persistent knowledge bases, no multi-agent runtime.
+2. **Hard cost caps / 硬性成本上限**: Every feature has a numerical cap (max_rounds=5, max_files=50, max_subagents=7, script_timeout=30s). Features that cannot be capped are not implemented.
+3. **Human authors rules, AI checks compliance / 人写规则，AI 查合规**: Guards are human-authored YAML. Spec is human-authored markdown. AI never auto-generates constraints — only checks them.
+4. **Pluggable, not replacement / 可插拔，非替换**: Every P2/P3 enhancement is opt-in or additive. Core P0/P1 functionality works identically without any P2/P3 feature enabled.
+5. **Benchmark before enhance / 先基准，后增强**: P2.9 (OSS benchmark) MUST complete before any other P2 item begins implementation. If existing skill cannot demonstrate recall >80%, fix the skill before adding features.
 
 ---
 
@@ -200,5 +496,6 @@ Star 数是滞后指标，**可复现的检出率**是领先指标。
 
 | Date / 日期 | Version / 版本 | Change / 变更 |
 |---|---|---|
-| 2026-07-09 | v0.2 | P1.4/P1.5/P1.6 implemented. ReasoningChain schema, Spec Mining Fallback module, Structured Audit Protocol (JSON Schema + Appendix B). Dogfooding self-audit case log added. / P1.4/P1.5/P1.6 实施。推理链 schema、Spec 反向挖掘模块、结构化审计协议（JSON Schema + Appendix B）。Dogfooding 自审计 case log 添加。 |
+| 2026-07-09 | v0.2→v0.5 roadmap | Integrated V2 pragmatic enhancement proposal. P2 restructured: P2.9 prioritized as gate item, P2.8+P2.8' merged into Lens-Typed-Subagent system, P2.10-P2.12 added (deterministic assist, inter-rater, iterative audit, fix tracking). P3 added (semantic guards, numeric scoring, cross-project reuse). Design constraints section added. / 整合 V2 务实增强方案。P2 层重构：P2.9 提升为门控项，P2.8 与 V2#3 合并为透镜-类型化 Subagent 系统，新增 P2.10-P2.12。新增 P3 层。新增设计约束章节。 |
+| 2026-07-09 | v0.2 | P1.4/P1.5/P1.6 implemented. ReasoningChain schema, Spec Mining Fallback module, Structured Audit Protocol (JSON Schema + Appendix B). Dogfooding self-audit case log added. / P1.4/P1.5/P1.6 实施。 |
 | 2026-07-06 | v0.1.1 | Initial roadmap created. P0.1/P0.2/P0.3 implemented. / 初始路线图创建。P0.1/P0.2/P0.3 实施。 |
