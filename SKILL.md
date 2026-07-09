@@ -45,6 +45,46 @@ NO "IMPLEMENTATION COMPLETE" WITHOUT AN AUDIT-DRIVEN REVIEW
 3. 设计文档独有约束无测试（如 ADR 不变式、策略 G/K）
 4. 修正阻断性项无测试（如先行者偏差防护、逃生舱独立检测）
 
+## Pre-Audit: Spec Quality Gate (Phase 0) / 设计文档质量门 (Phase 0)
+
+**Goal / 目标**: Assess spec quality before auditing. Prevent GIGO (garbage spec → garbage audit).
+在设计文档盘点之前评估 spec 质量，防止 GIGO（垃圾 spec → 垃圾审计）。
+
+**Added in v0.1.1** in response to Limitation 1 (skill relies on spec quality). See `docs/ROADMAP.md` P0.2.
+**v0.1.1 新增**，回应局限 1（skill 依赖 spec 质量）。见 `docs/ROADMAP.md` P0.2。
+
+### Spec Quality Checklist / Spec 质量检查清单
+
+Score each spec doc against 5 dimensions (0 or 1 point each, max 5):
+对每份 spec 文档按 5 维度评分（每项 0 或 1 分，满分 5）:
+
+| # | Dimension / 维度 | Question / 问题 | 1 Point If / 得 1 分条件 |
+|---|---|---|---|
+| 1 | Testable Constraints / 可测试约束 | Does the spec contain "must" / "must not" / numeric thresholds? spec 是否含"必须"/"禁止"/数值阈值？ | ≥3 testable constraints found / 找到 ≥3 条可测试约束 |
+| 2 | Module Mapping / 模块映射 | Does each module have a 1:1 spec section? 每个模块是否有 1:1 对应的 spec 章节？ | All modules mapped / 所有模块均有映射 |
+| 3 | Interface Contracts / 接口契约 | Are function signatures, params, return values specified? 函数签名、参数、返回值是否明确？ | ≥80% of public functions specified / ≥80% 公开函数有规范 |
+| 4 | Corrective Items / 修正项 | Does the spec list "fix 9.x" or equivalent corrective actions? spec 是否列出"修正 9.x"或等价修正项？ | Corrective items enumerated / 修正项已枚举 |
+| 5 | Cross-Module Contracts / 跨模块契约 | Are ADR invariants / dependency graph rules documented? ADR 不变式 / 依赖图规则是否记录？ | ≥1 ADR or equivalent / 至少 1 份 ADR 或等价物 |
+
+### Tier Assignment / 分档判定
+
+| Tier / 档位 | Score / 得分 | Audit Mode / 审计模式 | Action / 动作 |
+|---|---|---|---|
+| **A** | 4-5 | **Full audit** (Phases 1-4) | Proceed to Phase 1 / 进入 Phase 1 |
+| **B** | 2-3 | **Structural audit** | Downgrade: audit code vs general engineering principles (DAG acyclic, single entry, error handling complete). Flag "spec gaps prevent full audit" in report. / 降级：审查代码 vs 通用工程原则（依赖图无环、单一入口、错误处理完备）。报告中标注"spec 缺口导致无法完整审计"。 |
+| **C** | 0-1 | **Spec Mining** (v0.2) or **Refuse** | v0.2: invoke Spec Mining Fallback (P1.5). v0.1.1: refuse audit with reason "spec quality too low, cannot audit". / v0.2：调用 Spec Mining Fallback (P1.5)。v0.1.1：拒绝审计，理由"spec 质量过低，无法审计"。 |
+
+### Why This Gate Matters / 为何需要此门
+
+Without Phase 0, the skill gives false A+ scores when the spec is trivially satisfied (because the spec says nothing). This is the GIGO failure mode.
+
+没有 Phase 0，当 spec 空洞时，skill 会给出虚假的 A+ 评分（因为 spec 什么都没说，代码自然"对齐"）。这是 GIGO 失效模式。
+
+**Rule / 规则**: If Phase 0 tier is B or C, the audit report MUST state the tier and its limitation. A B-tier audit cannot issue an A+ score (capped at B+).
+
+**规则**：若 Phase 0 档位为 B 或 C，审计报告必须声明档位及其限制。B 档审计不能给出 A+ 评分（上限为 B+）。
+
+
 ## The Audit Framework: 4 Phases
 
 ```dot
@@ -427,3 +467,159 @@ fix: resolve N P0 blockers from code quality audit
 - P0 优先于 P1，1 行修复优先于 100 行重构
 - 传递依赖链是 ADR 违反的常见来源
 - 修正项未落实是设计承诺的违反
+
+
+
+---
+
+## Appendix A: Subagent Prompt Templates / Subagent Prompt 模板
+
+**Added in v0.1.1** in response to Limitation 2 (subagent intelligence is a black box). See `docs/ROADMAP.md` P0.1.
+**v0.1.1 新增**，回应局限 2（subagent 是黑盒）。见 `docs/ROADMAP.md` P0.1。
+
+The skill's core mechanism is "dispatch subagents to audit". Without explicit prompt templates, this mechanism is undefined and non-reproducible. The templates below make the black box white.
+
+skill 的核心机制是"派发 subagent 审查"。没有显式 prompt 模板，此机制未定义且不可复现。以下模板使黑盒变白盒。
+
+### Template 1: Module Audit Subagent / 模块审计 Subagent
+
+```
+You are auditing <MODULE_NAME> in <PROJECT_NAME> v<VERSION> for code-vs-spec alignment.
+
+INPUT CONTRACT / 输入契约:
+- Module code: <MODULE_PATH> (read all files)
+- Spec: <SPEC_PATH> §<SPEC_SECTION>
+- ADR list: <ADR_PATHS>
+- Baseline commit: <COMMIT_HASH>
+
+YOUR TASK / 你的任务:
+For each spec section, check code alignment across 5 dimensions. Each finding MUST include an evidence pointer.
+
+对每个 spec 章节，按 5 维度检查代码对齐。每个发现必须包含 evidence pointer。
+
+DIMENSION 1: Signature Consistency / 签名一致性
+- Check: method name, params, return type vs spec
+- For each mismatch: record file:line + spec section
+
+DIMENSION 2: Behavior Consistency / 行为一致性
+- Check: policies, thresholds, invariants vs spec
+- For each mismatch: record file:line + spec section
+
+DIMENSION 3: Corrective Items / 修正项落实
+- Check: spec's "fix 9.x" items are reflected in code
+- For each unimplemented corrective: record spec section + expected vs actual
+
+DIMENSION 4: Test Blind Spots / 测试盲区
+- Check: assertion tautologies, single-file inspection, design constraints without tests
+- For each blind spot: record test file:line + why it's a blind spot
+
+DIMENSION 5: Cross-Module Contracts / 跨模块契约
+- Check: ADR invariants (dependency graph, unique entry points)
+- For each violation: record file:line + ADR section
+
+OUTPUT CONTRACT / 输出契约 (MANDATORY / 强制格式):
+For EACH finding:
+  - severity: P0 | P1 | P2 | P3
+  - category: signature | behavior | corrective | blind_spot | contract
+  - evidence: <file>:<line_start>-<line_end>  [MANDATORY, no finding without evidence]
+  - spec_ref: <doc> §<section>  [MANDATORY, must point to specific section]
+  - claim: <one-sentence description of the mismatch>
+  - confidence: high | medium | low
+  - fix_cost: 1-line | <10-line | refactor
+
+For EACH dimension checked (even if no finding):
+  - status: pass | fail | NA
+  - evidence: what you read to verify
+
+EXHAUSTIVENESS RULE / 完备性规则:
+- You MUST check ALL spec sections, not just the ones with obvious issues.
+- You MUST check ALL P1 categories exhaustively. Do NOT skim P1 after finding P0s.
+  必须穷尽检查所有 P1 类别。不得在发现 P0 后略过 P1。
+- If you did not read a file, say so explicitly. Do not infer.
+
+REASONING CHAIN / 推理链 (v0.2 will schema-ize this):
+For each finding, briefly state:
+  Read: <what files/sections you read>
+  Checked: <what invariant/rule you verified>
+  Found: <what mismatch you detected>
+  Confidence: <why you are confident>
+
+DO NOT:
+- Report findings without evidence pointers
+- Report findings without spec references
+- Skip dimensions
+- Infer code behavior without reading the actual file
+```
+
+### Template 2: Cross-Module Contract Audit Subagent / 跨模块契约审计 Subagent
+
+```
+You are auditing cross-module contracts in <PROJECT_NAME> v<VERSION>.
+
+INPUT CONTRACT / 输入契约:
+- ADR list: <ADR_PATHS>
+- Architecture docs: <ARCH_PATHS>
+- All module code: <MODULE_PATHS>
+- Baseline commit: <COMMIT_HASH>
+
+YOUR TASK / 你的任务:
+Verify ADR invariants and cross-module contracts. Focus on transitive dependencies that single-file inspection cannot catch.
+
+验证 ADR 不变式和跨模块契约。聚焦单文件检查无法捕获的传递依赖。
+
+CHECK 1: Dependency Graph Acyclicity / 依赖图无环
+- For each module, list its imports (direct + transitive)
+- Verify no cycles (use grep + ast analysis, not inspect.getsource)
+- For each cycle: record the full dependency chain
+
+CHECK 2: Unique Entry Points / 唯一入口
+- Identify designated unique entry points (e.g., "only orchestrator writes memory")
+- Verify no other module calls the restricted API
+- For each violation: record the violating file:line + the ADR section that designates uniqueness
+
+CHECK 3: Interface Contracts / 接口契约
+- For each cross-module interface, verify signature consistency
+- For each mismatch: record both sides (caller file:line + callee file:line)
+
+CHECK 4: Session Isolation / Session 隔离 (if applicable)
+- Verify cross-session state isolation
+- For each leak: record the state field + how it leaks
+
+OUTPUT CONTRACT / 输出契约:
+Same as Template 1 (severity, category, evidence, spec_ref, claim, confidence, fix_cost).
+
+ADDITIONAL FOR CONTRACT AUDIT / 契约审计额外要求:
+- For transitive dependencies, MUST output the full chain:
+  e.g., bridge.py → generator.data_structures → memory.data_structures (3-hop violation)
+- Use grep to verify, not just code reading:
+  e.g., `grep -r "from factor_miner.memory" factor_miner/bridge/` should be empty
+```
+
+### Evidence Pointer Rules / Evidence Pointer 规则
+
+1. **No finding without evidence / 无证据不得报告发现**: Every finding MUST have `evidence: <file>:<line_start>-<line_end>`. Findings without evidence are invalid.
+   每个发现必须有 `evidence: <file>:<行号-行号>`。无 evidence 的发现无效。
+
+2. **No evidence without spec ref / 无 spec 引用不得报告发现**: Every finding MUST have `spec_ref: <doc> §<section>`. Findings without spec reference are invalid.
+   每个发现必须有 `spec_ref: <文档> §<章节>`。无 spec 引用的发现无效。
+
+3. **Read before report / 先读后报**: If a subagent reports `evidence: bridge/__init__.py:23`, it MUST have actually read that line. Inference is not evidence.
+   若 subagent 报告 `evidence: bridge/__init__.py:23`，必须实际读过该行。推断不是证据。
+
+4. **Exhaustiveness over speed / 完备优先于速度**: A subagent that reports 3 P0s and skips P1 checking is worse than one that reports 0 P0s but exhaustively checks all P1s. Coverage is scored, not just findings.
+   报告 3 个 P0 但跳过 P1 检查的 subagent，不如报告 0 个 P0 但穷尽检查所有 P1 的 subagent。覆盖率也被评分，不仅是发现数。
+
+### Subagent Calibration / Subagent 校准
+
+The skill operator (the main agent dispatching subagents) should:
+skill 操作者（派发 subagent 的主 agent）应：
+
+1. **Verify evidence pointers / 验证 evidence pointer**: Spot-check 10% of findings' evidence pointers against actual code. If a pointer is wrong, flag the subagent's entire output as low-confidence.
+   抽检 10% 发现的 evidence pointer 与实际代码对照。若 pointer 错误，将该 subagent 的全部输出标记为低置信度。
+
+2. **Check exhaustiveness / 检查完备性**: If a subagent reports 0 findings for a module, verify it actually checked all 5 dimensions (not just skimmed). A "pass" without evidence of checking is suspicious.
+   若 subagent 对某模块报告 0 发现，验证它确实检查了所有 5 维度（而非略读）。无检查证据的"通过"是可疑的。
+
+3. **Track false positives / 跟踪误报**: Record FPs in `docs/audit-log/<case>.md` §5. Over time, FP rate per subagent configuration becomes measurable.
+   在 `docs/audit-log/<case>.md` §5 记录误报。随时间推移，每个 subagent 配置的误报率变得可测量。
+
