@@ -169,21 +169,32 @@ Machine-aggregatable, comparable, benchmarkable.
 
 ### P2.9 — OSS Benchmark / OSS 基准测试 (v0.3)
 
-**Why first / 为何优先**: No benchmark → all quality claims are unverifiable. P2.9 is the only P2 item addressing Limitation 3 (output has no baseline). Before adding any new capability, we must establish ground truth for the existing one.
+**Why first / 为何优先**: No benchmark → all quality claims are unverifiable. P2.9 is the primary P2 item addressing Limitation 3 (output has no baseline), alongside P2.12 (fix tracking JSON → machine-readable ground truth over time). Before adding any new capability, we must establish ground truth for the existing one.
 
-没有基准 → 所有质量声明无法验证。P2.9 是唯一回应局限 3（输出无基准）的 P2 项。在添加任何新能力前，必须先为现有能力建立 ground truth。
+没有基准 → 所有质量声明无法验证。P2.9 是回应局限 3（输出无基准）的主要 P2 项，与 P2.12（修复跟踪 JSON → 随时间积累 ground truth）协同。在添加任何新能力前，必须先为现有能力建立 ground truth。
 
 **Fix / 修复**:
 - Select 3 OSS projects with known bug history (fixed issues in git history)
-- Selection criteria: (a) has tests, (b) has ADRs or equivalent design docs, (c) ≥50 commits, (d) ≥3 known bugs in history
-- Candidate pools: Python CLI tools, small web frameworks, data processing libraries
-- Run ADD audit on each project's buggy commit, measure:
+- Selection criteria: (a) has tests, (b) has design docs (ADRs, ARCHITECTURE.md, formal spec, or equivalent), (c) ≥50 commits, (d) ≥3 known bugs in history
+- Composition requirement: at least 1 project MUST have a formal design spec (Tier A candidate — e.g., FastAPI's OpenAPI spec). Remaining 2 can be Tier B (structural audit). This ensures benchmark measures both full audit AND structural audit capabilities.
+- Candidate pool:
+  - **Tier A candidates** (formal spec exists): FastAPI (OpenAPI), Django REST Framework (BDFL docs + deprecation policy), SQLAlchemy (extensive architecture docs)
+  - **Tier B candidates** (design docs exist, no formal spec): Flask, Requests, Click
+- Run ADD audit on each project's pre-fix commit, measure:
   - **Recall**: known bugs detected / total known bugs
   - **Precision**: true problems / total reported (requires manual FP classification)
   - **Prioritization**: what % of P0 findings are real bugs
 - Output: 3 case logs + 1 aggregated benchmark report in `docs/benchmark/`
 
-**成本控制**: 3 projects × ~2 hours each = ~6 hours total. Cap each audit at 5 subagents × 1 round.
+**TP/FP/FN Classification Standard / 匹配标准** (must be documented in `docs/benchmark/README.md` before first audit):
+- **Exact match**: finding file + line range overlaps known bug location → TP
+- **Close match**: finding file matches known bug file, same category (e.g., both are "behavior"), claim describes the same root cause → TP (flagged as "close, not exact")
+- **Related**: finding describes the same problem but different file/category → FP (not a detection of the known bug, even if the claim is semantically related — this must be strict to avoid overcounting recall)
+- **FP classification**: any finding with no matching known bug in any of the three tiers above → FP
+
+B 档 benchmark 标注: When a project is Tier B (structural audit), the benchmark-result.json MUST include `audit_mode: "structural"` and the aggregated report MUST separate full-audit recall from structural-audit recall. Tier B recall is expected to be lower (structural audit does not check spec-specific behavior).
+
+**成本控制**: 3 projects × ~3-4 hours each = ~9-12 hours total (including manual TP/FP classification). Cap each audit at 5 subagents × 1 round.
 
 **Dependency / 依赖**: P2.9 depends on P1.6 (JSON schema) for machine-readable output — ✅ already done.
 
@@ -214,6 +225,13 @@ Extension Lens（按需开启，通过 `--lens` 参数）:
 | 架构健康 | `--lens architecture` | Circular deps (via madge/dependency-cruiser output), layer violations |
 
 **Output**: Each typed subagent produces a `ModuleAuditResult` JSON (per existing schema in P1.6). The main agent aggregates all lens results into one `AuditReport`.
+
+**Lens Overlap Deduplication / 透镜重叠去重**: When two core lens subagents report findings with the same evidence (identical file + overlapping line range) and same category:
+1. If claims are semantically identical → keep one finding, annotate `detected_by: [lens_a, lens_b]`
+2. If claims differ (same evidence, different claims) → keep both as independent findings
+3. If claims differ but one is a subset of the other → keep the more specific finding, annotate `detected_by: [both]`
+
+This prevents double-counting the same bug in P3.2 scoring and P2.9 recall/precision. The dedup is applied by the main agent during Step 3 (Aggregate) before score calculation.
 
 **Why NOT "24 lenses"**: Cost explosion (24 × full codebase × per-iteration = unsustainable). 5 core + 2 extension = 7 max at any time. Core lens always on, extension lens opt-in.
 
@@ -277,7 +295,7 @@ Same module audited by 2 independent subagents (different lens assignments, so n
 
 **Problem / 问题**: Current audit is single-pass. When P0 findings are fixed, new P0s may emerge from the fix itself (regression). But unlimited iteration is cost-prohibitive.
 
-**Fix / 修复**: Configurable bounded iteration between Step 2 (Audit) and Step 3 (Aggregate).
+**Fix / 修复**: Configurable bounded iteration between Step 2 (Audit) and Step 3 (Aggregate). Human-in-the-loop: the Agent audits → reports P0 → pauses; human fixes → commits; Agent resumes with changed files.
 
 ```
 Parameters (in SKILL.md config section):
@@ -285,18 +303,19 @@ Parameters (in SKILL.md config section):
   --stop_condition <s>   "p0_zero" (default) or "p0_p1_zero"
   --incremental_only     only re-audit files touched in previous round (default=true)
 
-Algorithm:
+Algorithm (HUMAN-IN-THE-LOOP, NOT automated):
   round = 1
   changed_files = <full scope>
   while round <= max_rounds:
-    audit(changed_files)
-    fix(all P0 findings)
-    changed_files = files modified during fix
-    if stop_condition met or changed_files is empty:
+    audit(changed_files)                           # Agent step
+    report P0 findings to user                     # Agent output
+    if stop_condition met or changed_files empty:  # Agent check
       break
+    user fixes all P0 findings                     # HUMAN step (Agent WAITS)
+    changed_files = files modified in user's fix commit  # Agent reads git diff
     round += 1
   if round == max_rounds and stop_condition not met:
-    warn: "Audit stopped at max_rounds={max_rounds}. {n} P0 items remaining. Manual review recommended."
+    warn: "Iteration stopped at max_rounds. {n_p0} P0, {n_p1} P1 remain."
 ```
 
 **Integration with P2.8'**: Round 1 uses core lens. Round 2 optionally switches to a different core lens subset (e.g., Round 1 = design+contract, Round 2 = error+boundary+corrective).
@@ -309,7 +328,7 @@ Algorithm:
 
 **Fix / 修复**:
 
-1. **issues.json** — Machine-readable replacement for the Markdown tracking table:
+1. **issues.json** — Machine-readable state tracker (NOT a replacement for the Markdown table — both are generated in parallel):
 
 ```json
 {
@@ -321,6 +340,7 @@ Algorithm:
       "line": 23,
       "severity": "P0",
       "category": "contract",
+      "spec_ref": "ADR-001 §3.1",
       "claim": "bridge imports from memory, violating ADR-001 §3.1",
       "status": "open",
       "fix_commit": null,
@@ -329,6 +349,8 @@ Algorithm:
   ]
 }
 ```
+
+Note: `spec_ref` is preserved from the original `AuditFinding` (P1.6) — this is REQUIRED for `--verify` mode to know which spec section to re-audit against.
 
 2. **`--verify` mode** — Incremental re-audit of fixed files only:
 
@@ -460,7 +482,14 @@ Star count is a lagging indicator. **Reproducible detection rate** is the leadin
 
 Star 数是滞后指标，**可复现的检出率**是领先指标。
 
-**Updated 2026-07-09**: P2.9 (OSS benchmark) is now the highest-priority P2 item. Items 2-4 remain aspirational. The benchmark is the gate: if ADD cannot demonstrate recall >80% on 3 OSS projects, further feature development is premature.
+**Updated 2026-07-09**: P2.9 (OSS benchmark) is now the highest-priority P2 item. Items 2-4 remain aspirational. The benchmark is the gate with tiered thresholds:
+
+- **Gate pass (proceed)**: Recall >70% on the Tier A project AND average recall across 3 projects >60%
+- **Gate soft-fail (fix, then retry)**: Recall 50-70% on Tier A or average 40-60%. Pause feature work. Optimize subagent prompts. Retry benchmark with same projects.
+- **Gate hard-fail (re-scope)**: Recall <50% on Tier A or average <40%. Fundamental rethinking needed — the current subagent approach may not be viable for unknown-codebase audits. Re-scope P2/P3 plan.
+- **Threshold adjustment**: The specific thresholds (70%/60%) are initial values. After 1 project benchmark, re-evaluate based on difficulty. Document the adjustment rationale in `docs/benchmark/README.md`.
+
+Initial 80% single-threshold was too aggressive for OSS projects where design docs are often informal. Tiered thresholds allow calibration based on real data.
 
 ---
 
@@ -488,7 +517,7 @@ These constraints were derived from the V1 post-mortem and govern all P2/P3 impl
 2. **Hard cost caps / 硬性成本上限**: Every feature has a numerical cap (max_rounds=5, max_files=50, max_subagents=7, script_timeout=30s). Features that cannot be capped are not implemented.
 3. **Human authors rules, AI checks compliance / 人写规则，AI 查合规**: Guards are human-authored YAML. Spec is human-authored markdown. AI never auto-generates constraints — only checks them.
 4. **Pluggable, not replacement / 可插拔，非替换**: Every P2/P3 enhancement is opt-in or additive. Core P0/P1 functionality works identically without any P2/P3 feature enabled.
-5. **Benchmark before enhance / 先基准，后增强**: P2.9 (OSS benchmark) MUST complete before any other P2 item begins implementation. If existing skill cannot demonstrate recall >80%, fix the skill before adding features.
+5. **Benchmark before enhance / 先基准，后增强**: P2.9 (OSS benchmark) is the gate. P2.8' (lens system) **design** can proceed in parallel with benchmark data collection (Week 4 of M1), but **implementation** (SKILL.md lens prompts, audit_lens.py) MUST wait until gate passes. If gate hard-fails, redesign subagent prompts before adding lens system complexity. P2.10-P2.12 are blocked on gate pass regardless.
 
 ---
 

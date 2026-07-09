@@ -18,7 +18,7 @@
 ### 1.2 依赖图
 
 ```
-P1.6 (JSON Schema) ──┬──→ P2.9 (benchmark) ──→ Gate: recall >80%? ──→ P2.8' (lens)
+P1.6 (JSON Schema) ──┬──→ P2.9 (benchmark) ──→ Gate: recall >70% (Tier A), avg >60%? ──→ P2.8' (lens)
                      │                                                        │
                      ├──→ P2.10 (deterministic) ←────────────────────────────┘
                      │        │
@@ -30,7 +30,7 @@ P1.6 (JSON Schema) ──┬──→ P2.9 (benchmark) ──→ Gate: recall >8
                     P3.2 (scoring) ──→ depends on P2.12 issues.json data
 ```
 
-**关键门控**: P2.9 必须在任何其他 P2 项之前完成。如果 recall <80%，暂停功能开发，先修复基础审计能力。
+**关键门控**: P2.9 (OSS benchmark) 是最高优先级 P2 项。分级阈值：Tier A recall >70% AND 平均 >60% → 通过；Tier A 50-70% OR 平均 40-60% → 暂停优化 prompt 后重测；Tier A <50% → 重新审视方案。见 ROADMAP §Ecosystem Validation Strategy。
 
 ---
 
@@ -91,29 +91,35 @@ docs/benchmark/
 
 ```
 Step 1: git checkout <buggy_commit> of OSS project
-Step 2: Identify spec documents (README, CONTRIBUTING, ARCHITECTURE.md, or equivalent)
-Step 3: Run Phase 0 Spec Quality Gate (likely Tier B — OSS projects rarely have formal specs)
+Step 2: Identify spec documents (formal spec, ADRs, ARCHITECTURE.md — see candidate list for Tier A/B classification)
+Step 3: Run Phase 0 Spec Quality Gate. Record tier (Tier A or B expected, see candidate pool)
 Step 4: Run Phase 1-4 Audit (single round, 5 subagents max)
 Step 5: Output AuditReport.json per P1.6 schema
-Step 6: Manual comparison: map each audit finding to known_bugs list → calculate TP/FP/FN
-Step 7: Write benchmark-result.json
+Step 6: Manual classification per TP standard:
+  - Exact match: finding file+line overlaps known bug location → TP
+  - Close match: finding file matches, same category, claim describes same root cause → TP (tag: "close")
+  - Related: same problem, different file/category → FP (do NOT count as TP — must be strict)
+  - No match to any known bug → FP
+Step 7: Write benchmark-result.json. If Tier B: include audit_mode: "structural"
 ```
 
 **兼容性**: 零冲突。P2.9 是纯数据采集操作，仅消费 P1.6 JSON Schema 输出，不修改任何代码。
 
-**可操作性**: 每个 OSS 项目 1 个独立 Skill 调用。操作者手动 checkout buggy commit → 运行审计 → 人工匹配发现到已知 bug。结果存入 benchmark-result.json。基准报告由主 Agent 汇总 3 个 `benchmark-result.json` 生成。
+**可操作性**: 每个 OSS 项目 1 个独立 Skill 调用。操作者手动 checkout buggy commit → 运行审计 → 按 TP 标准人工匹配发现到已知 bug。结果存入 benchmark-result.json。基准报告由主 Agent 汇总 3 个 `benchmark-result.json` 生成。B 档项目的 recall 与 A 档项目的 recall 在汇总报告中分列，不混合计算。
 
 **候选项目池**:
 ```
-高优先级（Python，有测试，有设计文档，有已知 CVE/bug history）:
-1. Pillow (PIL) — image processing library, CVE history well-documented
-2. Flask — micro web framework, architectural docs present, CVE history
-3. Requests — HTTP library, well-documented API contracts via docstrings
+Tier A (formal design spec exists — must include >=1):
+1. FastAPI — OpenAPI spec = machine-readable design doc, well-documented route contracts
+2. Django REST Framework — extensive BDFL docs, deprecation policy, serializer contracts
+3. SQLAlchemy — detailed architecture docs, session/connection lifecycle documented
 
-备选（不同语言，扩大覆盖面）:
-4. FastAPI — Python, OpenAPI spec = natural design doc
-5. Axios — JS/TS, well-tested HTTP client
-6. Serde — Rust, derive macros, trait-based contracts
+Tier B (design docs exist, no formal spec):
+4. Flask — extension pattern documentation, app context documented
+5. Requests — well-documented API contracts via docstrings (not a formal spec)
+6. Click — decorator-based CLI framework, command contracts documented
+
+Selection: 1 Tier A + 2 Tier B = 3 projects. Ensures benchmark covers both full audit and structural audit.
 ```
 
 ---
@@ -198,6 +204,24 @@ Total max subagents per module = 5 (core) + 2 (extension max) = 7.
 
 **可操作性**: 用户无需感知透镜概念即可使用默认全部审查。高级用户可 `--lens design_align,contract` 只审查设计对齐和契约。安全团队可 `--lens security` 追加安全扫描。
 
+**Lens Prompt Templates Overview / 透镜 Prompt 要点**（每个透镜的 SKILL.md prompt 差异 — 完整模板见实施时 SKILL.md §Lens System）:
+
+| Lens | Prompt Differentiator | Key Instructions |
+|---|---|---|
+| design_align | DIMENSION 1+2 only | "Compare function signatures, params, return types vs spec. Compare behavior (policies, thresholds, invariants) vs spec. Output only signature/behavior category findings." |
+| contract | DIMENSION 5 only | "Verify ADR invariants. Check dependency graph acyclicity via grep. Verify unique entry points. Output only contract category findings. MUST trace transitive dependencies (not just direct imports)." |
+| error_handle | DIMENSION 2 subset | "Scan for: bare except clauses, missing try/except on I/O calls, error propagation gaps, retry logic absence. Output behavior category findings — tag subcategory: error_handle." |
+| boundary | DIMENSION 2 subset | "Scan for: missing None checks, unvalidated inputs, range violations, type safety gaps. Output behavior category findings — tag subcategory: boundary." |
+| corrective | DIMENSION 3 only | "Cross-reference spec §corrective items list with code. For each corrective item: confirm presence in code via grep. Output corrective category findings." |
+
+**Lens Overlap Deduplication / 透镜重叠去重**: When aggregating lens results (Step 3), the main agent applies:
+1. Same evidence (file + overlapping line range) + same category → check claims
+2. Identical claims → keep one, annotate `detected_by: [lens_a, lens_b]`
+3. Different claims, same evidence → keep both (independent findings)
+4. One claim is subset of another → keep the more specific, annotate `detected_by: [both]`
+
+This is applied BEFORE score calculation (P3.2) to prevent double-counting. Implemented in `audit_lens.py` merge logic.
+
 ---
 
 ## 3. v0.4 Implementation / 实施细节
@@ -227,9 +251,12 @@ Algorithm:
      - Look for "## Module: <name>" sections
      - Look for file references: `src/<module>/**/*.py` patterns
   2. Resolve globs via pathlib.glob
-  3. If --base commit provided: git diff --name-only <base>..HEAD
-  4. Intersection of glob matches + git diff = audit scope
-  5. Cap at --max-files (default 50). If >50, sort by git churn and take top 50.
+  3. If --base commit provided: git diff --name-only <base>..HEAD → changed files
+     If --base NOT provided: skip git diff, use all glob-matched files as scope
+     (First-time audits have no base commit → full glob scope is correct)
+  4. If --base provided: Intersection of glob matches + git diff = audit scope
+     If --base NOT provided: glob matches = audit scope
+  5. Cap at --max-files (default 50). If >50, warn and pick top 50 by git churn.
 
 Usage:
   python scripts/audit_files.py --spec docs/spec.md --module bridge --repo . [--base HEAD~10] [--max-files 50]
@@ -247,13 +274,20 @@ Post-audit line-number verification.
 
 For each finding in an AuditReport JSON:
   1. Read the claimed file
-  2. Extract keywords from finding.claim (split by spaces, take words >3 chars)
-  3. Check if the claimed line content contains at least 1 keyword from the claim
+  2. Extract keywords from finding.claim:
+     - Identify specific tokens: variable names (snake_case/CamelCase), module names, error types
+     - Deprioritize generic keywords: "from", "import", "the", "and", "with", "for"
+     - Weight: specific identifiers ×3, generic words ×1
+  3. Check if the claimed line content contains at least 1 weighted keyword from tokenized claim
   4. If no keyword match at claimed line:
      - Search ±N lines (default 20) for the nearest semantic match
      - If found: correct the line number, flag as "auto_corrected"
      - If not found: flag as "unverified", confidence = low
   5. Output verified_report.json with line_number_confirmed: true/false per finding
+
+Accuracy note: v0.4 uses regex + keyword matching (estimated ~65-75% precision on line verification).
+Full AST-based verification (tree-sitter) is a v0.5+ option if keyword matching accuracy is insufficient.
+This script is a cheap pre-filter, not a replacement for human review of evidence pointers.
 
 Usage:
   python scripts/verify_lines.py --report audit-output.json --repo . [--search-radius 20]
@@ -372,6 +406,8 @@ def cohens_kappa(findings_a, findings_b, files):
 
 **可操作性**: `audit --inter-rater` 启用。输出中多一个 `inter_rater` 字段：`{"kappa_behavior": 0.72, "agreement_rate": 0.85}`。
 
+**Kappa granularity note / Kappa 粒度说明**: v0.4 实现在 **per-file** 粒度计算 agreement（两个 subagent 是否在同一文件报告 finding）。这是简化假设——per-finding 粒度（是否在同一代码位置发现同一问题）能在更高精度评估一致性，但需要额外证据对齐逻辑。per-file 粒度在 v0.4 范围内是实用的初版实现，per-finding 精度可升级到 v0.5+。
+
 ---
 
 ### 3.3 P2.11 — Iterative Audit
@@ -381,10 +417,11 @@ def cohens_kappa(findings_a, findings_b, files):
 
 #### 工程实现
 
-**SKILL.md 修改**: Step 2 与 Step 3 之间插入循环逻辑:
+**SKILL.md 修改**: Step 2 与 Step 3 之间插入循环逻辑。Human-in-the-loop：每轮 Agent 审计后暂
+停，等待人修复并提交，然后读取 git diff 确定增量范围继续。
 
 ```
-Step 2.x: Iterative Audit Loop (v0.4+)
+Step 2.x: Iterative Audit Loop (v0.4+, HUMAN-IN-THE-LOOP)
 
   Parameters:
     round = 1
@@ -394,16 +431,17 @@ Step 2.x: Iterative Audit Loop (v0.4+)
   
   Loop:
     while round <= max_rounds:
-      1. Run Step 2 (Audit) on current file scope
+      1. Run Step 2 (Audit) on current file scope           # Agent step
          - Round 1: full scope (all module files)
-         - Round N>1: only files modified in Round N-1 fixes (if incremental)
-      2. Run Step 3 (Aggregate) on current round findings
-      3. If stop condition met: break
+         - Round N>1: only files modified in Round N-1 (if incremental)
+      2. Run Step 3 (Aggregate) on current round findings   # Agent step
+      3. If stop condition met: break                       # Agent check
          - "p0_zero" → total P0 findings this round == 0
          - "p0_p1_zero" → total P0+P1 findings this round == 0
-      4. Fix all P0 findings (human does this, NOT automated)
-      5. Record changed files from fix commits
-      6. round += 1
+      4. Report P0 findings to user                         # Agent output
+      5. USER fixes all P0 findings + commits               # HUMAN step (Agent WAITS)
+      6. Agent reads git diff to determine changed files    # Agent step
+      7. round += 1
     
     If round > max_rounds and stop condition not met:
       Output warning: "Iteration stopped at max_rounds. {n_p0} P0, {n_p1} P1 remain."
@@ -437,7 +475,7 @@ Round 4-5: Same as round 1, but on incremental scope only
 - `audit --max_rounds 1` → 恢复单轮行为（v0.2 兼容模式）
 - `audit --max_rounds 5 --stop_condition p0_p1_zero` → 激进模式
 
-**成本**: 2 轮迭代 + 增量范围 = ~1.5× v0.2 的 Token 成本（增量范围大幅降低第二轮成本）。
+**成本**: 经验估算值（实际取决于 P0 密度）。无 P0 → 停止在第 1 轮，成本 = 1.0×。中等 P0 密度（5-8 个 P0，分散在 3-5 个文件）→ 2 轮，成本 ≈ 1.3-1.5×（增量范围缩小第二轮）。高 P0 密度（15+ P0，分散在 10+ 文件）→ 3+ 轮，成本 ≈ 1.8-2.5×。最大硬上限：5 轮。
 
 ---
 
@@ -467,7 +505,8 @@ Commands:
     → Transition an issue: open/in_progress/fixed/verified
 
   python scripts/issues_tracker.py verify --file <file_path> [--report <audit_output.json>]
-    → Re-audit the specified file only
+    → Re-audit the specified file against its spec section (from issues.json's spec_ref field)
+    → Each open issue in issues.json includes spec_ref for this purpose
     → Compare new findings with existing issues.json
     → If previously-open issue NOT in new findings → status → "verified"
     → If previously-open issue STILL in new findings → status remains, warn user
@@ -642,9 +681,12 @@ Usage:
     → If extends field present:
       - Resolve path (local file or git URL)
       - Load base guards
-      - Merge: project guards override base guards with same id
-      - If no id conflict: concatenate
+      - Merge by id: project guards with same id as base → project override base (WARNING logged)
+        - If same id but different description → WARNING: "G001 in project overrides base G001 with different description — verify this is intentional"
+        - If same id and same description → INFO: "G001: project confirms base guard"
+      - If no id conflict: concatenate (base guards first, then project guards)
     → Output: docs/audit/guards.effective.yml
+"""
 ```
 
 **extends 解析**:
@@ -751,16 +793,20 @@ audit-driven-development/
 
 ## 7. Milestone Plan / 里程碑计划
 
-### Milestone 1: v0.3 — Core Verification（业余 1 month）
+### Milestone 1: v0.3 — Core Verification（业余 1.5 months）
 
-| Week | Tasks | Deliverable |
-|---|---|---|
-| 1 | P2.9: Select 3 OSS candidates, write metadata.json templates | candidates.md finalized |
-| 2 | P2.9: Benchmark project 1 (e.g., Flask), calculate recall/precision | 1st benchmark-result.json |
-| 3 | P2.9: Benchmark projects 2-3 | 3 benchmark results |
-| 4 | P2.9: Write aggregated benchmark report. P2.8': Design lens SKILL.md section + typed subagent prompts | benchmark README + SKILL.md lens section |
+| Week | Tasks | Deliverable | Notes |
+|---|---|---|---|
+| 1 | P2.9: Select 3 OSS candidates (1 Tier A + 2 Tier B). Write metadata.json templates. Define TP/FP/FN classification standard in benchmark README. | candidates.md + TP标准文档 | — |
+| 2 | P2.9: Benchmark Tier A project (e.g., FastAPI), manual TP/FP classification. Calculate recall/precision. | 1st benchmark-result.json | ~3-4 hours |
+| 3 | P2.9: Benchmark Tier B projects (2×). | 3 benchmark results | ~3-4 hours each |
+| 4 | P2.9: Write aggregated benchmark report. **Gate check**: apply tiered thresholds (recall >70% Tier A, avg >60%). If pass: begin P2.8' design. If soft-fail: optimize prompts, retry. | benchmark README | Gate timing: Week 4, NOT after Week 3 |
+| 5-6 | P2.8': Design lens SKILL.md section + write 5 typed subagent prompts (see §2.2 Lens Prompt Templates). Implement audit_lens.py merge logic with deduplication. | SKILL.md lens section + audit_lens.py | Can start design in Week 4, code in Week 5-6 |
 
-**Gate check at end of M1**: If recall <80% across 3 projects → STOP. Fix audit prompts before proceeding.
+**Gate check at end of M1**: Apply tiered thresholds:
+- Gate pass (proceed to P2.8'): Recall >70% Tier A AND average >60%
+- Soft-fail (fix prompts, retry): Recall 50-70% Tier A or avg 40-60%
+- Hard-fail (re-scope): Recall <50% Tier A or avg <40%
 
 ### Milestone 2: v0.4 — Pragmatic Enhancement（业余 1 month）
 
@@ -780,7 +826,7 @@ audit-driven-development/
 | 11 | P3.3: Implement merge_guards.py. Integration testing | merge_guards.py |
 | 12 | Full integration test. Adapters sync. Release v0.5 | Tag v0.5 |
 
-**Total**: 12 weeks full-time ≈ **3–4 calendar months** at hobby-project pace.
+**Total**: ~14 weeks full-time ≈ **4–5 calendar months** at hobby-project pace. Each version is independently shippable.
 
 ---
 
@@ -788,8 +834,8 @@ audit-driven-development/
 
 | Risk | Likelihood | Impact | Mitigation |
 |---|---|---|---|
-| OSS benchmark recall <80% | 中 | 高 — 阻塞所有后续开发 | P2.9 作为门控。若失败，回退优化 subagent prompt 后再测 |
-| 透镜 Subagent 产出质量下降（专业但过窄） | 低 | 中 — 漏报增加 | 每个透镜 Subagent 仍覆盖 2 个紧耦合维度，不完全割裂 |
+| OSS benchmark recall below gate threshold | 中 | 高 — 阻塞所有后续开发 | P2.9 作为门控，分级阈值（70%/60%）。若 soft-fail：回退优化 subagent prompt 后重测。若 hard-fail：重新审视 subagent 方案在未知代码库审计中的可行性。 |
+| 透镜 Subagent 产出质量下降（专业但过窄） | 低 | 中 — 漏报增加 | 每个透镜 Subagent 仍覆盖 2 个紧耦合维度，不完全割裂。lens overlap dedup 防止重复发现影响 scoring |
 | 确定性脚本维护成本 | 低 | 低 — 脚本简单（<200 行/个） | 脚本纯 Python stdlib，无外部依赖 |
 | guards.yml 模板无人使用 | 中 | 低 — 不影响核心功能 | guards.yml 完全可选。模板提供默认值降低编写成本 |
 | 版本迭代过快，用户无所适从 | 低 | 低 | 每版本向后兼容。v0.2→v0.3 默认行为不变 |
