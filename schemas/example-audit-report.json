@@ -1,0 +1,154 @@
+{
+  "$schema": "../schemas/audit-finding.schema.json",
+  "audit_metadata": {
+    "project": "example-project",
+    "version": "v0.1.0",
+    "audit_date": "2026-07-09",
+    "baseline_commit": "abc1234",
+    "skill_version": "v0.2",
+    "auditor": "Trae + subagents"
+  },
+  "spec_quality_gate": {
+    "tier": "A",
+    "score": 4,
+    "dimension_scores": {
+      "testable_constraints": 1,
+      "module_mapping": 1,
+      "interface_contracts": 1,
+      "corrective_items": 0,
+      "cross_module_contracts": 1
+    },
+    "audit_mode": "full"
+  },
+  "module_results": [
+    {
+      "module_name": "bridge",
+      "dimension_coverage": [
+        { "dimension": "signature", "status": "pass", "evidence_of_check": "Read bridge/__init__.py L1-50, compared all public method signatures against spec.md §2.1-2.3" },
+        { "dimension": "behavior", "status": "fail", "evidence_of_check": "Read bridge/__init__.py L23-L45, bridge/worker.py L10-L80, checked against ADR-001 §3.1" },
+        { "dimension": "corrective", "status": "fail", "evidence_of_check": "Read all bridge/ files, checked against spec.md §9 corrective items list" },
+        { "dimension": "blind_spot", "status": "fail", "evidence_of_check": "Read tests/test_bridge.py, identified assertion tautologies at L45-L48" },
+        { "dimension": "contract", "status": "fail", "evidence_of_check": "Ran grep for forbidden imports, AST analysis of transitive dependencies" }
+      ],
+      "findings": [
+        {
+          "id": "BRIDGE-P0-1",
+          "severity": "P0",
+          "category": "contract",
+          "evidence": { "file": "bridge/__init__.py", "line_start": 23, "line_end": 23 },
+          "spec_ref": "ADR-001 §3.1",
+          "claim": "bridge/__init__.py imports from factor_miner.memory, violating ADR-001 dependency graph invariant (bridge must not depend on memory)",
+          "confidence": "high",
+          "fix_cost": "1-line",
+          "reasoning_chain": {
+            "read": ["bridge/__init__.py L1-50", "ADR-001 §3.1"],
+            "checked": "DAG acyclicity: bridge must not import from memory",
+            "found": "L23 `from factor_miner.memory import X` violates ADR-001 §3.1",
+            "confidence_rationale": "grep + AST both confirm the import exists and is not TYPE_CHECKING-guarded"
+          },
+          "fix_suggestion": "Use TYPE_CHECKING guard or restructure to remove the direct dependency"
+        },
+        {
+          "id": "BRIDGE-P1-1",
+          "severity": "P1",
+          "category": "corrective",
+          "evidence": { "file": "bridge/worker.py", "line_start": 45, "line_end": 60 },
+          "spec_ref": "spec.md §9.1",
+          "claim": "Spec corrective item 9.1 (first-mover bias protection) is not implemented — cutoff threshold check is missing from worker.evaluate()",
+          "confidence": "medium",
+          "fix_cost": "<10-line",
+          "reasoning_chain": {
+            "read": ["bridge/worker.py L40-L80", "spec.md §9.1"],
+            "checked": "Does worker.evaluate() apply a cutoff threshold per spec §9.1?",
+            "found": "No cutoff threshold logic present in evaluate(). Spec §9.1 requires `if delta < cutoff: return None`",
+            "confidence_rationale": "grep confirmed no 'cutoff' keyword in bridge/worker.py"
+          }
+        },
+        {
+          "id": "BRIDGE-P1-2",
+          "severity": "P1",
+          "category": "blind_spot",
+          "evidence": { "file": "tests/test_bridge.py", "line_start": 45, "line_end": 48 },
+          "spec_ref": "spec.md §2.2",
+          "claim": "Test assertion at L45-48 is a tautology (`assert result or not result`), providing no actual coverage of bridge evaluation outcomes",
+          "confidence": "high",
+          "fix_cost": "<10-line"
+        }
+      ],
+      "score": "B",
+      "skipped_dimensions": []
+    },
+    {
+      "module_name": "memory",
+      "dimension_coverage": [
+        { "dimension": "signature", "status": "pass", "evidence_of_check": "Read memory/*.py, all public methods match spec.md §3.1-3.5" },
+        { "dimension": "behavior", "status": "pass", "evidence_of_check": "Read memory/store.py L10-L90, memory/query.py L5-L40, checked invariants" },
+        { "dimension": "corrective", "status": "pass", "evidence_of_check": "Read all memory/ files, spec §9.3-9.5 corrective items all confirmed implemented" },
+        { "dimension": "blind_spot", "status": "fail", "evidence_of_check": "Read tests/test_memory.py, found no test for schema_version field" },
+        { "dimension": "contract", "status": "pass", "evidence_of_check": "grep confirmed only orchestrator calls memory.write_*()" }
+      ],
+      "findings": [
+        {
+          "id": "MEM-P1-1",
+          "severity": "P1",
+          "category": "blind_spot",
+          "evidence": { "file": "tests/test_memory.py", "line_start": 1, "line_end": 120 },
+          "spec_ref": "spec.md §9.10",
+          "claim": "No test for schema_version field in P_succRecord, though spec §9.10 mandates version field for future compatibility",
+          "confidence": "high",
+          "fix_cost": "<10-line"
+        }
+      ],
+      "score": "A-",
+      "skipped_dimensions": []
+    }
+  ],
+  "cross_module_results": [
+    {
+      "module_name": "XMOD-contracts",
+      "dimension_coverage": [
+        { "dimension": "signature", "status": "pass", "evidence_of_check": "Cross-module interface signatures all consistent" },
+        { "dimension": "behavior", "status": "NA", "evidence_of_check": "N/A for cross-module contract audit" },
+        { "dimension": "corrective", "status": "NA", "evidence_of_check": "N/A for cross-module contract audit" },
+        { "dimension": "blind_spot", "status": "NA", "evidence_of_check": "N/A for cross-module contract audit" },
+        { "dimension": "contract", "status": "fail", "evidence_of_check": "Checked all ADR invariants, dependency graphs, unique entry points" }
+      ],
+      "findings": [
+        {
+          "id": "XMOD-P0-1",
+          "severity": "P0",
+          "category": "contract",
+          "evidence": { "file": "orchestrator/main.py", "line_start": 88, "line_end": 88 },
+          "spec_ref": "ADR-001 §4.2",
+          "claim": "orchestrator/main.py L88 calls registry.get() directly instead of through DSL interpreter, violating ADR-001 unique entry point invariant",
+          "confidence": "high",
+          "fix_cost": "refactor",
+          "reasoning_chain": {
+            "read": ["orchestrator/main.py L80-L100", "ADR-001 §4.2"],
+            "checked": "Only DSL interpreter may call registry.get()",
+            "found": "L88 `result = registry.get(op_name)` is a direct call bypassing DSL",
+            "confidence_rationale": "grep confirmed no DSL wrapper around this call"
+          },
+          "fix_suggestion": "Route through DSL interpreter: `result = dsl.evaluate(ast_node)` instead of direct registry access"
+        }
+      ],
+      "score": "C+",
+      "skipped_dimensions": [
+        { "dimension": "behavior", "reason": "Cross-module contract audit focuses on invariants, not per-module behavior" },
+        { "dimension": "corrective", "reason": "Cross-module contract audit focuses on invariants, not per-module corrective items" },
+        { "dimension": "blind_spot", "reason": "Cross-module contract audit focuses on invariants, not per-module test coverage" }
+      ]
+    }
+  ],
+  "summary": {
+    "total_findings": 4,
+    "by_severity": { "P0": 2, "P1": 2, "P2": 0, "P3": 0 },
+    "by_category": { "signature": 0, "behavior": 0, "corrective": 1, "blind_spot": 1, "contract": 2 },
+    "module_scores": { "bridge": "B", "memory": "A-", "XMOD-contracts": "C+" },
+    "fix_priority_matrix": {
+      "tier_1": ["BRIDGE-P0-1", "XMOD-P0-1"],
+      "tier_2": ["BRIDGE-P1-1", "BRIDGE-P1-2", "MEM-P1-1"],
+      "tier_3": []
+    }
+  }
+}

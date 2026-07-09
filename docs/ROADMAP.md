@@ -106,13 +106,21 @@ Actions that can be completed within days, addressing the most critical gaps.
 
 ### P1.4 — Reasoning Chain Schema
 
-Subagent output must include structured reasoning chain:
+Subagent output must include structured reasoning chain (schema-ized from Appendix A free-text format):
+
+Defined in `schemas/audit-finding.schema.json` §ReasoningChain:
+```json
+{
+  "read": ["bridge/__init__.py L1-50", "ADR-001 §3.1"],
+  "checked": "DAG acyclic, bridge does not import memory",
+  "found": "L23 `from factor_miner.memory import X` — violates ADR-001 §3.1",
+  "confidence_rationale": "grep evidence + AST evidence"
+}
 ```
-Read: bridge/__init__.py L1-50, ADR-001 §3.1
-Checked: DAG acyclic, bridge does not import memory
-Found: L23 `from factor_miner.memory import X` — violates ADR-001 §3.1
-Confidence: high (grep evidence + AST evidence)
-```
+
+Optional in v0.2, mandatory in v0.3+.
+
+**Status / 状态**: ✅ Implemented in v0.2 (see `schemas/audit-finding.schema.json` §ReasoningChain, SKILL.md Appendix A REASONING CHAIN section)
 
 ### P1.5 — Spec Mining Fallback
 
@@ -122,23 +130,19 @@ When spec is missing (Phase 0 tier C), reverse-mine implicit constraints from:
 - Test assertions → behavior contracts
 - ADRs (if any) → invariants
 
-Output `implicit_spec.md`, then proceed to normal audit.
+Output `implicit_spec.md`, re-enter Phase 0, proceed to structural audit if score ≥ 2.
+
+**Status / 状态**: ✅ Implemented in v0.2 (see SKILL.md §Spec Mining Fallback)
 
 ### P1.6 — Structured Audit Protocol (JSON Schema)
 
-```python
-class AuditFinding(BaseModel):
-    severity: Literal["P0","P1","P2","P3"]
-    category: Literal["signature","behavior","corrective","blind_spot","contract"]
-    evidence_file: str
-    evidence_line: tuple[int, int]
-    spec_ref: str  # "ADR-001 §3.1" or "spec.md §2.3"
-    claim: str
-    confidence: float
-    fix_cost: Literal["1-line","<10-line","refactor"]
-```
+Canonical schema: `schemas/audit-finding.schema.json` (JSON Schema Draft-07).
+Six entity types defined: AuditFinding, EvidencePointer, ReasoningChain, DimensionStatus, ModuleAuditResult, AuditReport.
+Example: `schemas/example-audit-report.json`.
 
 Machine-aggregatable, comparable, benchmarkable.
+
+**Status / 状态**: ✅ Implemented in v0.2 (see `schemas/audit-finding.schema.json`, SKILL.md Appendix B)
 
 ---
 
@@ -196,4 +200,5 @@ Star 数是滞后指标，**可复现的检出率**是领先指标。
 
 | Date / 日期 | Version / 版本 | Change / 变更 |
 |---|---|---|
+| 2026-07-09 | v0.2 | P1.4/P1.5/P1.6 implemented. ReasoningChain schema, Spec Mining Fallback module, Structured Audit Protocol (JSON Schema + Appendix B). Dogfooding self-audit case log added. / P1.4/P1.5/P1.6 实施。推理链 schema、Spec 反向挖掘模块、结构化审计协议（JSON Schema + Appendix B）。Dogfooding 自审计 case log 添加。 |
 | 2026-07-06 | v0.1.1 | Initial roadmap created. P0.1/P0.2/P0.3 implemented. / 初始路线图创建。P0.1/P0.2/P0.3 实施。 |

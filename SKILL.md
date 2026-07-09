@@ -9,7 +9,7 @@ description: "Multi-dimensional audit of code vs design spec alignment. Produces
 
 After implementation, verify code matches design. Find gaps. Fix blockers. Prevent regression.
 
-**Core principle:** Implementation完成 ≠ 设计落地。审查是"代码与设计文档对齐"的独立环节，与"代码质量审查"（code-review-excellence）正交。
+**Core principle:** 实施完成 ≠ 设计落地。审查是"代码与设计文档对齐"的独立环节，与"代码质量审查"（code-review-excellence）正交。
 
 **与 executing-plans / test-driven-development 的关系**：
 - executing-plans 覆盖"如何实施"
@@ -72,7 +72,7 @@ Score each spec doc against 5 dimensions (0 or 1 point each, max 5):
 |---|---|---|---|
 | **A** | 4-5 | **Full audit** (Phases 1-4) | Proceed to Phase 1 / 进入 Phase 1 |
 | **B** | 2-3 | **Structural audit** | Downgrade: audit code vs general engineering principles (DAG acyclic, single entry, error handling complete). Flag "spec gaps prevent full audit" in report. / 降级：审查代码 vs 通用工程原则（依赖图无环、单一入口、错误处理完备）。报告中标注"spec 缺口导致无法完整审计"。 |
-| **C** | 0-1 | **Spec Mining** (v0.2) or **Refuse** | v0.2: invoke Spec Mining Fallback (P1.5). v0.1.1: refuse audit with reason "spec quality too low, cannot audit". / v0.2：调用 Spec Mining Fallback (P1.5)。v0.1.1：拒绝审计，理由"spec 质量过低，无法审计"。 |
+| **C** | 0-1 | **Spec Mining** | Invoke Spec Mining Fallback (P1.5) to reverse-mine implicit spec from code. If mining fails (no code or insufficient signals), refuse audit with reason. See §Spec Mining Fallback below. / 调用 Spec Mining Fallback (P1.5)，从代码中反向挖掘隐式 spec。若挖掘失败（无代码或信号不足），拒绝审计。见下方 §Spec Mining Fallback。 |
 
 ### Why This Gate Matters / 为何需要此门
 
@@ -85,6 +85,73 @@ Without Phase 0, the skill gives false A+ scores when the spec is trivially sati
 **规则**：若 Phase 0 档位为 B 或 C，审计报告必须声明档位及其限制。B 档审计不能给出 A+ 评分（上限为 B+）。
 
 
+### Spec Mining Fallback / Spec 反向挖掘
+
+**Added in v0.2 (P1.5)** in response to Limitation 1 (skill relies on spec quality). When Phase 0 yields Tier C (score 0-1), the skill reverse-mines implicit constraints from the codebase instead of refusing audit outright.
+
+**v0.2 新增（P1.5）**，回应局限 1（skill 依赖 spec 质量）。当 Phase 0 判定为 C 档时，skill 从代码中反向挖掘隐式约束，而非直接拒绝审计。
+
+#### Mining Sources / 挖掘来源
+
+| # | Source / 来源 | Command / 命令 | What It Reveals / 揭示内容 |
+|---|---|---|---|
+| 1 | Git history / Git 历史 | `git log --oneline --grep="fix\|bug\|violate\|regression" -20` | Historical pitfalls = implicit spec. Bugs that were fixed reveal constraints that were violated. 历史缺陷 = 隐式 spec。已修复的 bug 揭示了曾被违反的约束。 |
+| 2 | Function signatures + docstrings / 函数签名 + 文档字符串 | Read all public function signatures, return types, docstrings | Interface contracts. What the code promises to callers. 接口契约。代码向调用者承诺了什么。 |
+| 3 | Test assertions / 测试断言 | Read all test files, extract assertions | Behavior contracts. What tests assert as expected behavior. 行为契约。测试断言了什么作为预期行为。 |
+| 4 | ADRs (if any) / ADR（如有） | Read all ADR files | Invariants. Even weak specs may have architectural decisions recorded. 不变式。即使是薄弱的 spec 也可能记录了架构决策。 |
+
+#### Mining Process / 挖掘流程
+
+**Step 1: Collect Signals / 收集信号**
+Run all four mining sources in parallel. Each source produces a list of candidate constraints.
+
+**Step 2: Deduplicate + Prioritize / 去重 + 排序**
+Merge candidates. Remove duplicates. Sort by:
+1. Constraints mentioned in ≥2 sources (strong signal)
+2. Constraints from git history (proven pain points)
+3. Constraints from test assertions (verified expectations)
+4. Constraints from signatures/docstrings (declared intent)
+
+**Step 3: Draft implicit_spec.md / 起草隐式 spec**
+Write `implicit_spec.md` with the mined constraints, organized by module:
+
+```markdown
+# Implicit Spec (auto-mined) / 隐式 Spec（自动挖掘）
+
+**Project / 项目**: <project>
+**Mined from / 挖掘来源**: git log, function signatures, test assertions, ADRs
+**Date / 日期**: YYYY-MM-DD
+
+## Module: <name>
+
+### Constraints from Git History / 来自 Git 历史的约束
+- `<commit_hash>`: <bug description> → constraint: <derived rule>
+
+### Interface Contracts / 接口契约
+- `<function>`: <signature> → contract: <derived rule>
+
+### Behavior Contracts (from tests) / 行为契约（来自测试）
+- `<test>`: <assertion> → contract: <derived rule>
+
+### Invariants (from ADRs) / 不变式（来自 ADR）
+- <ADR reference>: <invariant>
+```
+
+**Step 4: Re-enter Phase 0 / 重新进入 Phase 0**
+Treat `implicit_spec.md` as the spec. Re-score Phase 0 dimensions. If score ≥ 2 (Tier B), proceed to structural audit. If still Tier C (score 0-1), refuse audit with reason "insufficient signals to mine implicit spec — no git history, no tests, no docstrings".
+
+**Step 5: Flag as Mined / 标注为挖掘**
+The audit report MUST flag that the spec was mined, not authored. The audit mode in the JSON output should be `"mining"` (see Appendix B `spec_quality_gate.audit_mode`).
+
+#### Limitations / 局限
+
+- **Signal dependence / 依赖信号**: Projects with no git history, no tests, no docstrings cannot be mined. Refuse audit.
+- **Quality ceiling / 质量上限**: Mined specs are always weaker than authored specs. The audit score for mined-spec audits is capped at B+ (same as Tier B structural audits).
+- **False patterns / 假模式**: Git history may contain incorrect "fixes" that encode anti-patterns. Human review of mined constraints is recommended but not required — flag as low-confidence when ≥2 sources disagree.
+
+Mined spec 始终弱于显式 spec。挖掘 spec 的审计评分上限为 B+（与 Tier B 结构审计相同）。Git 历史可能包含错误的"修复"从而编码反模式。建议人工复核挖掘出的约束。
+
+---
 ## The Audit Framework: 4 Phases
 
 ```dot
@@ -518,6 +585,13 @@ DIMENSION 5: Cross-Module Contracts / 跨模块契约
 - For each violation: record file:line + ADR section
 
 OUTPUT CONTRACT / 输出契约 (MANDATORY / 强制格式):
+
+**v0.2+**: Output MUST be valid JSON conforming to `schemas/audit-finding.schema.json` (see Appendix B). The schema enforces:
+  - ModuleAuditResult with all 5 dimension_coverage entries
+  - Each AuditFinding with id, severity, category, evidence, spec_ref, claim, confidence, fix_cost
+  - Optional reasoning_chain and fix_suggestion per finding
+
+**v0.1.1 (legacy free-text format — still accepted but discouraged)**:
 For EACH finding:
   - severity: P0 | P1 | P2 | P3
   - category: signature | behavior | corrective | blind_spot | contract
@@ -537,12 +611,17 @@ EXHAUSTIVENESS RULE / 完备性规则:
   必须穷尽检查所有 P1 类别。不得在发现 P0 后略过 P1。
 - If you did not read a file, say so explicitly. Do not infer.
 
-REASONING CHAIN / 推理链 (v0.2 will schema-ize this):
-For each finding, briefly state:
-  Read: <what files/sections you read>
-  Checked: <what invariant/rule you verified>
-  Found: <what mismatch you detected>
-  Confidence: <why you are confident>
+REASONING CHAIN / 推理链:
+For each finding, include a structured reasoning chain (see `schemas/audit-finding.schema.json` §ReasoningChain). In v0.2 this is optional but strongly recommended; in v0.3+ (P1.4 completion) it becomes mandatory.
+  read: [<list of files/sections read>]
+  checked: <what invariant/rule you verified>
+  found: <what mismatch you detected>
+  confidence_rationale: <why you are confident in the confidence level>
+Example:
+  Read: bridge/__init__.py L1-50, ADR-001 §3.1
+  Checked: DAG acyclic, bridge does not import memory
+  Found: L23 `from factor_miner.memory import X` — violates ADR-001 §3.1
+  Confidence: high (grep evidence + AST evidence)
 
 DO NOT:
 - Report findings without evidence pointers
@@ -622,4 +701,100 @@ skill 操作者（派发 subagent 的主 agent）应：
 
 3. **Track false positives / 跟踪误报**: Record FPs in `docs/audit-log/<case>.md` §5. Over time, FP rate per subagent configuration becomes measurable.
    在 `docs/audit-log/<case>.md` §5 记录误报。随时间推移，每个 subagent 配置的误报率变得可测量。
+
+4. **Future (v0.3+) / 未来（v0.3+）**: Inter-rater reliability via dual subagent voting (P2.7) + typed subagents — ADR Guardian, Signature Checker, Blind Spot Hunter, Corrective Tracker (P2.8). See `docs/ROADMAP.md` P2.7/P2.8.
+
+---
+---
+
+## Appendix B: Structured Audit Protocol / 结构化审计协议
+
+**Added in v0.2 (P1.6)** in response to Limitations 2+3 (subagent output is unstructured, no machine-comparable baseline). See `docs/ROADMAP.md` P1.6.
+
+**v0.2 新增（P1.6）**，回应局限 2+3（subagent 输出无结构，无机器可比基准）。见 `docs/ROADMAP.md` P1.6。
+
+### Overview / 概述
+
+All subagent outputs MUST conform to the JSON schema defined in [`schemas/audit-finding.schema.json`](schemas/audit-finding.schema.json). This replaces the free-text OUTPUT CONTRACT in Appendix A Template 1.
+
+所有 subagent 输出必须符合 [`schemas/audit-finding.schema.json`](schemas/audit-finding.schema.json) 中定义的 JSON schema。这取代了 Appendix A Template 1 中的自由文本 OUTPUT CONTRACT。
+
+**Why structured output / 为何需要结构化输出**:
+- Machine-aggregatable findings → measurable recall/precision (Limitation 3)
+- Comparable subagent outputs → inter-rater reliability possible (P2.7)
+- Traceable reasoning → false positive/false negative analysis (Limitation 2)
+- Benchmarkable → OSS pilot audit results (P2.9)
+
+### Schema Location / Schema 位置
+
+```
+schemas/
+├── audit-finding.schema.json    (canonical JSON Schema, Draft-07)
+└── example-audit-report.json    (example showing schema in use)
+```
+
+### Core Model: AuditFinding / 核心模型
+
+The minimum unit of an audit. Every finding from any subagent MUST include:
+
+审计的最小单元。任何 subagent 的每个发现都必须包含：
+
+| Field / 字段 | Type / 类型 | Description / 描述 |
+|---|---|---|
+| `id` | string (e.g., `BRIDGE-P0-1`) | Unique finding ID within this audit |
+| `severity` | `P0` \| `P1` \| `P2` \| `P3` | Impact severity |
+| `category` | `signature` \| `behavior` \| `corrective` \| `blind_spot` \| `contract` | Finding category |
+| `evidence` | EvidencePointer `{file, line_start, line_end}` | MANDATORY. Where in code the issue exists |
+| `spec_ref` | string (e.g., `ADR-001 §3.1`) | MANDATORY. Which spec section is violated |
+| `claim` | string | One-sentence description of the mismatch |
+| `confidence` | `high` \| `medium` \| `low` | Evidence quality |
+| `fix_cost` | `1-line` \| `<10-line` \| `refactor` | Estimated fix effort |
+| `reasoning_chain` | ReasoningChain `{read[], checked, found, confidence_rationale}` | Optional in v0.2, mandatory in v0.3+ (P1.4) |
+| `fix_suggestion` | string | Optional. Concrete fix approach |
+
+### Aggregation Model: ModuleAuditResult / 聚合模型
+
+Each subagent produces one `ModuleAuditResult`:
+
+| Field / 字段 | Type / 类型 | Description / 描述 |
+|---|---|---|
+| `module_name` | string | Module or dimension name |
+| `dimension_coverage` | DimensionStatus[5] | MUST cover all 5 dimensions (pass/fail/NA + evidence_of_check) |
+| `findings` | AuditFinding[] | All findings for this module |
+| `score` | `A+`..`F` | Module-level score per scoring system |
+| `skipped_dimensions` | `{dimension, reason}[]` | MUST be empty or explained |
+
+### Report Model: AuditReport / 报告模型
+
+Complete audit report aggregating all modules:
+
+| Field / 字段 | Type / 类型 | Description / 描述 |
+|---|---|---|
+| `audit_metadata` | `{project, version, audit_date, baseline_commit, skill_version, auditor}` | Audit identification |
+| `spec_quality_gate` | `{tier, score, dimension_scores, audit_mode}` | Phase 0 result |
+| `module_results` | ModuleAuditResult[] | One per code module |
+| `cross_module_results` | ModuleAuditResult[] | Cross-module contract audit |
+| `summary` | `{total_findings, by_severity, by_category, module_scores, fix_priority_matrix}` | Aggregated summary |
+
+### Relationship to Appendix A / 与 Appendix A 的关系
+
+- **Appendix A (Templates 1+2)** defines the _subagent prompt_ (INPUT). The prompt is unchanged.
+- **Appendix B (this section)** defines the _subagent output format_ (OUTPUT). The OUTPUT CONTRACT in Template 1 is now: "Output MUST be valid JSON conforming to `schemas/audit-finding.schema.json`".
+
+**Appendix A（Template 1+2）**定义了 _subagent prompt_（输入），prompt 不变。
+**Appendix B（本节）**定义了 _subagent output format_（输出）。Template 1 中的 OUTPUT CONTRACT 现在为："输出必须是符合 `schemas/audit-finding.schema.json` 的有效 JSON"。
+
+### Integration with P1.4 / 与 P1.4 的集成
+
+The `ReasoningChain` object in the schema is the P1.4 deliverable. In v0.2 it is optional (`reasoning_chain` field in AuditFinding). In v0.3+ (P1.4 completion), it will become mandatory.
+
+Schema 中的 `ReasoningChain` 对象即 P1.4 交付物。v0.2 中为可选（AuditFinding 中的 `reasoning_chain` 字段）。v0.3+（P1.4 完成时）变为必填。
+
+### Integration with P2.7 / 与 P2.7 的集成
+
+The structured output enables dual-subagent voting: two subagents audit the same module, both output `ModuleAuditResult` JSON. The skill operator compares:
+- Agreement rate = `|intersection(findings_a, findings_b)| / |union(findings_a, findings_b)|`
+- Cohen's kappa calculated on finding presence per dimension
+
+结构化输出使双 subagent 投票成为可能：两个 subagent 审计同一模块，均输出 `ModuleAuditResult` JSON。skill 操作者比较共识率 = finding ID 交集/并集，按维度计算 Cohen's kappa。
 

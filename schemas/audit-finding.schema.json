@@ -1,0 +1,330 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "$id": "https://github.com/StormstoutLau/audit-driven-development/schemas/audit-finding.schema.json",
+  "title": "Audit Finding Schema",
+  "description": "Structured audit protocol for audit-driven-development skill. Single finding schema that all subagent outputs MUST conform to. Added in v0.2 (P1.6).",
+  "definitions": {
+    "Severity": {
+      "type": "string",
+      "enum": ["P0", "P1", "P2", "P3"],
+      "description": "P0=Blocker (core function broken, invariant violated, data loss), P1=Critical (policy failure, serious bug, test blind spot), P2=Major (behavior deviation, performance, doc inconsistency), P3=Minor (naming, comments, style)"
+    },
+    "Category": {
+      "type": "string",
+      "enum": ["signature", "behavior", "corrective", "blind_spot", "contract"],
+      "description": "signature=method name/params/return type vs spec, behavior=policies/thresholds/invariants vs spec, corrective=spec fix items not reflected in code, blind_spot=test gaps (tautologies, single-file inspection, design constraints without tests), contract=cross-module contract violations (ADR invariants, dependency graph, unique entry points)"
+    },
+    "FixCost": {
+      "type": "string",
+      "enum": ["1-line", "<10-line", "refactor"],
+      "description": "Estimated fix effort: 1-line (trivial fix), <10-line (small change), refactor (structural change)"
+    },
+    "ConfidenceLevel": {
+      "type": "string",
+      "enum": ["high", "medium", "low"],
+      "description": "high=grep+AST+manual verification, medium=grep or AST evidence only, low=inference-based (may be FP)"
+    },
+    "EvidencePointer": {
+      "type": "object",
+      "description": "MANDATORY: No finding without evidence pointer. Must have actually read the referenced lines.",
+      "required": ["file", "line_start", "line_end"],
+      "properties": {
+        "file": {
+          "type": "string",
+          "description": "Absolute or repo-relative path to the file containing evidence"
+        },
+        "line_start": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "First line of evidence (1-based)"
+        },
+        "line_end": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Last line of evidence (1-based, same as line_start for single-line evidence)"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReasoningChain": {
+      "type": "object",
+      "description": "How the subagent reached this finding. Schema-ized from SKILL.md Appendix A reasoning chain format. Added in P1.4.",
+      "required": ["read", "checked", "found"],
+      "properties": {
+        "read": {
+          "type": "array",
+          "description": "What files/sections were read to reach this finding",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "checked": {
+          "type": "string",
+          "description": "What invariant/rule was verified",
+          "minLength": 1
+        },
+        "found": {
+          "type": "string",
+          "description": "What mismatch was detected",
+          "minLength": 1
+        },
+        "confidence_rationale": {
+          "type": "string",
+          "description": "Why this confidence level (e.g., 'grep + AST both confirm')",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "DimensionStatus": {
+      "type": "object",
+      "description": "Per-dimension status report (even if no findings in that dimension)",
+      "required": ["dimension", "status"],
+      "properties": {
+        "dimension": {
+          "$ref": "#/definitions/Category"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pass", "fail", "NA"],
+          "description": "pass=checked and found no issues, fail=found issues, NA=dimension not applicable to this module"
+        },
+        "evidence_of_check": {
+          "type": "string",
+          "description": "What was read to verify this dimension (MANDATORY even for 'pass' — prevents skimming)"
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuditFinding": {
+      "type": "object",
+      "description": "A single audit finding. This is the core unit of the structured audit protocol.",
+      "required": ["id", "severity", "category", "evidence", "spec_ref", "claim", "confidence", "fix_cost"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique finding ID within this audit (e.g., 'MODULE-P0-1', 'XMOD-P1-2')",
+          "pattern": "^[A-Z]+-(P[0-3])-[0-9]+$"
+        },
+        "severity": {
+          "$ref": "#/definitions/Severity"
+        },
+        "category": {
+          "$ref": "#/definitions/Category"
+        },
+        "evidence": {
+          "$ref": "#/definitions/EvidencePointer"
+        },
+        "spec_ref": {
+          "type": "string",
+          "description": "Specific spec document and section reference (e.g., 'ADR-001 §3.1', 'spec.md §2.3')",
+          "minLength": 1
+        },
+        "claim": {
+          "type": "string",
+          "description": "One-sentence description of the mismatch between spec and code",
+          "minLength": 1
+        },
+        "confidence": {
+          "$ref": "#/definitions/ConfidenceLevel"
+        },
+        "fix_cost": {
+          "$ref": "#/definitions/FixCost"
+        },
+        "reasoning_chain": {
+          "$ref": "#/definitions/ReasoningChain",
+          "description": "Optional in v0.2 (P1.4 will make mandatory). Structured reasoning trace."
+        },
+        "fix_suggestion": {
+          "type": "string",
+          "description": "Concrete fix approach (1-3 sentences). Optional but recommended."
+        }
+      },
+      "additionalProperties": false
+    },
+    "ModuleAuditResult": {
+      "type": "object",
+      "description": "Aggregate audit result for a single module (or cross-module contract dimension). Output of one subagent.",
+      "required": ["module_name", "dimension_coverage", "findings"],
+      "properties": {
+        "module_name": {
+          "type": "string",
+          "description": "Module or dimension name (e.g., 'bridge', 'XMOD-contracts')"
+        },
+        "dimension_coverage": {
+          "type": "array",
+          "description": "Per-dimension status for all 5 dimensions. MUST include all 5, even if some are pass/NA.",
+          "items": {
+            "$ref": "#/definitions/DimensionStatus"
+          },
+          "minItems": 5,
+          "maxItems": 5
+        },
+        "findings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AuditFinding"
+          }
+        },
+        "score": {
+          "type": "string",
+          "enum": ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "F"],
+          "description": "Module-level score per SKILL.md scoring system"
+        },
+        "skipped_dimensions": {
+          "type": "array",
+          "description": "Dimensions that were NOT checked (if any). MUST be empty or explained.",
+          "items": {
+            "type": "object",
+            "required": ["dimension", "reason"],
+            "properties": {
+              "dimension": {
+                "$ref": "#/definitions/Category"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "AuditReport": {
+      "type": "object",
+      "description": "Complete audit report aggregating all module results and cross-module contract results.",
+      "required": ["audit_metadata", "spec_quality_gate", "module_results", "cross_module_results", "summary"],
+      "properties": {
+        "audit_metadata": {
+          "type": "object",
+          "required": ["project", "version", "audit_date", "baseline_commit", "skill_version"],
+          "properties": {
+            "project": { "type": "string" },
+            "version": { "type": "string" },
+            "audit_date": { "type": "string", "format": "date" },
+            "baseline_commit": { "type": "string", "minLength": 7 },
+            "skill_version": { "type": "string" },
+            "auditor": { "type": "string" }
+          },
+          "additionalProperties": false
+        },
+        "spec_quality_gate": {
+          "type": "object",
+          "description": "Phase 0 Spec Quality Gate result",
+          "required": ["tier", "score", "dimension_scores"],
+          "properties": {
+            "tier": {
+              "type": "string",
+              "enum": ["A", "B", "C"]
+            },
+            "score": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5
+            },
+            "dimension_scores": {
+              "type": "object",
+              "properties": {
+                "testable_constraints": { "type": "integer", "minimum": 0, "maximum": 1 },
+                "module_mapping": { "type": "integer", "minimum": 0, "maximum": 1 },
+                "interface_contracts": { "type": "integer", "minimum": 0, "maximum": 1 },
+                "corrective_items": { "type": "integer", "minimum": 0, "maximum": 1 },
+                "cross_module_contracts": { "type": "integer", "minimum": 0, "maximum": 1 }
+              },
+              "additionalProperties": false
+            },
+            "audit_mode": {
+              "type": "string",
+              "enum": ["full", "structural", "mining", "refused"]
+            }
+          },
+          "additionalProperties": false
+        },
+        "module_results": {
+          "type": "array",
+          "description": "One entry per code module audited",
+          "items": {
+            "$ref": "#/definitions/ModuleAuditResult"
+          }
+        },
+        "cross_module_results": {
+          "type": "array",
+          "description": "Cross-module contract audit results (typically 1 entry)",
+          "items": {
+            "$ref": "#/definitions/ModuleAuditResult"
+          }
+        },
+        "summary": {
+          "type": "object",
+          "required": ["total_findings", "by_severity", "by_category", "module_scores", "fix_priority_matrix"],
+          "properties": {
+            "total_findings": {
+              "type": "integer"
+            },
+            "by_severity": {
+              "type": "object",
+              "properties": {
+                "P0": { "type": "integer" },
+                "P1": { "type": "integer" },
+                "P2": { "type": "integer" },
+                "P3": { "type": "integer" }
+              },
+              "required": ["P0", "P1", "P2", "P3"],
+              "additionalProperties": false
+            },
+            "by_category": {
+              "type": "object",
+              "properties": {
+                "signature": { "type": "integer" },
+                "behavior": { "type": "integer" },
+                "corrective": { "type": "integer" },
+                "blind_spot": { "type": "integer" },
+                "contract": { "type": "integer" }
+              },
+              "required": ["signature", "behavior", "corrective", "blind_spot", "contract"],
+              "additionalProperties": false
+            },
+            "module_scores": {
+              "type": "object",
+              "description": "module_name → score mapping",
+              "additionalProperties": {
+                "type": "string",
+                "enum": ["A+", "A", "A-", "B+", "B", "B-", "C+", "C", "F"]
+              }
+            },
+            "fix_priority_matrix": {
+              "type": "object",
+              "description": "Findings grouped by fix tier (Tier 1 = P0, Tier 2 = P1 + low-cost P2, Tier 3 = remaining)",
+              "required": ["tier_1", "tier_2", "tier_3"],
+              "properties": {
+                "tier_1": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "description": "Finding IDs in Tier 1 (P0 blockers, fix immediately)"
+                },
+                "tier_2": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "description": "Finding IDs in Tier 2 (P1 critical + low-cost P2)"
+                },
+                "tier_3": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "description": "Finding IDs in Tier 3 (remaining P2 + P3)"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/AuditFinding"
+}
