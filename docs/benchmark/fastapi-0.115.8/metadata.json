@@ -1,0 +1,66 @@
+{
+  "project": "fastapi",
+  "repo_url": "https://github.com/fastapi/fastapi",
+  "buggy_version": "0.115.8",
+  "buggy_commit": "7128971f1d61e2e1e6f220a5f66baa925b635278",
+  "language": "python",
+  "audit_mode": "structural",
+  "spec_quality_tier": "B",
+  "spec_sources": [
+    "docs/en/docs/reference/ (API reference docs)",
+    "fastapi/security/  (well-defined public API with type hints)",
+    "fastapi/dependencies/ (dependency injection system)"
+  ],
+  "audit_scope": {
+    "modules": [
+      "fastapi/security/",
+      "fastapi/dependencies/",
+      "fastapi/openapi/"
+    ],
+    "rationale": "Scoped to modules where known bugs (0.115.9-0.115.14) exist. Full repo audit (>200 modules) exceeds benchmark cost cap (50 files per module)."
+  },
+  "known_bugs": [
+    {
+      "id": "KB-1",
+      "description": "HTTPDigest.__call__ raises exception even when auto_error=False",
+      "file": "fastapi/security/http.py",
+      "fixed_in": "0.115.9",
+      "fix_commit_reference": "PR #2939"
+    },
+    {
+      "id": "KB-2",
+      "description": "Model description field truncated when description contains form feed (U+000C) character",
+      "file": "fastapi/openapi/utils.py",
+      "fixed_in": "0.115.13",
+      "fix_commit_reference": "PR #13698"
+    },
+    {
+      "id": "KB-3",
+      "description": "Unions not properly supported when using Form parameters",
+      "file": "fastapi/dependencies/utils.py",
+      "fixed_in": "0.115.14",
+      "fix_commit_reference": "PR #13827"
+    },
+    {
+      "id": "KB-4",
+      "description": "convert_underscores=False not respected for header Pydantic models",
+      "file": "fastapi/dependencies/utils.py",
+      "fixed_in": "0.115.12",
+      "fix_commit_reference": "PR #13515"
+    },
+    {
+      "id": "KB-5",
+      "description": "Annotated custom validators (AfterValidator) not properly supported in query params",
+      "file": "fastapi/dependencies/utils.py",
+      "fixed_in": "0.115.11",
+      "fix_commit_reference": "PR #13442"
+    },
+    {
+      "id": "KB-6",
+      "description": "Pydantic 2.11 compatibility - internal annotation usage pattern incompatible",
+      "file": "fastapi/_compat.py, fastapi/dependencies/utils.py",
+      "fixed_in": "0.115.10",
+      "fix_commit_reference": "PR #13314"
+    }
+  ]
+}
