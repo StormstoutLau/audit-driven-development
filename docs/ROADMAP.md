@@ -49,32 +49,40 @@ Actions that can be completed within days, addressing the most critical gaps.
 
 **Status / 状态**: ✅ All P1 items implemented in v0.2
 
-### P2 — v0.3–v0.4 (Pragmatic Enhancement / 务实增强层)
+### P2 — v0.3–v0.4 (Detection + Repair / 检测 + 修复)
 
-**Design philosophy / 设计哲学**: Every enhancement is a pluggable extension to ADD's existing framework — not a replacement. All implementations stay within the Trae Skill + Subagent boundary. Hard cost caps on every feature.
+**Design philosophy / 设计哲学**: P2 items split into **Detection** (发现识别错误) and **Repair** (修复验证) capabilities. Detection gives confidence; Repair closes the loop. Every enhancement is a pluggable extension to ADD's existing framework. Hard cost caps on every feature.
 
-每项增强都是 ADD 现有框架的可插拔扩展——非替换。全部在 Trae Skill + Subagent 边界内实现。每项功能有硬性成本上限。
+P2 项分为 **Detection**（发现识别错误）和 **Repair**（修复验证）两类。检测建立信心，修复闭环验证。每项增强都是 ADD 现有框架的可插拔扩展。每项功能有硬性成本上限。
 
-**Note / 注**: P0.4 and P0.5 were added in v0.2.1 as immediate fixes from the Code_Hub audit (2026-07-10). They are numbered P0.x because they address blind spots discovered during a real audit, but are placed in the P2 tier for organizational clarity — they are already implemented.
+**Note / 注**: P0.4 and P0.5 were added in v0.2.1 as immediate fixes from the Code_Hub audit (2026-07-10). They are already implemented.
 
-| ID | Action / 动作 | Addresses / 回应 | Traced to V2 / V2 溯源 | Cost / 成本 |
-|---|---|---|---|---|
-| **P0.4** | Subagent prompt: DIMENSION 6 (build config + ADR execution) / 构建配置 + ADR 执行审计维度 | Limitation 1+2 | Code_Hub case log FN-1/FN-2 root cause | 0.5 day |
-| **P0.5** | FP tracking: type classification (over-aggressive / factual-error / scope-error) / FP 分类跟踪 | Limitation 2+3 | Code_Hub case log §7 FP analysis gap | 0.5 day |
-| **P2.9** | OSS benchmark / OSS 基准测试 | Limitation 3 | — (existing) | 1 week |
-| **P2.8'** | Lens System + Typed Subagent / 透镜分级 + 类型化 Subagent | Limitation 2 | V2#3 (透镜分级) + P2.8 (类型化) | 3 days |
-| **P2.10** | Deterministic Assist Layer / 确定性辅助层 | Limitation 2 | V2#4 | 2 days |
-| **P2.7** | Inter-rater reliability / 双 Subagent 投票 | Limitation 2 | — (existing) | 3 days |
-| **P2.11** | Iterative Audit / 迭代审查 | Limitation 2 | V2#1 | 1 day |
-| **P2.12** | Fix Tracking JSON + `--verify` mode / 修复跟踪 JSON 化 | Limitation 3 | V2#5 | 1 day |
+#### Detection Items / 检测侧
 
-### P3 — v0.5 (Rules + Scoring Ecosystem / 规则+评分生态)
+| ID | Action / 动作 | Side / 侧 | Addresses / 回应 | Traced to | Cost |
+|---|---|---|---|---|---|
+| **P0.4** | DIMENSION 6: build config + ADR execution / 构建配置 + ADR 执行审计 | Detection | Limitation 1+2 | Code_Hub FN-1/FN-2 | Done |
+| **P0.5** | FP type classification / FP 分类跟踪 | Detection | Limitation 2+3 | Code_Hub §7 | Done |
+| **P2.9** | Detection Calibration: OSS Benchmark / 检出校准：OSS 基准测试 | Detection | Limitation 3 | — | 1 week |
+| **P2.8'** | Detection Coverage: Lens-Audit Matrix / 检出覆盖：透镜审计矩阵 | Detection | Limitation 2 | V2#3 + P2.8 | 3 days |
+| **P2.10** | Detection Precision: Evidence Verification / 检出精度：证据验证 | Detection | Limitation 2 | V2#4 | 2 days |
+| **P2.7** | Detection Reliability: Dual-Subagent Voting / 检出可靠性：双 Subagent 投票 | Detection | Limitation 2 | — | 3 days |
 
-| ID | Action / 动作 | Addresses / 回应 | Traced to V2 / V2 溯源 | Cost / 成本 |
-|---|---|---|---|---|
-| **P3.1** | Semantic Guards engine / 语义守卫引擎 | Limitation 1 | V2#2 | 3 days |
-| **P3.2** | Numeric scoring + trend tracking / 量化评分 + 趋势追踪 | Limitation 3 | V2#6 | 1 day |
-| **P3.3** | Cross-project guard reuse / 跨项目规则复用 | Limitation 1 | V2#7 | 2 days |
+#### Repair Items / 修复侧
+
+| ID | Action / 动作 | Side / 侧 | Addresses / 回应 | Traced to | Cost |
+|---|---|---|---|---|---|
+| **P2.11** | Repair Cycle: Audit-Fix-Reverify Loop / 修复循环：审计-修复-重验 | Repair | Limitation 2 | V2#1 | 1 day |
+| **P2.12** | Repair Tracking: State Machine + Incremental Verify / 修复追踪：状态机 + 增量验证 | Repair | Limitation 3 | V2#5 | 1 day |
+| **P2.13** | Repair Guidance: Structured fix_suggestion + Impact Analysis / 修复引导：结构化修复建议 + 影响分析 | Repair | Limitation 2+3 | Security skill 借鉴 | 2 days |
+
+### P3 — v0.5 (Ecosystem: Detection + Repair / 生态：检测+修复)
+
+| ID | Action / 动作 | Side / 侧 | Addresses / 回应 | Traced to | Cost |
+|---|---|---|---|---|---|
+| **P3.1** | Detection Enhancement: Semantic Guards / 检出增强：语义守卫 | Detection | Limitation 1 | V2#2 | 3 days |
+| **P3.2** | Detection Quantification: Numeric Scoring + Trends / 检出量化：数值评分 + 趋势 | Detection | Limitation 3 | V2#6 | 1 day |
+| **P3.3** | Repair Knowledge: Cross-Project Guard Reuse / 修复知识：跨项目规则复用 | Repair | Limitation 1 | V2#7 | 2 days |
 
 ---
 
@@ -393,11 +401,56 @@ Effect:  Dispatch 1 subagent to audit only bridge/__init__.py against its spec s
 
 **Integration with P1.6**: issues.json conforms to the existing `AuditFinding` schema — the `status` field is the only addition. This is backward-compatible.
 
+### P2.13 — Repair Guidance: Structured fix_suggestion + Impact Analysis / 修复引导：结构化修复建议 + 影响分析 (v0.4)
+
+**Problem / 问题**: AuditFinding.fix_suggestion is an optional free-text string. Subagents produce vague suggestions ("use TYPE_CHECKING guard"). No impact analysis — "if I fix this, what else breaks?"
+
+**Fix / 修复**: Upgrade fix_suggestion from free-text to structured format:
+
+```json
+{
+  "fix_suggestion": {
+    "steps": ["Step 1: ...", "Step 2: ..."],
+    "affected_files": ["bridge/worker.py:45-60"],
+    "regression_risk": "low",
+    "verification_command": "pytest tests/test_bridge.py::test_evaluate -v"
+  },
+  "impact": "Violation of ADR-001 §3.1 causes bridge↔memory coupling that prevents independent module testing",
+  "mitigation": "If fix is delayed, add TYPE_CHECKING guard as temporary measure until refactor"
+}
+```
+
+**Borrowed from / 借鉴自**: TRAE `security-best-practices` skill's structured finding format (8 fields including Impact + Mitigation). See §Borrowed Patterns below.
+
+**Human-in-the-loop / 人机协作**: Subagent **suggests** fix_suggestion; human reviews and edits before applying. Never auto-fix.
+
+**Cost / 成本**: 2 days — schema update (backward-compatible) + prompt instruction update.
+
+---
+
+## Borrowed Patterns / 借鉴模式
+
+ADD 从 TRAE 生态内现有 skill 中借鉴了以下模式：
+
+| Pattern / 模式 | From / 来源 | Applied To / 应用到 | Description / 描述 |
+|---|---|---|---|
+| **Verify-after-fix** | `test-driven-development` | P2.11 Repair Cycle | TDD 的 Verify RED→Verify GREEN 子步骤 → ADD 的"修复后确认问题确实消失" |
+| **Audit Completion Checklist** | `test-driven-development` | P2.12 Repair Tracking | TDD 的 Verification Checklist → ADD 的"审计完成前门控清单" |
+| **Red Flags table** | `test-driven-development` | SKILL.md anti-patterns | TDD 的 12 条触发条件 → ADD 可扩展反模式为触发列表 |
+| **Structured finding (8 fields)** | `security-best-practices` | P2.13 Repair Guidance | Security 的 Impact + Mitigation 字段 → ADD 的 fix_suggestion 结构化 |
+| **3-mode architecture** | `security-best-practices` | v0.4+ passive review | Security 的 Generation/Passive/Active → ADD 未来可加 Passive review 模式 |
+| **4-state machine** | `executing-plans` | P2.12 Repair Tracking | executing-plans 的 pending→in_progress→completed → ADD 的 open→in_progress→fixed→verified（多一个验证态） |
+| **Block-on-failure** | `executing-plans` | P2.11 Repair Cycle | executing-plans 的"阻塞即停止+请求人类介入" → ADD P0 修复失败时的降级策略 |
+| **Task Depends On** | `writing-plans` | Fix Priority Matrix | writing-plans 缺少显式依赖跟踪 → ADD 在修复优先级矩阵中新增 Depends On 字段 |
+| **Precision command** | `writing-plans` | P2.12 --verify | writing-plans 的"精确命令+预期输出" → ADD verify 模式附带精确 pytest 命令 |
+
+**Key insight / 关键洞察**: ADD 不是从零开始。TRAE 生态中已经有 TDD（验证循环）、security（结构化发现）、executing-plans（状态机）三种成熟模式。ADD 的差异化在于将这些模式应用于**代码与设计文档对齐**这一未被其他 skill 覆盖的利基。
+
 ---
 
 ## P3 Details / P3 层详情
 
-### P3.1 — Semantic Guards Engine / 语义守卫引擎 (v0.5)
+### P3.1 — Detection Enhancement: Semantic Guards / 检出增强：语义守卫 (v0.5)
 
 **Problem / 问题**: Even with Spec Mining (P1.5) and Spec Quality Gate (P0.2), the ADD skill has no way to enforce project-specific, human-authored rules that AI cannot infer from code or git history. Example: "All public API endpoints must document request/response schema" — this is a semantic constraint, not derivable from code patterns.
 
@@ -437,7 +490,7 @@ guards:
 
 **Relationship to existing Phase 0 Spec Quality Gate**: Phase 0 scores the spec's quality. guards.yml is a separate, always-applied check layer independent of spec quality. A project can have A-tier spec AND a guards.yml — they are complementary.
 
-### P3.2 — Numeric Scoring + Trend Tracking / 量化评分 + 趋势追踪 (v0.5)
+### P3.2 — Detection Quantification: Numeric Scoring + Trend Tracking / 检出量化：数值评分 + 趋势追踪 (v0.5)
 
 **Problem / 问题**: A+ ~ F letter grades are too coarse. No trend over time. A project going from B+ to B+ across 3 audits could mean "stable" or "regressing with offsetting improvements" — indistinguishable.
 
@@ -468,7 +521,7 @@ xychart-beta
 
 **Cost / 成本**: Pure data processing. No AI involvement. Scores computed from the existing JSON output in P1.6.
 
-### P3.3 — Cross-Project Guard Reuse / 跨项目规则复用 (v0.5)
+### P3.3 — Repair Knowledge: Cross-Project Guard Reuse / 修复知识：跨项目规则复用 (v0.5)
 
 **Problem / 问题**: A team maintaining 5 projects needs the same guards (e.g., transaction safety, API doc requirements) in all 5. Copy-pasting guards.yml across repos is fragile.
 
@@ -522,15 +575,16 @@ Initial 80% single-threshold was too aggressive for OSS projects where design do
 
 ## Version Anchors / 版本锚定
 
-| Version / 版本 | Scope / 范围 | P Items / 包含项 | Est. Calendar (业余) |
-|---|---|---|---|
-| v0.1.1 | Immediate fixes / 立即修复 | P0.1, P0.2, P0.3 | Done |
-| v0.2 | Foundation / 基础层 | P1.4, P1.5, P1.6 | Done |
-| v0.3 | Core Verification / 核心验证 | P2.9 (benchmark), P2.8' (lens+typed) | ~2 weeks (业余 ~1 month) |
-| v0.4 | Pragmatic Enhancement / 务实增强 | P2.10 (deterministic), P2.7 (inter-rater), P2.11 (iterative), P2.12 (fix tracking) | ~2 weeks (业余 ~1 month) |
-| v0.5 | Rules + Scoring Ecosystem / 规则+评分生态 | P3.1 (guards), P3.2 (scoring), P3.3 (cross-project) | ~2 weeks (业余 ~1.5 months) |
+| Version / 版本 | Scope / 范围 | Detection / 检测 | Repair / 修复 | Est. Calendar (业余) |
+|---|---|---|---|---|
+| v0.1.1 | Iron Law + Gate | P0.1 prompt, P0.2 Phase 0, P0.3 case log | — | Done |
+| v0.2 | Structured Foundation | P1.4 reason chain, P1.5 spec mining, P1.6 JSON schema | — | Done |
+| v0.2.1 | Audit-Driven Improvements | P0.4 DIMENSION 6, P0.5 FP classification | — | Done |
+| v0.3 | Detection Bootstrap | P2.9 Calibration, P2.8' Coverage | — | ~3 weeks (业余 ~1.5 months) |
+| v0.4 | Repair Baseline | P2.10 Precision, P2.7 Reliability | P2.11 Cycle, P2.12 Tracking, P2.13 Guidance | ~3 weeks (业余 ~1.5 months) |
+| v0.5 | Ecosystem | P3.1 Enhancement, P3.2 Quantification | P3.3 Knowledge | ~2 weeks (业余 ~1.5 months) |
 
-Total: ~6 weeks full-time equivalent ≈ **3–4 calendar months** at hobby-project pace. Each version is independently shippable.
+Total: ~8 weeks full-time ≈ **4–5 calendar months** at hobby-project pace. Each version is independently shippable.
 
 ---
 
@@ -552,7 +606,8 @@ These constraints were derived from the V1 post-mortem and govern all P2/P3 impl
 
 | Date / 日期 | Version / 版本 | Change / 变更 |
 |---|---|---|
-| 2026-07-10 | v0.2.1 | P0.4/P0.5 implemented. Subagent prompt DIMENSION 6 (build config + ADR execution audit) + CHECK 5 added. FP template upgraded with type classification (over-aggressive / factual-error / scope-error). Code_Hub audit retrospective case log added. / P0.4/P0.5 实施。Subagent prompt 新增 DIMENSION 6（构建配置+ADR执行审计）+ CHECK 5。FP 模板升级。Code_Hub 审计复盘 case log 添加。 |
+| 2026-07-10 | v0.2.1→v0.5 rename | P2/P3 items renamed for Detection/Repair duality. P2.13 (Repair Guidance) added — structured fix_suggestion + impact analysis borrowed from security-best-practices skill. Borrowed Patterns section added documenting 9 patterns from 4 TRAE skills. Version Anchors updated with Detection/Repair columns. / P2/P3 项重命名为检测/修复二元体系。新增 P2.13（修复引导）— 借鉴 security-best-practices 的结构化修复建议。新增 Borrowed Patterns 章节，记录从 4 个 TRAE skill 借鉴的 9 个模式。版本锚定更新。 |
+| 2026-07-10 | v0.2.1 | P0.4/P0.5 implemented. Subagent prompt DIMENSION 6 (build config + ADR execution audit) + CHECK 5 added. FP template upgraded with type classification. Code_Hub audit retrospective case log added. / P0.4/P0.5 实施。Subagent prompt 新增 DIMENSION 6 + CHECK 5。FP 模板升级。Code_Hub 审计复盘 case log 添加。 |
 | 2026-07-09 | v0.2→v0.5 roadmap | Integrated V2 pragmatic enhancement proposal. / 整合 V2 务实增强方案。 |
 | 2026-07-09 | v0.2 | P1.4/P1.5/P1.6 implemented. / P1.4/P1.5/P1.6 实施。 |
 | 2026-07-06 | v0.1.1 | Initial roadmap created. P0.1/P0.2/P0.3 implemented. / 初始路线图创建。 |
