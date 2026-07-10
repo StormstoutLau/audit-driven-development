@@ -9,6 +9,16 @@ description: "Multi-dimensional audit of code vs design spec alignment. Produces
 
 After implementation, verify code matches design. Find gaps. Fix blockers. Prevent regression.
 
+ADD operates as a **Detection → Repair** loop:
+- **Detection（检测）**: Subagent-driven multi-dimensional audit — find misalignments between code and design docs. Outputs structured findings (P0-P3, evidence pointers, fix priority matrix).
+- **Repair（修复）**: Human-in-the-loop fix guidance — structured fix_suggestion, regression verification, state-machine tracking (`open → fixed → verified`). Never auto-fixes.
+
+实施后验证代码与设计对齐。发现差距。修复阻断项。防止回归。
+
+ADD 以 **检测 → 修复** 循环运作：
+- **检测（Detection）**：Subagent 驱动的多维度审查 — 发现代码与设计文档的不对齐。输出结构化发现（P0-P3、evidence pointer、修复优先级矩阵）。
+- **修复（Repair）**：人机协作的修复引导 — 结构化修复建议、回归验证、状态机跟踪（open → fixed → verified）。永不自动修复。
+
 **Core principle:** 实施完成 ≠ 设计落地。审查是"代码与设计文档对齐"的独立环节，与"代码质量审查"（code-review-excellence）正交。
 
 **与 executing-plans / test-driven-development 的关系**：
@@ -80,9 +90,9 @@ Without Phase 0, the skill gives false A+ scores when the spec is trivially sati
 
 没有 Phase 0，当 spec 空洞时，skill 会给出虚假的 A+ 评分（因为 spec 什么都没说，代码自然"对齐"）。这是 GIGO 失效模式。
 
-**Rule / 规则**: If Phase 0 tier is B or C, the audit report MUST state the tier and its limitation. A B-tier audit cannot issue an A+ score (capped at B+).
+**Rule / 规则**: If Phase 0 tier is B or C, the audit report MUST state the tier and its limitation. A B-tier audit cannot issue an A+ score (capped at B+). This also limits Repair capability — structural (B) and mining (C) audits have reduced detection precision, which lowers repair confidence.
 
-**规则**：若 Phase 0 档位为 B 或 C，审计报告必须声明档位及其限制。B 档审计不能给出 A+ 评分（上限为 B+）。
+**规则**：若 Phase 0 档位为 B 或 C，审计报告必须声明档位及其限制。B 档审计不能给出 A+ 评分（上限为 B+）。此限制同样影响修复能力——结构性（B）和挖掘型（C）审计的检测精度降低，从而降低修复置信度。
 
 
 ### Spec Mining Fallback / Spec 反向挖掘
@@ -449,17 +459,19 @@ fix: resolve N P0 blockers from code quality audit
 
 ## Process: Step-by-Step
 
-**v0.2 baseline.** For v0.3+ enhancements (lens system, iterative audit, deterministic assist, inter-rater reliability, verify mode), see `docs/implementation-plan.md`. All v0.3+ features are additive and opt-in.
+**v0.2.2 Detection → Repair loop.** Steps 1-3 = Detection phase (find misalignments). Steps 4-6 = Repair phase (fix + verify + baseline). For v0.3+ enhancements, see `docs/implementation-plan.md`.
 
-**v0.2 基线。** v0.3+ 增强（透镜系统、迭代审查、确定性辅助、双投票、验证模式）见 `docs/implementation-plan.md`。所有 v0.3+ 功能均为附加、可选。
+**v0.2.2 检测 → 修复 循环。** Steps 1-3 = 检测阶段（发现不对齐）。Steps 4-6 = 修复阶段（修复 + 验证 + 基线）。v0.3+ 增强见 `docs/implementation-plan.md`。
 
-### Step 1: Inventory
+### Detection Phase / 检测阶段
+
+### Step 1: Inventory (Detection)
 1. 收集所有设计文档（spec / ADR / 架构文档）
 2. 列出模块清单 + 对应 spec
 3. 识别跨模块契约（ADR 不变式、接口契约）
 4. 创建 TodoWrite 跟踪审查任务
 
-### Step 2: Audit (Parallel Subagents)
+### Step 2: Audit — Parallel Subagents (Detection)
 **对每个模块派发独立 subagent**:
 - 输入：模块代码 + 对应 spec
 - 输出：`ModuleAuditResult` JSON（per Appendix B schema）
@@ -468,31 +480,35 @@ fix: resolve N P0 blockers from code quality audit
 - 输入：ADR + 架构文档 + 所有模块代码
 - 输出：`ModuleAuditResult` JSON（category = contract）
 
-**v0.3+ Lens Mode / 透镜模式**: When `--lens` parameter is set, subagents are dispatched per lens per module (not per module). See `docs/implementation-plan.md` §2.2 (P2.8').
+**v0.3+ Lens Mode / 透镜模式**: When `--lens` parameter is set, subagents are dispatched per lens per module. See `docs/implementation-plan.md` §2.2 (P2.8').
 
-**v0.2 常规模式**: Generic subagent per module. **v0.3+ 透镜模式**: Typed subagent per lens per module.
-
-### Step 3: Aggregate + Prioritize
+### Step 3: Aggregate + Prioritize (Detection)
 1. 汇总所有 subagent `ModuleAuditResult` JSON
 2. 按 P0/P1/P2/P3 分级
-3. 按 Tier 1/2/3 排序
+3. 按 Tier 1/2/3 排序（Detection→Priority）
 4. 识别"低成本高影响"修复（1 行修复的 P0 优先）
 
-### Step 4: Fix Baseline
+### Repair Phase / 修复阶段
+
+### Step 4: Fix Baseline (Repair)
 1. 写入 `docs/audit/YYYY-MM-DD-code-quality-audit.md`
 2. 生成 `issues.json`（v0.4+, P2.12）— 机器可读修复跟踪
-3. 填充修复跟踪表（状态 ⬜）
+3. 填充修复跟踪表（状态 `open`）
 4. 提交基线 commit
 
-### Step 5: Fix P0 Blockers
+### Step 5: Fix P0 Blockers (Repair — Human-in-the-Loop)
+**人机协作原则**：Agent 审查发现问题 → 人修复代码 → Agent 验证修复。Agent 永不自动修改代码。
+
 1. 按修复成本排序 Tier 1（1 行修复优先）
-2. 逐项修复
-3. 每项修复后立即重跑测试
-4. 更新跟踪表（状态 ✅ + commit_hash）+ `issues.json` status → `fixed`
+2. 逐项修复（**人工执行**，Agent 仅提供 fix_suggestion）
+3. 每项修复后立即重跑全量测试（零回归原则，borrowed from `test-driven-development`）
+4. **Verify FIX（修复验证）**: 不仅确认测试通过，更要确认修复确实解决了 P0 报告的 mismatck，而非仅消除症状。若修复不满足 spec 对齐要求 → 重试。
+5. 更新跟踪表（状态 `fixed` + commit_hash）+ `issues.json` status → `fixed`
+6. 修复失败时停止（borrowed from `executing-plans` 的 block-on-failure 模式）— 请求用户介入，不强行继续。
 
-**v0.4+ Verify Mode / 验证模式**: After fixing, run `audit --verify --file <fixed_file>` to re-audit only the fixed file. Confirms fix without full re-audit. See `docs/implementation-plan.md` §3.4 (P2.12).
+**v0.4+ Verify Mode / 验证模式**: After all P0s fixed, run `audit --verify --file <fixed_file>` to re-audit only the fixed file. Confirms fix without full re-audit. See `docs/implementation-plan.md` §3.4 (P2.12).
 
-### Step 6: Final Report
+### Step 6: Final Report (Repair)
 1. 更新审查报告（所有 P0 状态 ✅）
 2. 标注修复后预期评分提升
 3. **v0.5+**: Append numeric score to `docs/audit/scores.json` (P3.2)
@@ -515,6 +531,25 @@ fix: resolve N P0 blockers from code quality audit
 
 ### ❌ 反模式 5: "只看单文件"
 `inspect.getsource()` 看不到传递依赖。必须用 grep / ast 分析跨文件依赖链。
+
+### ❌ 反模式 6: "修复后不验证是否真解决了问题"
+测试通过不等於 P0 问题的 spec 对齐要求被满足。必须 **Verify FIX** — 确认修复确实解决了指定证据行的不对齐（borrowed from `test-driven-development` 的 Verify GREEN 模式）。测试通过 + spec 对齐 = 修复有效。仅测试通过 = 可能只消除了症状。
+
+### ❌ 反模式 7: "Agent 可以自动修代码"
+ADD 必须是 Human-in-the-Loop。Agent 审查 → 发现 → 建议修复 → **人修代码** → Agent 验证。Agent 永不自动修改代码。自动修复违反"不信任系统"原则：我们连 subagent 的发现都要校准（P2.7），为什么会信任自动修复？
+
+## Audit Completion Checklist / 审计完成前清单
+
+**Borrowed from `test-driven-development`'s Verification Checklist pattern.** 每条 P0 修复后必须核对：
+
+在提交 Final Report 前，逐项核对：
+- [ ] 所有 P0 状态为 `fixed`（修复基线已建立）
+- [ ] 每项 P0 修复后重跑全量测试（零回归原则，N passed）
+- [ ] 每项 P0 修复通过 **Verify FIX** — 确认修复解决了 spec 对齐要求，而非仅测试通过
+- [ ] 修复跟踪表已更新（`fixed` + commit_hash + test_count）
+- [ ] 修复后预期评分提升已标注（如 Memory: C+ → B+）
+- [ ] 审查报告已写入 `docs/audit/YYYY-MM-DD-code-quality-audit.md`
+- [ ] 最终 commit 已提交
 
 ## Boundaries with Other Skills
 
@@ -553,11 +588,14 @@ fix: resolve N P0 blockers from code quality audit
 
 - 实施完成 ≠ 设计落地
 - 测试通过 ≠ 代码正确
+- ADD = Detection（发现不对齐）+ Repair（修复+验证），永不自动修复
+- Subagent 审查 → 人修代码 → Subagent 验证（borrowed from TDD Verify GREEN）
 - 审查是独立环节，不是可选步骤
 - 修复基线必须文档化
 - P0 优先于 P1，1 行修复优先于 100 行重构
 - 传递依赖链是 ADR 违反的常见来源
 - 修正项未落实是设计承诺的违反
+- 修复后必须 Verify FIX — 测试通过 ≠ spec 对齐
 
 
 
