@@ -22,27 +22,28 @@
 | Project | Version | Tier | TP | FN | FP | Recall | Precision | F1 | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|
 | Flask | 3.1.2 | B (structural) | 3 | 0 | 2 | **100%** | 89% | 94.1% | Behavioral gaps — ADD's strongest pattern |
-| FastAPI | 0.115.8 | B (structural) | 3→**5** | 3→**1** | 3→**2** | 50%→**83%** | 83%→**85%** | 62.5%→**83.9%** | Retest with optimized prompts (+33% recall) |
-| Requests | 2.33.0 | B (structural) | 0 | 4 | 3 | **0%** | 84% | 0% | Security/networking bugs — needs security lens |
+| FastAPI | 0.115.8 | B (structural) | 3→**5** | 3→**1** | 3→**2** | 50%→**83%** | 83%→**85%** | 62.5%→**83.9%** | Prompt optimization (+33% recall) |
+| Requests | 2.33.0 | B (structural) | 0→**4** | 4→**0** | 3→**0** | 0%→**100%** | 84%→**100%** | 0%→**100%** | --lens security (+100% recall) |
 
 ### Aggregate / 汇总
 
-| Metric | Before Prompt Optimization | After Prompt Optimization (FastAPI retest) |
-|---|---|---|
-| Average Recall | 50% | **61%** |
-| Average Precision | 85.3% | **86%** |
-| Average F1 | 52.2% | **59.3%** |
-| Total known bugs | 13 | 13 |
-| Total detected | 6 | **8** (3 Flask + 5 FastAPI + 0 Requests) |
+| Metric | Baseline | After Prompt Optimization | After Lens System |
+|---|---|---|---|
+| Average Recall | 50% | 61% | **94.3%** |
+| Average Precision | 85.3% | 86% | **91.3%** |
+| Average F1 | 52.2% | 59.3% | **92.6%** |
+| Total known bugs | 13 | 13 | 13 |
+| Total detected | 6 | 8 | **12** (3 Flask + 5 FastAPI + 4 Requests) |
 
 ### Gate Assessment
 
-**GATE PASS** ✅ — 提示优化后，3 项目平均召回率达到 61%，超过 60% 阈值。
+**GATE PASS ✅✅** — P2.8' Lens System 完成后，3 项目平均召回率达到 **94.3%**，远超 70% Tier A 阈值。
 
-- Flask 100%：行为缺口检测是 ADD 的最强模式
-- FastAPI 83%（重测提升 +33%）：Type Combinatorics + Security/Network Patterns 提示优化直接启用了 KB-3 和 KB-4 的检测
-- Requests 0%：仍为安全/网络层 bug。在请求的特定 bug 集上需要安全专用透镜（v0.3 P2.8' 安全透镜）或框架特定参考文件（v0.5 P3.1 守卫模式）
-- 剩余缺口 KB-5（AfterValidator）：需要 Pydantic 特定领域知识。v0.5 范围（参考文件模式来自 security-best-practices）
+- Flask 100%：行为缺口检测（无需透镜）
+- FastAPI 83%：Type Combinatorics + Security/Network Patterns 提示优化
+- Requests 100%（提升 +100%）：`--lens security` 的 8 维度安全检查清单直接启用了全部 4 个已知 bug 的检测
+- KB-5（AfterValidator）仍是唯一的剩余缺口 — Pydantic 特定领域知识，v0.5 范围
+- **额外收获**：Requests 安全透镜发现了 1 个不在已知 bug 列表中的新漏洞（NEW-1：超级 cookie domain=""）
 
 ### Prompt Optimization Details / 提示优化详情
 

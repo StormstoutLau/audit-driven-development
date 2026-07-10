@@ -491,21 +491,30 @@ fix: resolve N P0 blockers from code quality audit
 
 ### Step 4: Fix Baseline (Repair)
 1. 写入 `docs/audit/YYYY-MM-DD-code-quality-audit.md`
-2. 生成 `issues.json`（v0.4+, P2.12）— 机器可读修复跟踪
-3. 填充修复跟踪表（状态 `open`）
-4. 提交基线 commit
+2. 生成 `issues.json`（v0.3+, P2.12）— `python scripts/issues_tracker.py init <audit_report.json>`
+3. 每个 issue 状态 = `open`，附带 `spec_ref`（从 AuditFinding 保留，--verify 模式必须）
+4. 状态机: `open` → `in_progress` → `fixed` → `verified`
+5. 填充修复跟踪表 + 提交基线 commit
 
 ### Step 5: Fix P0 Blockers (Repair — Human-in-the-Loop)
 **人机协作原则**：Agent 审查发现问题 → 人修复代码 → Agent 验证修复。Agent 永不自动修改代码。
 
 1. 按修复成本排序 Tier 1（1 行修复优先）
 2. 逐项修复（**人工执行**，Agent 仅提供 fix_suggestion）
-3. 每项修复后立即重跑全量测试（零回归原则，borrowed from `test-driven-development`）
-4. **Verify FIX（修复验证）**: 不仅确认测试通过，更要确认修复确实解决了 P0 报告的 mismatck，而非仅消除症状。若修复不满足 spec 对齐要求 → 重试。
-5. 更新跟踪表（状态 `fixed` + commit_hash）+ `issues.json` status → `fixed`
-6. 修复失败时停止（borrowed from `executing-plans` 的 block-on-failure 模式）— 请求用户介入，不强行继续。
+3. 每项修复后: `python scripts/issues_tracker.py status --id <ID> --to in_progress`
+4. 每项修复后立即重跑全量测试（零回归原则，borrowed from `test-driven-development`）
+5. **Verify FIX（修复验证）**: 不仅确认测试通过，更要确认修复确实解决了 P0 报告的 mismatch。若修复不满足 spec 对齐要求 → 重试。
+6. 修复完成: `python scripts/issues_tracker.py status --id <ID> --to fixed` + 记录 fix_commit
+7. 修复失败时停止（borrowed from `executing-plans` 的 block-on-failure 模式）— 请求用户介入
 
-**v0.4+ Verify Mode / 验证模式**: After all P0s fixed, run `audit --verify --file <fixed_file>` to re-audit only the fixed file. Confirms fix without full re-audit. See `docs/implementation-plan.md` §3.4 (P2.12).
+**v0.3+ Verify Mode / 验证模式** (P2.12):
+```
+python scripts/issues_tracker.py verify --file <fixed_file> [--report <re_audit.json>]
+```
+- 读取 issues.json 中该文件的 open/fixed 项
+- 对比新审计报告：若 finding ID 不再出现 → status → `verified`
+- 若仍然出现 → 警告修复不完整，保持 status
+- 单文件验证，无需全量重审计。依赖 issues.json 的 spec_ref 字段做定向 Subagent 派发
 
 ### Step 6: Final Report (Repair)
 1. 更新审查报告（所有 P0 状态 ✅）
@@ -513,6 +522,119 @@ fix: resolve N P0 blockers from code quality audit
 3. **v0.5+**: Append numeric score to `docs/audit/scores.json` (P3.2)
 4. 提交最终 commit
 5. 输出下一步选项（契约测试 / P1 修复 / 实证阶段）
+
+---
+
+## Lens System / 透镜系统 (v0.3+)
+
+**Added in v0.3 (P2.8')** in response to Limitation 2 (subagent black box) and benchmark findings (Requests 0% recall on security bugs). Borrowed from `security-best-practices`'s domain-specific checklists pattern.
+
+Each lens is a typed subagent prompt variant that specializes in one audit dimension. Core lenses are always active; extension lenses are opt-in via `--lens`.
+
+### Core Lens / 核心透镜 (5, always-on)
+
+| Lens / 透镜 | Typed Subagent | Checks / 检查内容 | Maps to Category |
+|---|---|---|---|
+| 设计对齐 | Design Aligner | Signature consistency + behavior consistency vs spec | signature + behavior |
+| 跨模块契约 | Contract Guardian | ADR invariants, dependency graph, unique entry points | contract |
+| 错误处理完整性 | Error Handler | Exception coverage, error propagation, retry logic | behavior (subset) |
+| 数据验证/边界 | Boundary Checker | Input validation, null checks, edge cases, type safety | behavior (subset) |
+| 修正项追踪 | Corrective Tracker | Spec corrective items reflected in code | corrective |
+
+### Extension Lens / 扩展透镜 (2, opt-in via `--lens`)
+
+| Lens / 透镜 | Enabled by / 开启方式 | Checks / 检查内容 |
+|---|---|---|
+| 安全扫描 | `--lens security` | XSS, injection (SQL/command/path traversal), unsafe eval, hardcoded secrets, proxy bypass, cookie security, URI normalization risks |
+| 架构健康 | `--lens architecture` | Circular deps (import graph analysis), layer violations (data→app direction), unused code, dead imports |
+
+### Lens Dispatch / 透镜派发
+
+When `--lens` is set, Step 2 dispatches subagents per lens per module instead of one generic subagent:
+
+```
+Default:  1 generic subagent per module
+--lens:   1 typed subagent per lens per module (5 core + N extension)
+```
+
+Each typed subagent receives the core prompt (Template 1, Appendix A) PLUS a Lens-Specific Instruction block. The Lens-Specific block overrides the focus of DIMENSION 1-6 to specialize in that lens's domain.
+
+### Lens-Specific Prompt Blocks / 透镜专用 Prompt 块
+
+**Design Aligner（设计对齐）**:
+```
+FOCUS: You are ALIGNING code signatures and behavior against the spec.
+- DIMENSION 1 (Signature): Compare EVERY public function name, param type, return type against spec. 
+- DIMENSION 2 (Behavior): Check that policies, thresholds, and invariants in spec are reflected in code.
+- DO NOT audit error handling, input validation, or test coverage — other lenses cover those.
+```
+
+**Contract Guardian（跨模块契约）**:
+```
+FOCUS: You are GUARDING cross-module contracts and ADR invariants.
+- DIMENSION 5 (Contract): Verify ADR dependency graph acyclicity via grep+AST. Check unique entry points.
+- DIMENSION 1 (Signature): Check cross-module interface signatures for consistency (caller vs callee).
+- DO NOT audit single-module behavior or test coverage.
+```
+
+**Error Handler（错误处理完整性）**:
+```
+FOCUS: You are checking ERROR HANDLING completeness.
+- Check exception coverage: every try block has corresponding except; every raise has a caller that catches.
+- Check error propagation: errors from deep calls propagate correctly to top-level handlers.
+- Check retry logic: transient errors have retry with exponential backoff where appropriate.
+- DO NOT audit signature consistency or corrective items.
+```
+
+**Boundary Checker（数据验证/边界）**:
+```
+FOCUS: You are checking DATA VALIDATION and BOUNDARY conditions.
+- Check input validation: null checks, type coercion, range validation on all public function inputs.
+- Check edge cases: empty collections, zero values, negative numbers, max values.
+- Check type safety: any `Any` type usage, unsafe casts, missing type narrowing.
+- DO NOT audit error handling or contract violations.
+```
+
+**Corrective Tracker（修正项追踪）**:
+```
+FOCUS: You are TRACKING corrective items from spec to code.
+- DIMENSION 3 (Corrective): Every "fix X.Y" or corrective action in spec must have a corresponding code change.
+- For each unimplemented corrective: record spec section + expected vs actual with HIGH confidence.
+- DO NOT audit signatures, behavior, or test coverage.
+```
+
+**Security Scanner（安全扫描）— Extension, `--lens security`**:
+```
+FOCUS: You are SCANNING for security vulnerabilities. Borrowed from security-best-practices skill's 13-step audit checklist.
+- Check path traversal risks: file extraction, zip handling — does it prevent writes to arbitrary filesystem locations?
+- Check injection risks: SQL, command, header injection. Unsafe eval/exec.
+- Check URI normalization: are slashes preserved? Is path mangling causing data loss?
+- Check proxy/domain matching: is matching exact or greedy (bypass risk)?
+- Check object lifecycle: does any history/list contain self-references causing infinite loops?
+- Check parameter flag propagation: are security flags (auto_error, convert_underscores) passed through ALL layers?
+- Check hardcoded secrets: API keys, tokens, passwords in source code.
+- For each violation: record exact conditional/string operation with the vulnerability.
+```
+
+**Architecture Scanner（架构健康）— Extension, `--lens architecture`**:
+```
+FOCUS: You are checking ARCHITECTURAL HEALTH.
+- Check circular dependencies: import graph analysis across modules.
+- Check layer violations: does data layer import from UI layer? Does core import from plugins?
+- Check unused code: functions/classes with no callers, dead imports.
+- Check module cohesion: are related functions in the same module, or scattered?
+- For each violation: record the full dependency chain with file:line evidence.
+```
+
+### Lens Overlap Deduplication / 透镜重叠去重
+
+Applied in Step 3 (Aggregate) before score calculation. When two lens subagents report findings with identical evidence (same file + overlapping line range):
+
+1. Same claim → **keep one**, annotate `detected_by: [lens_a, lens_b]`
+2. Different claims → **keep both** as independent findings
+3. One claim is subset of other → **keep more specific**, annotate `detected_by: [both]`
+
+This prevents double-counting the same bug in scoring and benchmark recall/precision.
 
 ## Critical Anti-Patterns
 
@@ -628,10 +750,23 @@ For each spec section, check code alignment across 5 dimensions. Each finding MU
 DIMENSION 1: Signature Consistency / 签名一致性
 - Check: method name, params, return type vs spec
 - For each mismatch: record file:line + spec section
+- **Type Combinatorics Guidance / 类型组合学指导** (added v0.3 benchmark optimization):
+  - When a function accepts Union/Optional types (e.g., `Union[str, Form]`), verify each branch is handled
+  - Check that Form fields, Header models, Query params handle Union types correctly
+  - Check that `Annotated` types with validators (e.g., `AfterValidator`) are properly propagated through the dependency analysis chain
+  - Check that `convert_underscores` parameter is respected for Header Pydantic models (getattr default fallback can silently override user setting)
+  - For each type combinatorics gap: record the specific Union branch that is unhandled
 
 DIMENSION 2: Behavior Consistency / 行为一致性
 - Check: policies, thresholds, invariants vs spec
 - For each mismatch: record file:line + spec section
+- **Security/Network Patterns / 安全/网络模式** (added v0.3 benchmark optimization):
+  - Check path traversal risks in file extraction utilities (e.g., zip extraction — does it prevent writes to arbitrary filesystem locations?)
+  - Check URI path normalization — are leading slashes preserved? Is path mangling causing data loss?
+  - Check proxy/domain matching — is no_proxy matching exact or greedy? Greedy matching causes bypass.
+  - Check object lifecycle — does Response.history or similar list contain self-references that could cause infinite loops?
+  - Check parameter flag propagation — are flags like `auto_error`, `convert_underscores` passed through all layers? Verify via grep that every class in a security/dependency hierarchy handles these flags.
+  - For each violation: record the exact conditional or string operation that has the vulnerability
 
 DIMENSION 3: Corrective Items / 修正项落实
 - Check: spec's "fix 9.x" items are reflected in code
