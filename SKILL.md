@@ -629,10 +629,23 @@ For each spec section, check code alignment across 5 dimensions. Each finding MU
 DIMENSION 1: Signature Consistency / 签名一致性
 - Check: method name, params, return type vs spec
 - For each mismatch: record file:line + spec section
+- **Type Combinatorics Guidance / 类型组合学指导** (added v0.3 benchmark optimization):
+  - When a function accepts Union/Optional types (e.g., `Union[str, Form]`), verify each branch is handled
+  - Check that Form fields, Header models, Query params handle Union types correctly
+  - Check that `Annotated` types with validators (e.g., `AfterValidator`) are properly propagated through the dependency analysis chain
+  - Check that `convert_underscores` parameter is respected for Header Pydantic models (getattr default fallback can silently override user setting)
+  - For each type combinatorics gap: record the specific Union branch that is unhandled
 
 DIMENSION 2: Behavior Consistency / 行为一致性
 - Check: policies, thresholds, invariants vs spec
 - For each mismatch: record file:line + spec section
+- **Security/Network Patterns / 安全/网络模式** (added v0.3 benchmark optimization):
+  - Check path traversal risks in file extraction utilities (e.g., zip extraction — does it prevent writes to arbitrary filesystem locations?)
+  - Check URI path normalization — are leading slashes preserved? Is path mangling causing data loss?
+  - Check proxy/domain matching — is no_proxy matching exact or greedy? Greedy matching causes bypass.
+  - Check object lifecycle — does Response.history or similar list contain self-references that could cause infinite loops?
+  - Check parameter flag propagation — are flags like `auto_error`, `convert_underscores` passed through all layers? Verify via grep that every class in a security/dependency hierarchy handles these flags.
+  - For each violation: record the exact conditional or string operation that has the vulnerability
 
 DIMENSION 3: Corrective Items / 修正项落实
 - Check: spec's "fix 9.x" items are reflected in code

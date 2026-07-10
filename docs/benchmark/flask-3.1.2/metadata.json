@@ -1,0 +1,7 @@
+{
+  "project": "flask",
+  "version": "3.1.2",
+  "repo_url": "https://github.com/pallets/flask",
+  "buggy_commit": "2c1b30d0503cfb064f1cb252e6614a06915a362a",
+  "language": "python"
+}

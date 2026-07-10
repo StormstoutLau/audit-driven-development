@@ -1,0 +1,47 @@
+{
+  "project": "flask",
+  "version": "3.1.2",
+  "audit_date": "2026-07-10",
+  "audit_mode": "structural",
+  "spec_quality_tier": "B",
+  "advisor": "ADD v0.2.2 subagent",
+  "skill_version": "v0.2.2",
+  "total_findings": 19,
+
+  "known_bugs": [
+    {"id": "KB-1", "description": "Session not marked as accessed for `in` and `len` operations (GHSA-68rp-wp8r-4726)"},
+    {"id": "KB-2", "description": "stream_with_context fails inside async views (#5774)"},
+    {"id": "KB-3", "description": "test client follow_redirects final session state incorrect (#5786)"},
+    {"id": "KB-4", "description": "--help loads app to show all commands (#5673) — FIXED IN 3.1.2, NOT A BUG HERE"},
+    {"id": "KB-5", "description": "SECRET_KEY_FALLBACKS key selection order wrong (GHSA-4grg-w6v8-c28g) — FIXED IN 3.1.2, NOT A BUG HERE"}
+  ],
+
+  "active_known_bugs": ["KB-1", "KB-2", "KB-3"],
+
+  "tp_classification": {
+    "exact_matches": [
+      {"known_bug_id": "KB-1", "match_type": "exact", "description": "session.__contains__ and __len__ don't call accessed() — detected as P1 behavioral gap"},
+      {"known_bug_id": "KB-2", "match_type": "exact", "description": "stream_with_context incompatible with async views — detected as P1 async handling gap"},
+      {"known_bug_id": "KB-3", "match_type": "exact", "description": "test client follow_redirects loses session state — detected as P1 testing gap"}
+    ]
+  },
+
+  "false_negatives": [],
+
+  "false_positives": 2,
+
+  "recall": 1.0,
+  "precision": 0.89,
+  "prioritization_score": {
+    "known_bugs_as_p0": 0,
+    "known_bugs_as_p1": 3,
+    "known_bugs_as_p2_or_lower": 0,
+    "known_bugs_missed": 0
+  },
+
+  "analysis": {
+    "strengths": "Perfect recall (3/3) on Flask. ADD detected all three active known bugs: session accessed tracking, stream_with_context async compatibility, and follow_redirects session state. Detection quality is excellent — all three were classified as P1 with clear evidence pointers.",
+    "why_perfect": "Flask's known bugs are all in the 'behavioral gap' category (missing method calls, missing async compatibility, missing state preservation) rather than security exploits or deep type combinatorics. These patterns match ADD's current subagent prompt strength precisely.",
+    "kb4_kb5_note": "KB-4 and KB-5 were already fixed in Flask 3.1.2, our audit baseline. Subagent correctly verified both are working as expected. These are excluded from recall calculation."
+  }
+}

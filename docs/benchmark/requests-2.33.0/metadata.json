@@ -1,0 +1,7 @@
+{
+  "project": "requests",
+  "version": "2.33.0",
+  "repo_url": "https://github.com/psf/requests",
+  "buggy_commit": "bc04dfd6dad4cb02cd92f5daa81eb562d280a761",
+  "language": "python"
+}

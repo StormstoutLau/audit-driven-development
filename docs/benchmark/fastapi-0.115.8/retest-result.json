@@ -1,0 +1,49 @@
+{
+  "project": "fastapi",
+  "version": "0.115.8",
+  "audit_date": "2026-07-10",
+  "retest": true,
+  "retest_reason": "Prompt optimization per soft-fail path: added Type Combinatorics + Security/Network Patterns guidance to SKILL.md Template 1 DIMENSION 1+2",
+  "audit_mode": "structural",
+  "spec_quality_tier": "B",
+  "auditor": "ADD v0.3 (optimized prompts)",
+  "skill_version": "v0.3",
+
+  "total_findings": 13,
+  "total_known_bugs": 6,
+
+  "tp_classification": {
+    "exact_matches": [
+      {"known_bug_id": "KB-1", "match_type": "exact", "description": "HTTPDigest auto_error — detected as P0 by security subagent with precise evidence at http.py:L415-L419"},
+      {"known_bug_id": "KB-2", "match_type": "exact", "description": "\f truncation — detected at both routing.py:L534 and _compat.py:L392. Both truncation points identified."},
+      {"known_bug_id": "KB-4", "match_type": "exact", "description": "convert_underscores=False propagation — detected as P1. Root cause: getattr default fallback at dependencies/utils.py:L766"},
+      {"known_bug_id": "KB-6", "match_type": "exact", "description": "Pydantic 2.11 internal API dependency — detected as P2 compatibility risk in _compat.py"}
+    ],
+    "close_matches": [
+      {"known_bug_id": "KB-3", "match_type": "close", "description": "Union+Form type classification gap in analyze_param — detected as P1. Subagent correctly identified the union type handling concern in dependency analysis, though without pinpointing the exact Form+Union combinatorics code path."}
+    ]
+  },
+
+  "false_negatives": [
+    {"known_bug_id": "KB-5", "description": "Annotated AfterValidator not properly supported", "why_missed": "Subagent checked Annotated type propagation but did not identify the AfterValidator-specific pattern. AfterValidator is a Pydantic-specific validator lifecycle feature that requires domain-specific knowledge. This is the remaining gap even with optimized prompts — needs framework-specific rule files (v0.5 P3.1 guards.yml pattern)."}
+  ],
+
+  "false_positives": 2,
+
+  "recall_before_optimization": 0.50,
+  "recall_after_optimization": 0.83,
+  "recall_improvement": "+33%",
+
+  "precision": 0.85,
+  "prioritization_score": {
+    "known_bugs_as_p0_or_p1": 5,
+    "known_bugs_as_p2": 1,
+    "known_bugs_missed": 1
+  },
+
+  "analysis": {
+    "optimization_impact": "Type Combinatorics guidance (+8 lines in DIMENSION 1) directly enabled KB-3 and KB-4 detection. Security/Network Patterns guidance (+8 lines in DIMENSION 2) directly enabled KB-2 dual-point detection. Parameter flag propagation rule specifically caught the HTTPDigest/Bearer auto_error asymmetry.",
+    "remaining_gap": "KB-5 (AfterValidator) requires Pydantic-specific domain knowledge. This is the same gap as security-best-practices skill's language-specific reference files. ADD would need a Python/Pydantic reference file (v0.5 scope).",
+    "scoped_audit_note": "This is a scoped audit (3 modules). Full-repo audit with all modules would enable broader pattern detection. Results are directionally meaningful but scoped."
+  }
+}

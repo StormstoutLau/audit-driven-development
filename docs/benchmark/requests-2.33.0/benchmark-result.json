@@ -1,0 +1,46 @@
+{
+  "project": "requests",
+  "version": "2.33.0",
+  "audit_date": "2026-07-10",
+  "audit_mode": "structural",
+  "spec_quality_tier": "B",
+  "auditor": "ADD v0.2.2 subagent",
+  "skill_version": "v0.2.2",
+  "total_findings": 19,
+
+  "known_bugs": [
+    {"id": "KB-1", "description": "CVE-2026-25645: extract_zipped_paths path traversal risk"},
+    {"id": "KB-2", "description": "Response.history self-reference causing infinite loop (PR #7328)"},
+    {"id": "KB-3", "description": "no_proxy greedy matching on domains (PR #7427)"},
+    {"id": "KB-4", "description": "Duplicate leading slashes stripped in URI paths (PR #7315)"}
+  ],
+
+  "tp_classification": {
+    "exact_matches": [],
+    "close_matches": [],
+    "note": "None of the 4 known bugs were explicitly detected. Subagent focused on cookie handling (P0: toReturn None check) and general code quality issues rather than the security/network-layer bugs in KB 1-4."
+  },
+
+  "false_negatives": [
+    {"id": "KB-1", "why_missed": "Subagent audited utils.py but did not flag extract_zipped_paths zip extraction logic. Likely requires security-specific lens (v0.3 P2.8' architecture lens would help)."},
+    {"id": "KB-2", "why_missed": "Subagent checked models.py but did not trace Response.history assignment chain. Requires deep object lifecycle analysis."},
+    {"id": "KB-3", "why_missed": "no_proxy logic in utils.py was not flagged. Requires network-domain-specific knowledge."},
+    {"id": "KB-4", "why_missed": "URI path normalization in utils.py not identified as bug-prone. String manipulation pattern not captured by generic subagent prompt."}
+  ],
+
+  "false_positives": 3,
+
+  "recall": 0.0,
+  "precision": 0.84,
+  "prioritization_score": {
+    "p0_findings": 2,
+    "known_bugs_detected": 0,
+    "known_bugs_missed": 4
+  },
+
+  "analysis": {
+    "strengths": "Subagent found a legitimate P0 bug (cookies.py:411 null-check issue) and 18 other quality issues. Precision is 84% — most findings are real code quality problems, just not the known bugs we were targeting.",
+    "weaknesses": "0/4 recall for known bugs. All 4 FNs are in the security/networking domain (path traversal exploit, proxy bypass, URI normalization, object lifecycle). ADD's generic subagent prompt is biased toward code quality patterns (null checks, type hints, exception handling) rather than security/network-layer contracts.",
+    "root_cause": "The benchmark's known bugs are all security-adjacent. ADD v0.2.2's subagent prompt covers general engineering principles but has no security-specific guidance. This is the same gap that the security-best-practices skill fills with its 13-step audit checklist and language-specific reference files."
+  }
+}
