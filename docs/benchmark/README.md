@@ -42,7 +42,7 @@
 - Flask 100%：行为缺口检测（无需透镜）
 - FastAPI 83%：Type Combinatorics + Security/Network Patterns 提示优化
 - Requests 100%（提升 +100%）：`--lens security` 的 8 维度安全检查清单直接启用了全部 4 个已知 bug 的检测
-- KB-5（AfterValidator）仍是唯一的剩余缺口 — Pydantic 特定领域知识，v0.5 范围
+- KB-5（AfterValidator）— 通过 MCP 工具深度搜索 FastAPI PR #13442 + Pydantic docs 后已合成知识。根因是 PR #13314（Pydantic 2.11 compat）修改了 `_compat.py` 的 Annotated 元数据提取逻辑，丢弃了 AfterValidator 等非 FastAPI 元数据。已写入 `references/python-pydantic-audit-rules.md`（遵循 security-best-practices 的 `references/` 模式）。v0.5 的 P3.1 guards.yml 加载后可直接使用
 - **额外收获**：Requests 安全透镜发现了 1 个不在已知 bug 列表中的新漏洞（NEW-1：超级 cookie domain=""）
 
 ### Prompt Optimization Details / 提示优化详情
