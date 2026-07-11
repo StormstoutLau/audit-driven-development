@@ -204,7 +204,7 @@ If `docs/audit/guards.learned.yml` exists:
 - 人工审查后，将学习到的守卫移入 `guards.project.yml`，将置信度升级为 `verified`
 
 ```
-python scripts/merge_guards.py --common docs/audit/guards.learned.yml --project docs/audit/guards.yml
+python scripts/merge_guards.py --common docs/audit/guards.learned.yml --project docs/audit/guards.project.yml
 ```
 
 #### 3. scores.json — Trend Tracking / 趋势追踪
