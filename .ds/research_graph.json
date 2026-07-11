@@ -1,0 +1,12 @@
+{
+  "nodes": {
+    "decision:decision_kb5_mcp_search": {
+      "node_type": "decision",
+      "node_id": "decision_kb5_mcp_search",
+      "status": "completed",
+      "detail": "KB-5 false negative resolved via MCP search: AfterValidator annotation propagation bug in FastAPI 0.115.8 traced to PR #13314's Pydantic 2.11 compat change that stripped Annotated metadata. Root cause documented in references/python-pydantic-audit-rules.md (3 detection rules). Knowledge-gap-closure pattern validated: MCP search + doc fetch + rule synthesis + reference file persistence.",
+      "updated_at": "2026-07-11T09:23:49.456313+00:00"
+    }
+  },
+  "updated_at": "2026-07-11T09:23:49.456313+00:00"
+}

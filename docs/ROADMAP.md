@@ -607,8 +607,9 @@ These constraints were derived from the V1 post-mortem and govern all P2/P3 impl
 
 | Date / 日期 | Version / 版本 | Change / 变更 |
 |---|---|---|
-| 2026-07-10 | v0.2.1→v0.5 rename | P2/P3 items renamed for Detection/Repair duality. P2.13 (Repair Guidance) added — structured fix_suggestion + impact analysis borrowed from security-best-practices skill. Borrowed Patterns section added documenting 9 patterns from 4 TRAE skills. Version Anchors updated with Detection/Repair columns. / P2/P3 项重命名为检测/修复二元体系。新增 P2.13（修复引导）— 借鉴 security-best-practices 的结构化修复建议。新增 Borrowed Patterns 章节，记录从 4 个 TRAE skill 借鉴的 9 个模式。版本锚定更新。 |
-| 2026-07-10 | v0.2.1 | P0.4/P0.5 implemented. Subagent prompt DIMENSION 6 (build config + ADR execution audit) + CHECK 5 added. FP template upgraded with type classification. Code_Hub audit retrospective case log added. / P0.4/P0.5 实施。Subagent prompt 新增 DIMENSION 6 + CHECK 5。FP 模板升级。Code_Hub 审计复盘 case log 添加。 |
+| 2026-07-10 | v0.3 KB-5 resolution | KB-5 (AfterValidator annotation propagation) resolved via MCP tool search. Root cause: FastAPI PR #13314 (Pydantic 2.11 compat) stripped Annotated metadata. Knowledge synthesized into references/python-pydantic-audit-rules.md (3 detection rules, following security-best-practices references/ pattern). MCP search→knowledge synthesis→reference file pattern validated. Decision recorded in .ds/decisions.jsonl + research_graph.json. / KB-5 通过 MCP 工具搜索解决。根因：FastAPI PR #13314 丢弃了 Annotated 元数据。知识合成到 references/python-pydantic-audit-rules.md。MCP 搜索模式已验证。 |
+| 2026-07-10 | v0.2.1→v0.5 rename | P2/P3 items renamed for Detection/Repair duality. P2.13 (Repair Guidance) added — structured fix_suggestion + impact analysis borrowed from security-best-practices skill. Borrowed Patterns section added. Version Anchors updated. / P2/P3 项重命名。新增 P2.13 + Borrowed Patterns 章节。 |
+| 2026-07-10 | v0.2.1 | P0.4/P0.5 implemented. Subagent prompt DIMENSION 6 + CHECK 5 added. FP template upgraded. Code_Hub case log added. / P0.4/P0.5 实施。DIMENSION 6 + CHECK 5。FP 模板升级。 |
 | 2026-07-09 | v0.2→v0.5 roadmap | Integrated V2 pragmatic enhancement proposal. / 整合 V2 务实增强方案。 |
 | 2026-07-09 | v0.2 | P1.4/P1.5/P1.6 implemented. / P1.4/P1.5/P1.6 实施。 |
 | 2026-07-06 | v0.1.1 | Initial roadmap created. P0.1/P0.2/P0.3 implemented. / 初始路线图创建。 |
