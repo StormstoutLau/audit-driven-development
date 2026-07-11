@@ -1,0 +1,13 @@
+[
+  {
+    "date": "2026-07-11",
+    "project": "audit-driven-development",
+    "version": "v2.0-self-audit",
+    "score": 0,
+    "grade": "F",
+    "p0_count": 4,
+    "p1_count": 4,
+    "p2_count": 4,
+    "p3_count": 0
+  }
+]
