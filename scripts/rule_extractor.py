@@ -57,8 +57,12 @@ def parse_evidence(evidence_text):
     """Extract file path and line range from evidence string.
     Handles multiple formats:
       - "file.py:L123-L456 — description" (structured)
+      - "description with file at file.py:L123 embedded" (embedded, P0-4 fix)
       - "description without file info" (free-text, returns None path)
     """
+    if not evidence_text:
+        return None, 0, 0, ""
+
     structured_pattern = re.match(r'^([\w.\-/]+):L?(\d+)(?:-L?(\d+))?\s*[—\-]\s*(.*)', evidence_text)
     if structured_pattern:
         file_path = structured_pattern.group(1)
@@ -72,6 +76,13 @@ def parse_evidence(evidence_text):
         file_path = simple_pattern.group(1)
         line_start = int(simple_pattern.group(2))
         line_end = int(simple_pattern.group(3)) if simple_pattern.group(3) else line_start
+        return file_path, line_start, line_end, evidence_text
+
+    embedded_pattern = re.search(r'(?:at|in|evidence|file)\s+([\w.\-/]+\.py)(?::L?(\d+)(?:-L?(\d+))?)?', evidence_text)
+    if embedded_pattern:
+        file_path = embedded_pattern.group(1)
+        line_start = int(embedded_pattern.group(2)) if embedded_pattern.group(2) else 1
+        line_end = int(embedded_pattern.group(3)) if embedded_pattern.group(3) else line_start
         return file_path, line_start, line_end, evidence_text
 
     return None, 0, 0, evidence_text
@@ -297,6 +308,7 @@ def main():
         output_lines.append(f"    description: \"{g['description']}\"")
         output_lines.append(f"    scope: \"{g['scope']}\"")
         output_lines.append(f"    severity: \"{g['severity']}\"")
+        output_lines.append(f"    category: \"{g.get('category', 'behavior')}\"")
         check_text = g["check"].replace("\n", "\n      ")
         output_lines.append(f"    check: |")
         output_lines.append(f"      {check_text}")
@@ -317,5 +329,7 @@ if __name__ == "__main__":
     try:
         sys.exit(main())
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         print(json.dumps({"error": str(e)}), file=sys.stderr)
         sys.exit(2)

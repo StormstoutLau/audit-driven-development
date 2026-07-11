@@ -1,0 +1,6 @@
+{
+  "audit_id": "2026-07-11-v2.0.1-reaudit",
+  "issues": [
+    {"id": "ADD-P2-4", "severity": "P2", "status": "open"}
+  ]
+}

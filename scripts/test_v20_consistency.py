@@ -94,6 +94,31 @@ if inter_rater_path.exists():
     check("R16 inter_rater.py outputs agreement rate or kappa value",
           "agreement" in ir_src.lower() or "kappa" in ir_src.lower() or "print" in ir_src)
 
+    import tempfile, subprocess
+    test_a = json.dumps([
+        {"evidence": {"file": "f1.py"}, "claim": "issue"},
+        {"evidence": {"file": "f2.py"}, "claim": "issue"},
+        {"evidence": {"file": "f3.py"}, "claim": "issue"},
+    ])
+    test_b = json.dumps([
+        {"evidence": {"file": "f1.py"}, "claim": "issue"},
+        {"evidence": {"file": "f3.py"}, "claim": "issue"},
+        {"evidence": {"file": "f4.py"}, "claim": "issue"},
+    ])
+    with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as fa, \
+         tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as fb:
+        fa.write(test_a); fb.write(test_b)
+        fa_name = fa.name; fb_name = fb.name
+    result = subprocess.run(
+        [sys.executable, str(inter_rater_path), "--findings-a", fa_name, "--findings-b", fb_name],
+        capture_output=True, text=True, timeout=10, cwd=str(ROOT)
+    )
+    import os; os.unlink(fa_name); os.unlink(fb_name)
+    kappa_ok = result.returncode == 0 and '"kappa"' in result.stdout and '"agreement_rate"' in result.stdout
+    check("R16b inter_rater.py functional: kappa + agreement_rate in JSON output",
+          kappa_ok,
+          f"stdout: {result.stdout[:200]}")
+
 # ── R17-R20: SKILL.md Knowledge Loading ──
 print("\n── SKILL.md Knowledge Loading Section ──")
 

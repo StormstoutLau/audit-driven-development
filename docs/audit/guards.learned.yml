@@ -9,7 +9,7 @@ description: "Auto-extracted guards — review before use"
 guards:
   - id: "LEARNED-FASTAPI_0.11-001"
     description: "HTTPDigest auto_error — detected as P0 by security subagent with precise evidence at http.py:L415-L419"
-    scope: "**/unknown.py"
+    scope: "**/http.py"
     severity: "critical"
     check: |
       Evidence: HTTPDigest auto_error — detected as P0 by security subagent with precise evidence at http.py:L415-L419
@@ -29,7 +29,7 @@ guards:
 
   - id: "LEARNED-FASTAPI_0.11-003"
     description: "convert_underscores=False propagation — detected as P1. Root cause: getattr default fallback at dependencies/utils.py:L7"
-    scope: "**/unknown.py"
+    scope: "**/dependencies/**/*.py"
     severity: "critical"
     check: |
       Evidence: convert_underscores=False propagation — detected as P1. Root cause: getattr default fallback at dependencies/utils.py:L7
@@ -39,7 +39,7 @@ guards:
 
   - id: "LEARNED-FASTAPI_0.11-004"
     description: "Pydantic 2.11 internal API dependency — detected as P2 compatibility risk in _compat.py"
-    scope: "**/unknown.py"
+    scope: "**/_compat.py"
     severity: "critical"
     check: |
       Evidence: Pydantic 2.11 internal API dependency — detected as P2 compatibility risk in _compat.py

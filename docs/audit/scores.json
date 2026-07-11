@@ -9,5 +9,27 @@
     "p1_count": 4,
     "p2_count": 4,
     "p3_count": 0
+  },
+  {
+    "date": "2026-07-12",
+    "project": "audit-driven-development",
+    "version": "v2.0.1-reaudit",
+    "score": 0,
+    "grade": "F",
+    "p0_count": 4,
+    "p1_count": 4,
+    "p2_count": 4,
+    "p3_count": 0
+  },
+  {
+    "date": "2026-07-12",
+    "project": "audit-driven-development",
+    "version": "v2.0.1-final",
+    "score": 97,
+    "grade": "A+",
+    "p0_count": 0,
+    "p1_count": 0,
+    "p2_count": 1,
+    "p3_count": 0
   }
 ]

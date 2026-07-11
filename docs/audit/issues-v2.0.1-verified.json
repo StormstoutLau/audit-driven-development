@@ -1,0 +1,21 @@
+{
+  "audit_id": "2026-07-11-v2.0-self-audit-round4",
+  "audit_date": "2026-07-11",
+  "project": "audit-driven-development",
+  "version": "v2.0.1",
+  "baseline_commit": "d386a93",
+  "issues": [
+    {"id": "ADD-P0-1", "severity": "P0", "status": "verified"},
+    {"id": "ADD-P0-2", "severity": "P0", "status": "verified"},
+    {"id": "ADD-P0-3", "severity": "P0", "status": "verified"},
+    {"id": "ADD-P0-4", "severity": "P0", "status": "verified"},
+    {"id": "ADD-P1-1", "severity": "P1", "status": "verified"},
+    {"id": "ADD-P1-2", "severity": "P1", "status": "verified"},
+    {"id": "ADD-P1-3", "severity": "P1", "status": "verified"},
+    {"id": "ADD-P1-4", "severity": "P1", "status": "verified"},
+    {"id": "ADD-P2-1", "severity": "P2", "status": "verified"},
+    {"id": "ADD-P2-2", "severity": "P2", "status": "verified"},
+    {"id": "ADD-P2-3", "severity": "P2", "status": "verified"},
+    {"id": "ADD-P2-4", "severity": "P2", "status": "verified"}
+  ]
+}

@@ -19,51 +19,7 @@ New capabilities vs rule_index.py:
 
 import argparse, json, sys, re, subprocess, glob as glob_mod
 from pathlib import Path
-
-
-def extract_constraints(text, source_name):
-    """Extract must/shall/threshold/invariant statements. Preserved from rule_index.py."""
-    rules = []
-    lines = text.split("\n")
-    patterns = [
-        (r'(?i)\b(must\s+(?:not\s+)?[^.]{15,200}?\.)', "must"),
-        (r'(?i)\b(shall\s+(?:not\s+)?[^.]{15,200}?\.)', "must"),
-        (r'(?i)\b(threshold[^.]{15,200}?\.)', "threshold"),
-        (r'(?i)\b(invariant[^.]{15,200}?\.)', "invariant"),
-        (r'(?i)\b(required\s+[^.]{15,200}?\.)', "required"),
-        (r'(?i)\b(never\s+[^.]{15,200}?\.)', "forbidden"),
-        (r'(?i)\b(always\s+[^.]{15,200}?\.)', "always"),
-    ]
-    for i, line in enumerate(lines):
-        for pat, cat in patterns:
-            for m in re.finditer(pat, line):
-                rules.append({
-                    "text": m.group(1).strip(),
-                    "category": cat,
-                    "source": source_name,
-                    "line": i + 1,
-                })
-    for i, line in enumerate(lines):
-        if re.search(r'(?i)#+\s*(?:rule|constraint|requirement)', line):
-            rules.append({
-                "text": line.strip(),
-                "category": "explicit_rule",
-                "source": source_name,
-                "line": i + 1,
-            })
-    return rules
-
-
-def index_rules(rules):
-    """Keyword→constraint index. Preserved from rule_index.py."""
-    index = {}
-    for r in rules:
-        words = set(re.findall(r'\b[a-zA-Z_]\w{2,}\b', r["text"].lower()))
-        for w in words:
-            if w not in index:
-                index[w] = []
-            index[w].append(r["text"])
-    return {k: v for k, v in list(index.items())[:200]}
+from _rule_utils import extract_constraints, index_rules
 
 
 def parse_spec_modules(spec_text):
@@ -169,6 +125,8 @@ def grep_code_evidence(decision_text, repo_root, timeout=10):
                 capture_output=True, text=True, timeout=timeout,
                 cwd=str(repo)
             )
+            if result.returncode not in (0, 1):
+                continue
             matches = result.stdout.strip().split("\n")[:3]
             for match in matches:
                 if ":" in match:
@@ -179,7 +137,7 @@ def grep_code_evidence(decision_text, repo_root, timeout=10):
                             "line": int(parts[1]) if parts[1].isdigit() else 0,
                             "match": parts[2][:80] if len(parts) > 2 else match[:80],
                         })
-        except (subprocess.TimeoutExpired, FileNotFoundError):
+        except (subprocess.TimeoutExpired, FileNotFoundError, PermissionError, OSError):
             pass
 
     return evidence[:3]
@@ -264,5 +222,7 @@ if __name__ == "__main__":
     try:
         sys.exit(main())
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         print(json.dumps({"error": str(e)}), file=sys.stderr)
         sys.exit(2)
