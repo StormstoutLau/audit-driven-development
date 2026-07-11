@@ -14,6 +14,7 @@ Grade mapping:  A+ >=95, A 85-94, B+ 75-84, B 65-74, C+ 55-64, D 40-54, F <40
 import json, sys
 from pathlib import Path
 from datetime import datetime
+from _script_utils import run_script
 
 WEIGHTS = {"P0": 20, "P1": 8, "P2": 3, "P3": 1}
 
@@ -122,8 +123,4 @@ def main():
         print(f"Unknown command: {cmd}")
 
 if __name__ == "__main__":
-    try:
-        sys.exit(main())
-    except Exception as e:
-        print(json.dumps({"error": str(e)}), file=sys.stderr)
-        sys.exit(2)
+    run_script(main)

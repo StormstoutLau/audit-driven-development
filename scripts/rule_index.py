@@ -7,8 +7,9 @@ Output: rule_index.json — keyword → constraint mapping. Subagent queries thi
 instead of re-reading entire spec documents, reducing context size.
 """
 
-import argparse, json, sys, re
+import argparse, json, sys, re, os
 from pathlib import Path
+from _script_utils import run_script
 
 
 def extract_constraints(text, source_name):
@@ -101,8 +102,4 @@ def main():
 
 
 if __name__ == "__main__":
-    try:
-        sys.exit(main())
-    except Exception as e:
-        print(json.dumps({"error": str(e)}), file=sys.stderr)
-        sys.exit(2)
+    run_script(main)

@@ -6,6 +6,7 @@ Usage: python scripts/merge_guards.py --common <guards.common.yml> --project <gu
 
 import sys, yaml, json
 from pathlib import Path
+from _script_utils import run_script
 
 def load_guard_file(path):
     """Load a guard YAML file."""
@@ -80,8 +81,4 @@ def main():
     return 0
 
 if __name__ == "__main__":
-    try:
-        sys.exit(main())
-    except Exception as e:
-        print(json.dumps({"error": str(e)}), file=sys.stderr)
-        sys.exit(2)
+    run_script(main)

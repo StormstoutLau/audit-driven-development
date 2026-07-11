@@ -7,6 +7,7 @@ Cost cap: max 50 files per module. If >50, warn and pick top 50 by git churn.
 
 import argparse, json, sys, glob as glob_mod, subprocess, os
 from pathlib import Path
+from _script_utils import run_script
 
 
 def parse_spec_module(spec_path, module_name):
@@ -82,8 +83,4 @@ def main():
 
 
 if __name__ == "__main__":
-    try:
-        sys.exit(main())
-    except Exception as e:
-        print(json.dumps({"error": str(e)}), file=sys.stderr)
-        sys.exit(2)
+    run_script(main)

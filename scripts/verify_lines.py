@@ -7,6 +7,7 @@ Output: verified.json with line_number_confirmed: true/false for each finding.
 
 import argparse, json, sys
 from pathlib import Path
+from _script_utils import run_script
 
 
 def extract_keywords(claim):
@@ -82,8 +83,4 @@ def main():
 
 
 if __name__ == "__main__":
-    try:
-        sys.exit(main())
-    except Exception as e:
-        print(json.dumps({"error": str(e)}), file=sys.stderr)
-        sys.exit(2)
+    run_script(main)

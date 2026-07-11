@@ -21,6 +21,7 @@ Logic (deterministic, no AI):
 
 import argparse, json, sys, re, difflib, glob as glob_mod
 from pathlib import Path
+from _script_utils import run_script
 
 SEVERITY_MAP = {"P0": "blocker", "P1": "critical", "P2": "warning", "P3": "info"}
 
@@ -326,10 +327,4 @@ def main():
 
 
 if __name__ == "__main__":
-    try:
-        sys.exit(main())
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        print(json.dumps({"error": str(e)}), file=sys.stderr)
-        sys.exit(2)
+    run_script(main)

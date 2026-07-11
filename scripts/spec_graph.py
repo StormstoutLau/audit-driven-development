@@ -20,6 +20,7 @@ New capabilities vs rule_index.py:
 import argparse, json, sys, re, subprocess, glob as glob_mod
 from pathlib import Path
 from _rule_utils import extract_constraints, index_rules
+from _script_utils import run_script
 
 
 def parse_spec_modules(spec_text):
@@ -219,10 +220,4 @@ def main():
 
 
 if __name__ == "__main__":
-    try:
-        sys.exit(main())
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        print(json.dumps({"error": str(e)}), file=sys.stderr)
-        sys.exit(2)
+    run_script(main)
