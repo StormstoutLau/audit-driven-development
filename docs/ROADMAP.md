@@ -65,16 +65,16 @@ P2 项分为 **Detection**（发现识别错误）和 **Repair**（修复验证�
 | **P0.5** | FP type classification | Detection | Limitation 2+3 | Code_Hub §7 | ✅ Done |
 | **P2.9** | Detection Calibration: OSS Benchmark | Detection | Limitation 3 | — | ✅ Done (94.3% recall) |
 | **P2.8'** | Detection Coverage: Lens-Audit Matrix | Detection | Limitation 2 | V2#3 + P2.8 | ✅ Done (100% Requests recall) |
-| **P2.10** | Detection Precision: Evidence Verification | Detection | Limitation 2 | V2#4 | 2 days |
+| **P2.10** | Detection Precision: Evidence Verification | Detection | Limitation 2 | V2#4 | ✅ Done (3 scripts) |
 | **P2.7** | Detection Reliability: Dual-Subagent Voting | Detection | Limitation 2 | — | 3 days |
 
 #### Repair Items / 修复侧
 
 | ID | Action / 动作 | Side / 侧 | Addresses / 回应 | Traced to | Cost |
 |---|---|---|---|---|---|
-| **P2.11** | Repair Cycle: Audit-Fix-Reverify Loop | Repair | Limitation 2 | V2#1 | 1 day |
+| **P2.11** | Repair Cycle: Audit-Fix-Reverify Loop | Repair | Limitation 2 | V2#1 | ✅ Done (iterative audit) |
 | **P2.12** | Repair Tracking: State Machine + Incremental Verify | Repair | Limitation 3 | V2#5 | ✅ Done (issues_tracker.py) |
-| **P2.13** | Repair Guidance: Structured fix_suggestion + Impact Analysis | Repair | Limitation 2+3 | Security skill 借鉴 | 2 days |
+| **P2.13** | Repair Guidance: Structured fix_suggestion + Impact Analysis | Repair | Limitation 2+3 | Security skill 借鉴 | ✅ Done (6-field schema) |
 
 ### P3 — v0.5 (Ecosystem: Detection + Repair / 生态：检测+修复)
 
@@ -582,10 +582,10 @@ Initial 80% single-threshold was too aggressive for OSS projects where design do
 | v0.2.1 | Audit-Driven Improvements | P0.4 DIMENSION 6, P0.5 FP classification | — | Done |
 | v0.2.2 | Detection/Repair Duality | SKILL.md alignment, TDD | — | Done |
 | v0.3 | Detection Bootstrap | P2.9 (94.3% recall), P2.8' (7 lenses) | P2.12 (state machine + --verify) | ✅ Done |
-| v0.4 | Repair Baseline | P2.10 Precision, P2.7 Reliability | P2.11 Cycle, P2.13 Guidance | ~2 weeks (业余 ~1 month) |
-| v0.5 | Ecosystem | P3.1 Enhancement, P3.2 Quantification | P3.3 Knowledge | ~2 weeks (业余 ~1.5 months) |
+| v0.4 | Repair Baseline | P2.10 (3 scripts), P2.11 (iterative), P2.13 (6-field fix_suggestion) | — | ✅ Done |
+| v0.5 | Ecosystem | P3.1 Guards, P3.2 Scoring | P3.3 Cross-project | ~1.5 weeks (业余 ~1 month) |
 
-Total: ~4 weeks remaining ≈ **2–3 calendar months** at hobby-project pace. Each version independently shippable.
+Total: P2 complete. 3 P3 items remaining ≈ **1.5 weeks** at hobby-project pace.
 
 ---
 

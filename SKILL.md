@@ -472,9 +472,19 @@ fix: resolve N P0 blockers from code quality audit
 4. 创建 TodoWrite 跟踪审查任务
 
 ### Step 2: Audit — Parallel Subagents (Detection)
+
+**v0.4+ Deterministic Pre-Processing / 确定性预处理** (P2.10):
+Before any subagent dispatch, run 3 deterministic scripts to verify subagent inputs:
+```
+python scripts/audit_files.py --spec <spec> --module <name> --base <commit>
+python scripts/rule_index.py --spec <spec> --adrs <dir>
+```
+These scripts are NOT subagent tasks. They are deterministic pre-processing run by the main agent via `RunCommand`. If any script fails or times out (cap: 30s), the audit proceeds without its output — no blocking dependency. Subagents receive pre-verified file lists and rule indices instead of raw spec documents.
+
 **对每个模块派发独立 subagent**:
 - 输入：模块代码 + 对应 spec
 - 输出：`ModuleAuditResult` JSON（per Appendix B schema）
+- 输出 now includes `fix_suggestion` block per P2.13 schema (v0.4+)
 
 **跨模块契约审查派发独立 subagent**:
 - 输入：ADR + 架构文档 + 所有模块代码
@@ -637,6 +647,109 @@ Applied in Step 3 (Aggregate) before score calculation. When two lens subagents 
 
 This prevents double-counting the same bug in scoring and benchmark recall/precision.
 
+---
+
+## Iterative Audit / 迭代审查 (v0.4+)
+
+**Added in v0.4 (P2.11)** in response to Limitation 2 (single-pass audit). Borrowed from `executing-plans`'s round-based execution model.
+
+Single-pass audit can miss regressions introduced by fixes. Iterative Audit runs bounded rounds: audit → fix → re-audit changed files → repeat. **HUMAN-IN-THE-LOOP — Agent never auto-fixes.**
+
+### Parameters / 参数
+
+```yaml
+--max_rounds:      default=2, max=5        # Cap iterations per audit
+--stop_condition:  "p0_zero" (default)      # "p0_zero" or "p0_p1_zero"
+--incremental_only: default=true            # Only re-audit files changed since last round
+```
+
+### Algorithm / 算法
+
+```
+round = 1
+changed_files = <full scope from P2.10 audit_files.py>
+while round <= max_rounds:
+    audit(changed_files)                              # Agent: Phase 2 subagent dispatch
+    report P0/P1 findings to user                     # Agent output
+    if stop_condition met:                            # e.g., p0_zero → no P0s remain
+        break
+    user fixes all P0 findings                        # HUMAN step — Agent WAITS
+    changed_files = files modified in user's commits  # Agent: git diff HEAD~1..HEAD
+    round += 1
+if round == max_rounds and stop_condition not met:
+    warn: "Iteration capped at max_rounds={max_rounds}. {n_p0} P0, {n_p1} P1 remain."
+```
+
+### Round 2 Lens Switching / 第二轮流切换透镜
+
+Round 1 uses the lens set specified by `--lens`. Round 2 can optionally switch to a different core lens subset to catch different bug categories:
+- Round 1 = design+contract (spec alignment focus)
+- Round 2 = error+boundary+corrective (quality focus)
+- If `--lens security` is set, security lens runs in ALL rounds
+
+### Cost Cap / 成本上限
+
+`max_rounds=5` × `incremental_only=true` → worst case 5 × (50 files max per module) subagent passes. Default: 2 rounds.
+
+### Integration with P2.10 / 集成
+
+Before Round 1: `python scripts/audit_files.py --spec <spec> --module <name> --base <commit>` determines initial scope.
+Before Round N: `git diff HEAD~1..HEAD --name-only` determines changed files for incremental re-audit.
+
+---
+
+## Structured Repair Guidance / 结构化修复引导 (v0.4+)
+
+**Added in v0.4 (P2.13)** in response to Limitation 2+3 (unstructured fix suggestions). Borrowed from `security-best-practices` skill's structured finding format (Impact + Mitigation fields).
+
+Every AuditFinding now includes a structured `fix_suggestion` block. The subagent prompt (Template 1, Appendix A) is updated to require this format.
+
+### fix_suggestion Schema / 修复建议格式
+
+```json
+{
+  "finding_id": "MODULE-P0-1",
+  "fix_suggestion": {
+    "steps": [
+      "<Step 1: what to change, where, how>",
+      "<Step 2: ...>"
+    ],
+    "affected_files": [
+      "<file_path>:<line_range>"
+    ],
+    "regression_risk": "<none | low | medium | high>",
+    "verification_command": "<shell command to confirm fix>",
+    "impact": "<what breaks if NOT fixed>",
+    "mitigation": "<temporary workaround until fix is applied>"
+  }
+}
+```
+
+### Field Descriptions / 字段说明
+
+| Field | Type | Description |
+|---|---|---|
+| `steps` | string[] | Ordered, actionable fix steps. Each step = one atomic change. |
+| `affected_files` | string[] | Files that must be modified, with optional line range (e.g., `file.py:L10-L15`) |
+| `regression_risk` | enum | `none` (1-line doc fix) / `low` (isolated module) / `medium` (shared dependency) / `high` (contract change) |
+| `verification_command` | string | Shell command to confirm the fix works. Prefer test runner commands. |
+| `impact` | string | What fails or is broken if this finding is NOT fixed. User-facing impact. |
+| `mitigation` | string | Temporary workaround or fallback until fix is applied. Can be `None`. |
+
+### Subagent Prompt Update / Subagent Prompt 更新
+
+Template 1 (Appendix A) now requires:
+```
+FOR EACH FINDING, output a fix_suggestion block with:
+- steps: ordered list of atomic fix actions
+- affected_files: file paths with optional line ranges
+- regression_risk: none / low / medium / high
+- verification_command: test or shell command to confirm fix
+- impact: what breaks if unfixed (user-facing)
+- mitigation: temporary workaround (or "none")
+```
+
+
 ## Critical Anti-Patterns
 
 ### ❌ 反模式 1: "测试通过就行"
@@ -683,8 +796,13 @@ ADD 必须是 Human-in-the-Loop。Agent 审查 → 发现 → 建议修复 → *
 | ADR 依赖图不变式 | ✅ | - | Lens: contract |
 | 测试盲区识别 | ✅ | - | Lens: blind_spot |
 | 跨模块契约一致性 | ✅ | - | Lens: contract + inter-rater (v0.4) |
-| 错误处理完整性 | v0.3+ | - | Lens: error_handle |
-| 数据验证/边界条件 | v0.3+ | - | Lens: boundary |
+| 错误处理完整性 | ✅ v0.3+ | - | Lens: error_handle |
+| 数据验证/边界条件 | ✅ v0.3+ | - | Lens: boundary |
+| 安全漏洞扫描 | ✅ v0.3+ | - | Lens: security |
+| 迭代审计（多轮） | ✅ v0.4+ | - | Iterative audit: Repair cycle (P2.11) |
+| 结构化修复引导 | ✅ v0.4+ | - | fix_suggestion schema: Repair Guidance (P2.13) |
+| 确定性文件选择 + 行号验证 | ✅ v0.4+ | - | audit_files.py + verify_lines.py (P2.10) |
+| 修复状态机跟踪 | ✅ v0.3+ | - | Repair tracking: issues_tracker.py (P2.12) |
 | 语义守卫检查 | v0.5+ | - | P3.1 guards.yml |
 | 通用代码质量 | - | code-review-excellence | - |
 | 单 Task TDD | - | test-driven-development | - |

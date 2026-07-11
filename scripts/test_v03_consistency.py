@@ -53,8 +53,8 @@ checks.append(("L5: Core Lens → Category mapping table exists",
 checks.append(("L6: Process Step 2 mentions lens dispatch mode",
     "per lens per module" not in SKILL.lower() and "lens dispatch" not in SKILL.lower()))
 
-# L7: Boundaries table shows Lens coverage
-boundaries = SKILL[SKILL.find("## Boundaries"):SKILL.find("## Integration")] if "## Boundaries" in SKILL else ""
+# L7: Boundaries table lists Lens-audit capabilities
+boundaries = SKILL[SKILL.find("## Boundaries with Other Skills"):SKILL.find("## Integration\n")] if "## Integration\n" in SKILL else SKILL[SKILL.find("## Boundaries with Other Skills"):]
 checks.append(("L7: Boundaries table lists Lens-audit capabilities",
     "lens" not in boundaries.lower()))
 

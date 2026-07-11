@@ -78,7 +78,7 @@ checks.append((
 # === BOUNDARIES TABLE ===
 
 # R9: Boundaries table should show Repair capabilities
-boundaries_section = SKILL[SKILL.find("## Boundaries"):SKILL.find("## Integration")]
+boundaries_section = SKILL[SKILL.find("## Boundaries with Other Skills"):SKILL.find("## Integration\n")] if "## Integration\n" in SKILL else SKILL[SKILL.find("## Boundaries with Other Skills"):]
 checks.append((
     "R9: Boundaries shows Repair-side capabilities",
     "repair" not in boundaries_section.lower() and "修复" not in boundaries_section.lower()
