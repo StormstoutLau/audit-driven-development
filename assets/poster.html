@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADD — Audit-Driven Development — Poster</title>
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0a0f;
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; padding: 20px;
+  }
+  .poster {
+    width: 1200px; height: 1800px;
+    background: #0a0a0f;
+    color: #e2e8f0;
+    font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+    overflow: hidden; position: relative;
+    display: flex; flex-direction: column;
+    padding: 72px 80px;
+  }
+
+  /* Background texture — subtle grid */
+  .poster::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  /* Accent glow top-right */
+  .poster::after {
+    content: '';
+    position: absolute;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(124,58,237,.12), transparent 70%);
+    pointer-events: none;
+  }
+
+  .header   { position: relative; z-index: 1; }
+  .top-row  { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; }
+
+  .tag {
+    display: inline-block;
+    font-size: 13px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase;
+    color: #7c3aed;
+    border: 1px solid rgba(124,58,237,.3);
+    border-radius: 6px;
+    padding: 6px 14px;
+  }
+
+  .version {
+    font-size: 14px; color: #64748b; font-weight: 500;
+  }
+
+  .thesis {
+    font-size: 64px; font-weight: 800; line-height: 1.08; letter-spacing: -.02em;
+    color: #f8fafc;
+    margin: 0 0 16px 0;
+    position: relative; z-index: 1;
+  }
+  .thesis .highlight-green { color: #4ade80; }
+  .thesis .highlight-amber { color: #fbbf24; }
+  .thesis .highlight-red   { color: #f87171; }
+
+  .subtitle {
+    font-size: 22px; font-weight: 400; color: #94a3b8;
+    line-height: 1.45; max-width: 780px;
+    margin-bottom: 60px;
+    position: relative; z-index: 1;
+  }
+
+  /* KPI Row */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 64px;
+    position: relative; z-index: 1;
+  }
+  .kpi-card {
+    background: rgba(255,255,255,.03);
+    border: 1px solid rgba(255,255,255,.06);
+    border-radius: 16px;
+    padding: 28px 24px;
+    text-align: center;
+  }
+  .kpi-value {
+    font-size: 48px; font-weight: 800; line-height: 1;
+    letter-spacing: -.02em;
+    margin-bottom: 8px;
+  }
+  .kpi-value.green  { color: #4ade80; }
+  .kpi-value.amber  { color: #fbbf24; }
+  .kpi-value.purple { color: #a78bfa; }
+  .kpi-value.cyan   { color: #22d3ee; }
+  .kpi-label {
+    font-size: 14px; color: #64748b; font-weight: 500; letter-spacing: .05em;
+  }
+
+  /* Detection / Repair block */
+  .duality {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+    margin-bottom: 60px; position: relative; z-index: 1;
+  }
+  .side-card {
+    border-radius: 18px; padding: 36px 32px;
+  }
+  .side-card.detection {
+    background: rgba(22,163,74,.06);
+    border: 1px solid rgba(22,163,74,.18);
+  }
+  .side-card.repair {
+    background: rgba(245,158,11,.06);
+    border: 1px solid rgba(245,158,11,.18);
+  }
+  .side-title {
+    font-size: 16px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+  .side-card.detection .side-title  { color: #4ade80; }
+  .side-card.repair    .side-title  { color: #fbbf24; }
+  .side-list { list-style: none; }
+  .side-list li {
+    font-size: 17px; line-height: 1.6; color: #cbd5e1;
+    padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,.04);
+  }
+  .side-list li:last-child { border-bottom: none; }
+  .side-list li::before {
+    content: '→';
+    margin-right: 12px;
+    font-weight: 700;
+  }
+  .side-card.detection .side-list li::before { color: #4ade80; }
+  .side-card.repair    .side-list li::before { color: #fbbf24; }
+
+  /* Benchmark */
+  .bench-section {
+    position: relative; z-index: 1;
+    margin-bottom: 60px;
+  }
+  .section-label {
+    font-size: 13px; font-weight: 600; letter-spacing: .15em; text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 20px;
+  }
+  .bench-table {
+    width: 100%; border-collapse: collapse;
+  }
+  .bench-table th {
+    font-size: 12px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
+    color: #64748b; text-align: left; padding: 10px 16px;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+  }
+  .bench-table td {
+    font-size: 18px; color: #e2e8f0; padding: 14px 16px;
+    border-bottom: 1px solid rgba(255,255,255,.04);
+  }
+  .bench-table .recall-100 { color: #4ade80; font-weight: 700; }
+  .bench-table .recall-83  { color: #fbbf24; font-weight: 700; }
+
+  /* Iron Law */
+  .iron-law {
+    position: relative; z-index: 1;
+    background: rgba(220,38,38,.05);
+    border-left: 4px solid #dc2626;
+    padding: 28px 32px;
+    margin-bottom: auto;
+  }
+  .iron-law-text {
+    font-size: 22px; font-weight: 700; letter-spacing: -.01em;
+    color: #fca5a5;
+    line-height: 1.4;
+  }
+  .iron-law-sub {
+    font-size: 14px; color: #64748b; margin-top: 10px;
+  }
+
+  /* Footer */
+  .footer {
+    position: relative; z-index: 1;
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,.06);
+  }
+  .footer-left  { font-size: 14px; color: #64748b; }
+  .footer-right { font-size: 14px; color: #475569; }
+  .footer a { color: #7c3aed; text-decoration: none; }
+  .footer a:hover { color: #a78bfa; }
+
+  /* Lens row */
+  .lens-row {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    margin-bottom: 12px; position: relative; z-index: 1;
+  }
+  .lens-chip {
+    font-size: 13px; font-weight: 500; letter-spacing: .03em;
+    padding: 6px 14px; border-radius: 20px;
+    border: 1px solid rgba(124,58,237,.25);
+    color: #a78bfa;
+    background: rgba(124,58,237,.06);
+  }
+</style>
+</head>
+<body>
+<div class="poster">
+  <div class="header">
+    <div class="top-row">
+      <span class="tag">TRAE SKILL · v1.0</span>
+      <span class="version">audit-driven-development</span>
+    </div>
+    <div class="lens-row">
+      <span class="lens-chip">🧬 Design Alignment</span>
+      <span class="lens-chip">🔗 Contract Guardian</span>
+      <span class="lens-chip">🛡️ Error Handler</span>
+      <span class="lens-chip">🔲 Boundary Checker</span>
+      <span class="lens-chip">📝 Corrective Tracker</span>
+      <span class="lens-chip">🔐 Security</span>
+      <span class="lens-chip">🏗️ Architecture</span>
+    </div>
+
+    <h1 class="thesis">
+      Tests Pass<br>
+      <span class="highlight-red">≠</span>
+      <span class="highlight-green">Code Correct</span>
+    </h1>
+
+    <p class="subtitle">
+      An independent audit phase between implementation and done.<br>
+      Seven typed lens subagents. Three open‑source projects.<br>
+      <strong>94.3% benchmark recall.</strong> Detection finds. Repair closes.
+    </p>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-value purple">7</div>
+      <div class="kpi-label">TYPED LENSES</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value green">94.3%</div>
+      <div class="kpi-label">AVG RECALL</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value amber">96/96</div>
+      <div class="kpi-label">TDD PASS</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-value cyan">7</div>
+      <div class="kpi-label">IDE ADAPTERS</div>
+    </div>
+  </div>
+
+  <div class="duality">
+    <div class="side-card detection">
+      <div class="side-title">Detection</div>
+      <ul class="side-list">
+        <li>Multi-dimension audit</li>
+        <li>7 typed lens subagents</li>
+        <li>Spec mining + JSON output</li>
+        <li>Deterministic pre-processing</li>
+        <li>Benchmark calibration</li>
+        <li>Semantic guard enforcement</li>
+        <li>0–100 numeric scoring</li>
+      </ul>
+    </div>
+    <div class="side-card repair">
+      <div class="side-title">Repair</div>
+      <ul class="side-list">
+        <li>Fix priority matrix</li>
+        <li>Structured fix_suggestion</li>
+        <li>issues.json state machine</li>
+        <li>open → fixed → verified loop</li>
+        <li>Iterative audit rounds</li>
+        <li>Incremental --verify</li>
+        <li>Cross-project guard reuse</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="bench-section">
+    <div class="section-label">Open-Source Benchmark</div>
+    <table class="bench-table">
+      <tr><th>Project</th><th>Version</th><th>Bugs</th><th>Found</th><th>Recall</th><th>F₁</th></tr>
+      <tr><td>Flask</td><td>3.1.2</td><td>3</td><td>3</td><td class="recall-100">100%</td><td>94.1%</td></tr>
+      <tr><td>FastAPI</td><td>0.115.8</td><td>6</td><td>5</td><td class="recall-83">83%</td><td>83.9%</td></tr>
+      <tr><td>Requests</td><td>2.33.0</td><td>4</td><td>4</td><td class="recall-100">100%</td><td>100%</td></tr>
+    </table>
+  </div>
+
+  <div class="iron-law">
+    <div class="iron-law-text">NO "IMPLEMENTATION COMPLETE" WITHOUT AN AUDIT‑DRIVEN REVIEW</div>
+    <div class="iron-law-sub">The audit phase is mandatory. Tests passing is the gate to audit. Audit passing is the gate to done.</div>
+  </div>
+
+  <div class="footer">
+    <div class="footer-left">
+      <a href="https://github.com/StormstoutLau/audit-driven-development">github.com/StormstoutLau/audit-driven-development</a>
+    </div>
+    <div class="footer-right">MIT License © 2026 StormstoutLau</div>
+  </div>
+</div>
+</body>
+</html>
