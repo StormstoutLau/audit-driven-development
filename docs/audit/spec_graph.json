@@ -1,0 +1,1496 @@
+{
+  "project": "audit-driven-development",
+  "version": "2.0",
+  "spec_sections": [
+    {
+      "section": "Overview",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "When to Use",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "The Iron Law",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Pre-Audit: Spec Quality Gate (Phase 0) / 设计文档质量门 (Phase 0)",
+      "module": "SKILL.md",
+      "constraints": [],
+      "code_locations": [
+        {
+          "file": "docs/ROADMAP.md",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "Spec Quality Checklist / Spec 质量检查清单",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Tier Assignment / 分档判定",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Why This Gate Matters / 为何需要此门",
+      "module": "unknown",
+      "constraints": [
+        "MUST state the tier and its limitation."
+      ],
+      "code_locations": []
+    },
+    {
+      "section": "Spec Mining Fallback / Spec 反向挖掘",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": [
+        {
+          "file": "implicit_spec.md",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "Module: <name>",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Constraints from Git History / 来自 Git 历史的约束",
+      "module": "unknown",
+      "constraints": [
+        "### Constraints from Git History / 来自 Git 历史的约束"
+      ],
+      "code_locations": []
+    },
+    {
+      "section": "Interface Contracts / 接口契约",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Behavior Contracts (from tests) / 行为契约（来自测试）",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Invariants (from ADRs) / 不变式（来自 ADR）",
+      "module": "unknown",
+      "constraints": [
+        "MUST flag that the spec was mined, not authored.",
+        "always weaker than authored specs.",
+        "required — flag as low-confidence when ≥2 sources disagree."
+      ],
+      "code_locations": [
+        {
+          "file": "implicit_spec.md",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "Knowledge Loading / 知识加载 (v2.0+)",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Step 0.5: Load Accumulated Knowledge / 加载积累知识",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": [
+        {
+          "file": "merge_guards.py",
+          "line_start": 1,
+          "line_end": 1
+        },
+        {
+          "file": "docs/audit/scores.json",
+          "line_start": 1,
+          "line_end": 1
+        },
+        {
+          "file": "docs/audit/guards.learned.yml",
+          "line_start": 1,
+          "line_end": 1
+        },
+        {
+          "file": "docs/audit/spec_graph.json",
+          "line_start": 1,
+          "line_end": 1
+        },
+        {
+          "file": "guards.project.yml",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "The Audit Framework: 4 Phases",
+      "module": "SKILL.md",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Phase 1: Spec Inventory (设计文档盘点)",
+      "module": "SKILL.md",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Phase 2: Multi-Dimensional Audit (多维度审查)",
+      "module": "SKILL.md",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Phase 3: Fix Priority Matrix (修复优先级矩阵)",
+      "module": "SKILL.md",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Phase 4: Fix Baseline + Tracking (修复基线 + 跟踪表)",
+      "module": "SKILL.md",
+      "constraints": [],
+      "code_locations": [
+        {
+          "file": "docs/audit/YYYY-MM-DD-code-quality-audit.md",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "Scoring System",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": [
+        {
+          "file": "docs/implementation-plan.md",
+          "line_start": 1,
+          "line_end": 1
+        },
+        {
+          "file": "scores.json",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "ADR Dependency Graph Invariants",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "1. 静态依赖检查（必须）",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "2. 动态依赖检查（必须）",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "3. TYPE_CHECKING 守卫模式",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": [
+        {
+          "file": "data_structures.py",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "4. 两个唯一入口原则",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Test Blind Spot Detection",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "盲区 1: 断言恒真式",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "盲区 2: 单文件检查盲区",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "盲区 3: 设计文档独有约束无测试",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "盲区 4: 修正阻断性项无测试",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Templates",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Template 1: 审查报告骨架",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "0. 修复跟踪表",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "1. 审查范围与方法",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "1.1 设计文档清单",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "1.2 审查维度",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "1.3 审查方法",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "2. 模块审查结果",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "2.1 <Module> 模块 (评分: X)",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "3. 跨模块契约审查",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "3.1 ADR-001 依赖图不变式",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "3.2 接口契约",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "4. 修复优先级矩阵",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Tier 1: P0 Blocker (立即修复)",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Tier 2: P1 Critical + 低成本 P2",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Tier 3: 剩余 P2 + P3",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "5. 测试盲区汇总",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "6. 修复后预期评分提升",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "7. 下一步建议",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Template 2: 修复提交信息",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "修复内容",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "<Module> (N 项)",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "测试验证",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "文档",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Process: Step-by-Step",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": [
+        {
+          "file": "docs/implementation-plan.md",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "Detection Phase / 检测阶段",
+      "module": "SKILL.md",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Step 1: Inventory (Detection)",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Step 2: Audit — Parallel Subagents (Detection)",
+      "module": "SKILL.md",
+      "constraints": [],
+      "code_locations": [
+        {
+          "file": "docs/implementation-plan.md",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "Step 3: Aggregate + Prioritize (Detection)",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Repair Phase / 修复阶段",
+      "module": "SKILL.md",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Step 4: Fix Baseline (Repair)",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": [
+        {
+          "file": "docs/audit/YYYY-MM-DD-code-quality-audit.md",
+          "line_start": 1,
+          "line_end": 1
+        },
+        {
+          "file": "issues.json",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "Step 5: Fix P0 Blockers (Repair — Human-in-the-Loop)",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Step 6: Final Report (Repair)",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": [
+        {
+          "file": "docs/audit/scores.json",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "Lens System / 透镜系统 (v0.3+)",
+      "module": "SKILL.md",
+      "constraints": [
+        "always active; extension lenses are opt-in via `--lens`."
+      ],
+      "code_locations": []
+    },
+    {
+      "section": "Core Lens / 核心透镜 (5, always-on)",
+      "module": "SKILL.md",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Extension Lens / 扩展透镜 (2, opt-in via `--lens`)",
+      "module": "SKILL.md",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Lens Dispatch / 透镜派发",
+      "module": "SKILL.md",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Lens-Specific Prompt Blocks / 透镜专用 Prompt 块",
+      "module": "SKILL.md",
+      "constraints": [
+        "thresholds, and invariants in spec are reflected in code.",
+        "invariants in spec are reflected in code.",
+        "must have a corresponding code change."
+      ],
+      "code_locations": []
+    },
+    {
+      "section": "Lens Overlap Deduplication / 透镜重叠去重",
+      "module": "SKILL.md",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Iterative Audit / 迭代审查 (v0.4+)",
+      "module": "SKILL.md",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Parameters / 参数",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Algorithm / 算法",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Round 2 Lens Switching / 第二轮流切换透镜",
+      "module": "SKILL.md",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Cost Cap / 成本上限",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Integration with P2.10 / 集成",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Structured Repair Guidance / 结构化修复引导 (v0.4+)",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "fix_suggestion Schema / 修复建议格式",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Field Descriptions / 字段说明",
+      "module": "unknown",
+      "constraints": [
+        "must be modified, with optional line range (e."
+      ],
+      "code_locations": []
+    },
+    {
+      "section": "Subagent Prompt Update / Subagent Prompt 更新",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Semantic Guards / 语义守卫 (v0.5+)",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Architecture / 架构",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Guard Format / 守卫格式",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Guard Check Subagent / 守卫检查 Subagent",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": [
+        {
+          "file": "guards.yml",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "Template Guards / 模板守卫",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": [
+        {
+          "file": "docs/audit/guards.template.yml",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "Loading and Merging / 加载和合并 (P3.3)",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Numeric Scoring / 数值评分 (v0.5+)",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Score Formula / 评分公式",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Grade Mapping / 等级映射",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "scores.json / 趋势追踪",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": [
+        {
+          "file": "docs/audit/scores.json",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "Commands / 命令",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Step 6 Integration / 流程集成",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": [
+        {
+          "file": "scores.json",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "Critical Anti-Patterns",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "❌ 反模式 1: \"测试通过就行\"",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "❌ 反模式 2: \"修复后不重跑\"",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "❌ 反模式 3: \"审查后不建立基线\"",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "❌ 反模式 4: \"P0 和 P1 一起修\"",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "❌ 反模式 5: \"只看单文件\"",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "❌ 反模式 6: \"修复后不验证是否真解决了问题\"",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "❌ 反模式 7: \"Agent 可以自动修代码\"",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Audit Completion Checklist / 审计完成前清单",
+      "module": "SKILL.md",
+      "constraints": [],
+      "code_locations": [
+        {
+          "file": "docs/audit/YYYY-MM-DD-code-quality-audit.md",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "Boundaries with Other Skills",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Integration",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Remember",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Appendix A: Subagent Prompt Templates / Subagent Prompt 模板",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": [
+        {
+          "file": "docs/ROADMAP.md",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "Template 1: Module Audit Subagent / 模块审计 Subagent",
+      "module": "SKILL.md",
+      "constraints": [
+        "MUST include an evidence pointer.",
+        "required metadata fields (e.",
+        "MUST be valid JSON conforming to `schemas/audit-finding.",
+        "MUST check ALL spec sections, not just the ones with obvious issues.",
+        "MUST check ALL P1 categories exhaustively."
+      ],
+      "code_locations": [
+        {
+          "file": "schemas/audit-finding.schema.json",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "Template 2: Cross-Module Contract Audit Subagent / 跨模块契约审计 Subagent",
+      "module": "SKILL.md",
+      "constraints": [
+        "invariants and cross-module contracts."
+      ],
+      "code_locations": []
+    },
+    {
+      "section": "Evidence Pointer Rules / Evidence Pointer 规则",
+      "module": "unknown",
+      "constraints": [
+        "MUST have `evidence: <file>:<line_start>-<line_end>`.",
+        "MUST have `spec_ref: <doc> §<section>`.",
+        "MUST have actually read that line."
+      ],
+      "code_locations": []
+    },
+    {
+      "section": "Subagent Calibration / Subagent 校准",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": [
+        {
+          "file": "docs/ROADMAP.md",
+          "line_start": 1,
+          "line_end": 1
+        },
+        {
+          "file": "docs/audit-log/<case>.md",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "Appendix B: Structured Audit Protocol / 结构化审计协议",
+      "module": "SKILL.md",
+      "constraints": [],
+      "code_locations": [
+        {
+          "file": "docs/ROADMAP.md",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "Overview / 概述",
+      "module": "unknown",
+      "constraints": [
+        "MUST conform to the JSON schema defined in [`schemas/audit-finding."
+      ],
+      "code_locations": [
+        {
+          "file": "schemas/audit-finding.schema.json",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "Schema Location / Schema 位置",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Core Model: AuditFinding / 核心模型",
+      "module": "SKILL.md",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Aggregation Model: ModuleAuditResult / 聚合模型",
+      "module": "SKILL.md",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Report Model: AuditReport / 报告模型",
+      "module": "SKILL.md",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Relationship to Appendix A / 与 Appendix A 的关系",
+      "module": "unknown",
+      "constraints": [
+        "MUST be valid JSON conforming to `schemas/audit-finding."
+      ],
+      "code_locations": [
+        {
+          "file": "schemas/audit-finding.schema.json",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "Integration with P1.4 / 与 P1.4 的集成",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Integration with P2.7 / 与 P2.7 的集成",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    }
+  ],
+  "adr_decisions": [
+    {
+      "adr": "implementation-plan.md",
+      "decision": "\" sections → invariant statements",
+      "code_evidence": []
+    },
+    {
+      "adr": "implementation-plan.md",
+      "decision": "Extract \"Constraint:\" sections → explicit constraints",
+      "code_evidence": [
+        {
+          "file": "scripts/audit_files.py",
+          "line": 13,
+          "match": "    \"\"\"Extract file glob patterns from spec for a given module.\"\"\""
+        },
+        {
+          "file": "scripts/rule_extractor.py",
+          "line": 12,
+          "match": "  3. Extract TP entries from tp_classification.exact_matches + close_matches"
+        },
+        {
+          "file": "scripts/rule_extractor.py",
+          "line": 17,
+          "match": "  8. Extract rules from references/*.md (semi-structured Rule N format)"
+        }
+      ]
+    },
+    {
+      "adr": "implementation-plan.md",
+      "decision": "3. Build keyword→rule index",
+      "code_evidence": []
+    },
+    {
+      "adr": "implementation-plan.md",
+      "decision": "Tokenize each rule → extract significant words (>3 chars, non-stopword)",
+      "code_evidence": []
+    },
+    {
+      "adr": "implementation-plan.md",
+      "decision": "Create mapping: keyword → [list of rule strings]",
+      "code_evidence": [
+        {
+          "file": "scripts/issues_tracker.py",
+          "line": 73,
+          "match": "    print(f\"Created {ISSUES_FILE} with {len(issues)} issues (all status=open)\")"
+        },
+        {
+          "file": "scripts/rule_index.py",
+          "line": 55,
+          "match": "    \"\"\"Create keyword→constraint index for fast lookup.\"\"\""
+        }
+      ]
+    },
+    {
+      "adr": "implementation-plan.md",
+      "decision": "4. Output rule_index.json",
+      "code_evidence": [
+        {
+          "file": "scripts/rule_extractor.py",
+          "line": 19,
+          "match": "  10. Output guards.learned.yml in guards.template.yml format"
+        },
+        {
+          "file": "scripts/rule_index.py",
+          "line": 6,
+          "match": "Output: rule_index.json — keyword → constraint mapping. Subagent queries this"
+        },
+        {
+          "file": "scripts/score_tracker.py",
+          "line": 5,
+          "match": "    → Output 0-100 score + letter grade based on finding counts"
+        }
+      ]
+    },
+    {
+      "adr": "implementation-plan.md",
+      "decision": "python scripts/rule_index.py --spec docs/spec.md --adrs docs/adr/ [--output rule_index.json]",
+      "code_evidence": [
+        {
+          "file": "scripts/rule_index.py",
+          "line": 3,
+          "match": "Usage: python scripts/rule_index.py --spec <spec.md> --adrs <dir>"
+        },
+        {
+          "file": "scripts/rule_index.py",
+          "line": 4,
+          "match": "      python scripts/rule_index.py --spec <spec.md>"
+        },
+        {
+          "file": "scripts/test_v04_consistency.py",
+          "line": 29,
+          "match": "# D3: scripts/rule_index.py exists"
+        }
+      ]
+    },
+    {
+      "adr": "implementation-plan.md",
+      "decision": "Output: rule_index.json",
+      "code_evidence": [
+        {
+          "file": "scripts/rule_extractor.py",
+          "line": 19,
+          "match": "  10. Output guards.learned.yml in guards.template.yml format"
+        },
+        {
+          "file": "scripts/rule_index.py",
+          "line": 6,
+          "match": "Output: rule_index.json — keyword → constraint mapping. Subagent queries this"
+        },
+        {
+          "file": "scripts/score_tracker.py",
+          "line": 5,
+          "match": "    → Output 0-100 score + letter grade based on finding counts"
+        }
+      ]
+    },
+    {
+      "adr": "ROADMAP.md",
+      "decision": "\" 项是否在代码中落地）",
+      "code_evidence": []
+    },
+    {
+      "adr": "ROADMAP.md",
+      "decision": "Template 2 (Cross-Module): 新增 CHECK 5 — ADR Decision Execution 交叉验证",
+      "code_evidence": [
+        {
+          "file": "docs/audit/guards.template.yml",
+          "line": 1,
+          "match": "# ADD Semantic Guards Template / 语义守卫模板"
+        },
+        {
+          "file": "scripts/test_v022_consistency.py",
+          "line": 119,
+          "match": "# R13: DIMENSION 6 present in Template 1 (P0.4 should be in SKILL.md)"
+        },
+        {
+          "file": "scripts/test_v022_consistency.py",
+          "line": 121,
+          "match": "    \"R13: Template 1 has DIMENSION 6 (added in v0.2.1)\","
+        }
+      ]
+    },
+    {
+      "adr": "ROADMAP.md",
+      "decision": "**Benefit / 收益**: 消除 Code_Hub 审计中发现的 prompt 盲区，将 FN-1/FN-2 类型的漏报在源头捕获。",
+      "code_evidence": []
+    },
+    {
+      "adr": "ROADMAP.md",
+      "decision": "**Status / 状态**: ✅ Implemented in v0.2.1 (see `SKILL.md` Template 1 DIMENSION 6 + Template 2 CHECK 5)",
+      "code_evidence": [
+        {
+          "file": "scripts/test_v20_consistency.py",
+          "line": 117,
+          "match": "check(\"C1 ROADMAP P2.7 Status is Done\","
+        },
+        {
+          "file": "scripts/test_v03_consistency.py",
+          "line": 104,
+          "match": "checks.append((\"C1: ROADMAP P2.8' status updated to Done/Implemented\","
+        },
+        {
+          "file": "scripts/test_v03_consistency.py",
+          "line": 108,
+          "match": "checks.append((\"C2: ROADMAP P2.12 status updated to Done/Implemented\","
+        }
+      ]
+    }
+  ],
+  "guard_mappings": [
+    {
+      "guard_id": "LEARNED-FASTAPI_0.11-001",
+      "scope_glob": "**/unknown.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "LEARNED-FASTAPI_0.11-002",
+      "scope_glob": "**/unknown.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "LEARNED-FASTAPI_0.11-003",
+      "scope_glob": "**/unknown.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "LEARNED-FASTAPI_0.11-004",
+      "scope_glob": "**/unknown.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "LEARNED-FASTAPI_0.11-005",
+      "scope_glob": "**/unknown.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "LEARNED-FLASK_3.1.2-006",
+      "scope_glob": "**/unknown.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "LEARNED-FLASK_3.1.2-007",
+      "scope_glob": "**/unknown.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "LEARNED-FLASK_3.1.2-008",
+      "scope_glob": "**/unknown.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "LEARNED-REQUESTS_2.3-009",
+      "scope_glob": "**/utils.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "LEARNED-REQUESTS_2.3-010",
+      "scope_glob": "**/sessions.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "LEARNED-REQUESTS_2.3-011",
+      "scope_glob": "**/utils.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "LEARNED-REQUESTS_2.3-012",
+      "scope_glob": "**/models.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "REF-PYTHON-P-001",
+      "scope_glob": "**/*.py",
+      "resolved_files": [
+        "scripts\\audit_files.py",
+        "scripts\\issues_tracker.py",
+        "scripts\\merge_guards.py",
+        "scripts\\rule_extractor.py",
+        "scripts\\rule_index.py",
+        "scripts\\score_tracker.py",
+        "scripts\\spec_graph.py",
+        "scripts\\sync_adapters.py",
+        "scripts\\test_v022_consistency.py",
+        "scripts\\test_v03_consistency.py",
+        "scripts\\test_v04_consistency.py",
+        "scripts\\test_v05_consistency.py",
+        "scripts\\test_v20_consistency.py",
+        "scripts\\verify_lines.py"
+      ],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "REF-PYTHON-P-002",
+      "scope_glob": "**/*.py",
+      "resolved_files": [
+        "scripts\\audit_files.py",
+        "scripts\\issues_tracker.py",
+        "scripts\\merge_guards.py",
+        "scripts\\rule_extractor.py",
+        "scripts\\rule_index.py",
+        "scripts\\score_tracker.py",
+        "scripts\\spec_graph.py",
+        "scripts\\sync_adapters.py",
+        "scripts\\test_v022_consistency.py",
+        "scripts\\test_v03_consistency.py",
+        "scripts\\test_v04_consistency.py",
+        "scripts\\test_v05_consistency.py",
+        "scripts\\test_v20_consistency.py",
+        "scripts\\verify_lines.py"
+      ],
+      "audit_lens": "behavior"
+    }
+  ],
+  "keyword_index": {
+    "and": [
+      "MUST state the tier and its limitation.",
+      "thresholds, and invariants in spec are reflected in code.",
+      "invariants and cross-module contracts."
+    ],
+    "the": [
+      "MUST state the tier and its limitation.",
+      "MUST flag that the spec was mined, not authored.",
+      "MUST check ALL spec sections, not just the ones with obvious issues.",
+      "MUST conform to the JSON schema defined in [`schemas/audit-finding."
+    ],
+    "must": [
+      "MUST state the tier and its limitation.",
+      "MUST flag that the spec was mined, not authored.",
+      "must have a corresponding code change.",
+      "must be modified, with optional line range (e.",
+      "MUST include an evidence pointer.",
+      "MUST be valid JSON conforming to `schemas/audit-finding.",
+      "MUST check ALL spec sections, not just the ones with obvious issues.",
+      "MUST check ALL P1 categories exhaustively.",
+      "MUST have `evidence: <file>:<line_start>-<line_end>`.",
+      "MUST have `spec_ref: <doc> §<section>`.",
+      "MUST have actually read that line.",
+      "MUST conform to the JSON schema defined in [`schemas/audit-finding.",
+      "MUST be valid JSON conforming to `schemas/audit-finding."
+    ],
+    "tier": [
+      "MUST state the tier and its limitation."
+    ],
+    "state": [
+      "MUST state the tier and its limitation."
+    ],
+    "its": [
+      "MUST state the tier and its limitation."
+    ],
+    "limitation": [
+      "MUST state the tier and its limitation."
+    ],
+    "mined": [
+      "MUST flag that the spec was mined, not authored."
+    ],
+    "was": [
+      "MUST flag that the spec was mined, not authored."
+    ],
+    "spec": [
+      "MUST flag that the spec was mined, not authored.",
+      "thresholds, and invariants in spec are reflected in code.",
+      "invariants in spec are reflected in code.",
+      "MUST check ALL spec sections, not just the ones with obvious issues."
+    ],
+    "authored": [
+      "MUST flag that the spec was mined, not authored.",
+      "always weaker than authored specs."
+    ],
+    "flag": [
+      "MUST flag that the spec was mined, not authored.",
+      "required — flag as low-confidence when ≥2 sources disagree."
+    ],
+    "that": [
+      "MUST flag that the spec was mined, not authored.",
+      "MUST have actually read that line."
+    ],
+    "not": [
+      "MUST flag that the spec was mined, not authored.",
+      "MUST check ALL spec sections, not just the ones with obvious issues."
+    ],
+    "weaker": [
+      "always weaker than authored specs."
+    ],
+    "always": [
+      "always weaker than authored specs.",
+      "always active; extension lenses are opt-in via `--lens`."
+    ],
+    "specs": [
+      "always weaker than authored specs."
+    ],
+    "than": [
+      "always weaker than authored specs."
+    ],
+    "when": [
+      "required — flag as low-confidence when ≥2 sources disagree."
+    ],
+    "confidence": [
+      "required — flag as low-confidence when ≥2 sources disagree."
+    ],
+    "sources": [
+      "required — flag as low-confidence when ≥2 sources disagree."
+    ],
+    "low": [
+      "required — flag as low-confidence when ≥2 sources disagree."
+    ],
+    "disagree": [
+      "required — flag as low-confidence when ≥2 sources disagree."
+    ],
+    "required": [
+      "required — flag as low-confidence when ≥2 sources disagree.",
+      "required metadata fields (e."
+    ],
+    "via": [
+      "always active; extension lenses are opt-in via `--lens`."
+    ],
+    "lens": [
+      "always active; extension lenses are opt-in via `--lens`."
+    ],
+    "active": [
+      "always active; extension lenses are opt-in via `--lens`."
+    ],
+    "are": [
+      "always active; extension lenses are opt-in via `--lens`.",
+      "thresholds, and invariants in spec are reflected in code.",
+      "invariants in spec are reflected in code."
+    ],
+    "opt": [
+      "always active; extension lenses are opt-in via `--lens`."
+    ],
+    "lenses": [
+      "always active; extension lenses are opt-in via `--lens`."
+    ],
+    "extension": [
+      "always active; extension lenses are opt-in via `--lens`."
+    ],
+    "code": [
+      "thresholds, and invariants in spec are reflected in code.",
+      "invariants in spec are reflected in code.",
+      "must have a corresponding code change."
+    ],
+    "invariants": [
+      "thresholds, and invariants in spec are reflected in code.",
+      "invariants in spec are reflected in code.",
+      "invariants and cross-module contracts."
+    ],
+    "reflected": [
+      "thresholds, and invariants in spec are reflected in code.",
+      "invariants in spec are reflected in code."
+    ],
+    "thresholds": [
+      "thresholds, and invariants in spec are reflected in code."
+    ],
+    "have": [
+      "must have a corresponding code change.",
+      "MUST have `evidence: <file>:<line_start>-<line_end>`.",
+      "MUST have `spec_ref: <doc> §<section>`.",
+      "MUST have actually read that line."
+    ],
+    "change": [
+      "must have a corresponding code change."
+    ],
+    "corresponding": [
+      "must have a corresponding code change."
+    ],
+    "range": [
+      "must be modified, with optional line range (e."
+    ],
+    "optional": [
+      "must be modified, with optional line range (e."
+    ],
+    "modified": [
+      "must be modified, with optional line range (e."
+    ],
+    "line": [
+      "must be modified, with optional line range (e.",
+      "MUST have actually read that line."
+    ],
+    "with": [
+      "must be modified, with optional line range (e.",
+      "MUST check ALL spec sections, not just the ones with obvious issues."
+    ],
+    "include": [
+      "MUST include an evidence pointer."
+    ],
+    "evidence": [
+      "MUST include an evidence pointer.",
+      "MUST have `evidence: <file>:<line_start>-<line_end>`."
+    ],
+    "pointer": [
+      "MUST include an evidence pointer."
+    ],
+    "metadata": [
+      "required metadata fields (e."
+    ],
+    "fields": [
+      "required metadata fields (e."
+    ],
+    "conforming": [
+      "MUST be valid JSON conforming to `schemas/audit-finding.",
+      "MUST be valid JSON conforming to `schemas/audit-finding."
+    ],
+    "schemas": [
+      "MUST be valid JSON conforming to `schemas/audit-finding.",
+      "MUST conform to the JSON schema defined in [`schemas/audit-finding.",
+      "MUST be valid JSON conforming to `schemas/audit-finding."
+    ],
+    "valid": [
+      "MUST be valid JSON conforming to `schemas/audit-finding.",
+      "MUST be valid JSON conforming to `schemas/audit-finding."
+    ],
+    "json": [
+      "MUST be valid JSON conforming to `schemas/audit-finding.",
+      "MUST conform to the JSON schema defined in [`schemas/audit-finding.",
+      "MUST be valid JSON conforming to `schemas/audit-finding."
+    ],
+    "finding": [
+      "MUST be valid JSON conforming to `schemas/audit-finding.",
+      "MUST conform to the JSON schema defined in [`schemas/audit-finding.",
+      "MUST be valid JSON conforming to `schemas/audit-finding."
+    ],
+    "audit": [
+      "MUST be valid JSON conforming to `schemas/audit-finding.",
+      "MUST conform to the JSON schema defined in [`schemas/audit-finding.",
+      "MUST be valid JSON conforming to `schemas/audit-finding."
+    ],
+    "sections": [
+      "MUST check ALL spec sections, not just the ones with obvious issues."
+    ],
+    "check": [
+      "MUST check ALL spec sections, not just the ones with obvious issues.",
+      "MUST check ALL P1 categories exhaustively."
+    ],
+    "issues": [
+      "MUST check ALL spec sections, not just the ones with obvious issues."
+    ],
+    "all": [
+      "MUST check ALL spec sections, not just the ones with obvious issues.",
+      "MUST check ALL P1 categories exhaustively."
+    ],
+    "obvious": [
+      "MUST check ALL spec sections, not just the ones with obvious issues."
+    ],
+    "just": [
+      "MUST check ALL spec sections, not just the ones with obvious issues."
+    ],
+    "ones": [
+      "MUST check ALL spec sections, not just the ones with obvious issues."
+    ],
+    "exhaustively": [
+      "MUST check ALL P1 categories exhaustively."
+    ],
+    "categories": [
+      "MUST check ALL P1 categories exhaustively."
+    ],
+    "module": [
+      "invariants and cross-module contracts."
+    ],
+    "contracts": [
+      "invariants and cross-module contracts."
+    ],
+    "cross": [
+      "invariants and cross-module contracts."
+    ],
+    "line_start": [
+      "MUST have `evidence: <file>:<line_start>-<line_end>`."
+    ],
+    "line_end": [
+      "MUST have `evidence: <file>:<line_start>-<line_end>`."
+    ],
+    "file": [
+      "MUST have `evidence: <file>:<line_start>-<line_end>`."
+    ],
+    "spec_ref": [
+      "MUST have `spec_ref: <doc> §<section>`."
+    ],
+    "doc": [
+      "MUST have `spec_ref: <doc> §<section>`."
+    ],
+    "section": [
+      "MUST have `spec_ref: <doc> §<section>`."
+    ],
+    "actually": [
+      "MUST have actually read that line."
+    ],
+    "read": [
+      "MUST have actually read that line."
+    ],
+    "defined": [
+      "MUST conform to the JSON schema defined in [`schemas/audit-finding."
+    ],
+    "schema": [
+      "MUST conform to the JSON schema defined in [`schemas/audit-finding."
+    ],
+    "conform": [
+      "MUST conform to the JSON schema defined in [`schemas/audit-finding."
+    ],
+    "history": [
+      "### Constraints from Git History / 来自 Git 历史的约束"
+    ],
+    "constraints": [
+      "### Constraints from Git History / 来自 Git 历史的约束"
+    ],
+    "from": [
+      "### Constraints from Git History / 来自 Git 历史的约束"
+    ],
+    "git": [
+      "### Constraints from Git History / 来自 Git 历史的约束"
+    ]
+  },
+  "total_constraints": 21,
+  "total_keywords": 81
+}
