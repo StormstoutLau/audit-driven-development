@@ -584,13 +584,13 @@ Initial 80% single-threshold was too aggressive for OSS projects where design do
 | v0.3 | Detection Bootstrap | P2.9 (94.3% recall), P2.8' (7 lenses) | P2.12 (state machine + --verify) | ✅ Done |
 | v0.4 | Repair Baseline | P2.10 (3 scripts), P2.11 (iterative), P2.13 (6-field fix_suggestion) | — | ✅ Done |
 | v0.5 | Ecosystem | P3.1 Guards, P3.2 Scoring | P3.3 Cross-project | ✅ Done |
-| v1.0 | Stable | 5 versions shippable, 94.3% benchmark recall, 15 scripts, 7 lenses, full Detection→Repair loop | — | ✅ Done |
+| v1.0 | Stable | 5 versions shippable, 94.3% benchmark recall, 11 scripts, 7 lenses, full Detection→Repair loop | — | ✅ Done |
 | v2.0 | Knowledge Pipeline | rule_extractor.py (12 TP→guards), spec_graph.py (spec↔code mapping), inter_rater.py (P2.7 kappa + per-dimension + escalation), SKILL.md Step 0.5 Knowledge Loading | — | ✅ Done |
 | v2.1 | Dual-Track Learning | Detection: diff_miner.py (git→bug pattern), rule_suggester.py (audit-log→rule). Repair: fix_history.py (semantic match + reward signal). 双轨并行 — Detection 侧从开源 git 挖模式, Repair 侧从历史审计匹配修复方案. scores.json 趋势作为强化学习奖励信号. | — | 🚧 Design Complete |
 | v2.2 | LLM Generalization + Recipe Book | Detection: llm_generalize.py (具体bug→通用规则), rule_validator.py (benchmark复测). Repair: fix_recipes.py (人类+LLM双源配方库). 双轨合并 — 共享 LLM 泛化引擎. | — | 🚧 Design Complete |
 | v2.3 | External Knowledge + Community | Detection: mcp_lookup.py (结构化MCP搜索+缓存), benchmark_syncer.py (标杆项目持续监控), add-rules独立仓库. Repair: mcp_lookup侧修复方案搜索, live_knowledge.py (post-audit自动更新). 外部知识注入管道 — 从开源标杆项目获取知识. | — | 🚧 Design Complete |
 
-Total: P0+P1+P2+P3 complete. **1.0 reached.** v2.0→v2.3 comprehensive upgrade roadmap finalized. **23 scripts, ~2,060 lines, knowledge accumulation + autonomous learning + external injection.**
+Total: P0+P1+P2+P3 complete. **1.0 reached.** v2.0→v2.3 comprehensive upgrade roadmap finalized. **16 scripts (v2.0), 28 scripts (v2.3), ~3,500 lines, knowledge accumulation + autonomous learning + external injection.**
 
 ---
 
