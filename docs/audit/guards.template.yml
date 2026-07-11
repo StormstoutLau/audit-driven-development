@@ -1,0 +1,44 @@
+# ADD Semantic Guards Template / 语义守卫模板
+# Human-authored. AI checks compliance, does NOT auto-generate rules.
+# Copy this file to docs/audit/guards.yml and customize.
+# 
+# Severity mapping: blocker → P0 | critical → P1 | warning → P2 | info → P3
+# Scope: file glob pattern to apply the guard to.
+# Check: free-form description of the constraint. AI subagent interprets and verifies.
+#
+# Two-layer architecture (P3.3):
+#   guards.common.yml  ← shared across all projects (this template)
+#   guards.project.yml ← project-specific overrides (copy & customize)
+#   Use: merge_guards.py --common guards.common.yml --project guards.project.yml
+#
+# To extend a common baseline, add to guards.project.yml:
+#   extends: "../guards.common.yml"
+# Project guards with the same id override common guards.
+
+version: "1.0"
+description: "Starter semantic guards for ADD audit"
+
+guards:
+  - id: "G001"
+    description: "All public API endpoints MUST document request/response schema"
+    scope: "src/api/**/*.ts"
+    severity: "critical"
+    check: "For each file matching scope, verify that every exported route handler has a JSDoc @schema tag or equivalent OpenAPI documentation"
+
+  - id: "G002"
+    description: "Database write operations MUST execute within a transaction"
+    scope: "src/repository/**/*.ts"
+    severity: "blocker"
+    check: "For each file matching scope, verify that INSERT/UPDATE/DELETE calls are wrapped in transaction blocks"
+
+  - id: "G003"
+    description: "All unexpected errors MUST be logged with trace ID"
+    scope: "src/**/*.ts"
+    severity: "warning"
+    check: "Every catch block or error handler must log the error with a unique trace ID before re-throwing or returning error response"
+
+  - id: "G004"
+    description: "All public function inputs MUST have null/type validation"
+    scope: "src/**/*.ts"
+    severity: "critical"
+    check: "Every exported function's parameters must be validated at entry point — null checks, type guards, or Pydantic/Zod schema validation"

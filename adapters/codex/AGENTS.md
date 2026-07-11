@@ -748,6 +748,112 @@ FOR EACH FINDING, output a fix_suggestion block with:
 - mitigation: temporary workaround (or "none")
 ```
 
+---
+
+## Semantic Guards / 语义守卫 (v0.5+)
+
+**Added in v0.5 (P3.1)** in response to Limitation 1 (no way to enforce human-authored project-specific rules). "Human authors rules, AI checks compliance" — guards are NEVER auto-generated.
+
+### Architecture / 架构
+
+```
+docs/audit/
+├── guards.template.yml  ← Starter template (copy & customize)
+├── guards.common.yml    ← Reusable common baseline (P3.3)
+└── guards.project.yml   ← Project-specific overrides
+```
+
+### Guard Format / 守卫格式
+
+```yaml
+version: "1.0"
+guards:
+  - id: "G001"
+    description: "All public API endpoints MUST document request/response schema"
+    scope: "src/api/**/*.ts"
+    severity: "critical"
+    check: "Verify every exported route handler has OpenAPI documentation"
+```
+
+**Severity mapping / 严重度映射**:
+| Guard Severity | Audit Severity | Description |
+|---|---|---|
+| `blocker` | P0 | Must fix before release |
+| `critical` | P1 | Should fix this release |
+| `warning` | P2 | Consider fixing |
+| `info` | P3 | Informational |
+
+### Guard Check Subagent / 守卫检查 Subagent
+
+A dedicated typed subagent (extension of Lens System) audits guards:
+- Input: `guards.yml` + scope files
+- Output: `ModuleAuditResult` with category = `"guard"`
+- Invoked via `--lens guard` or automatic when `guards.yml` exists in project
+- The subagent reads each guard's `check` field as a human-readable constraint and tests code against it
+
+### Template Guards / 模板守卫
+
+`docs/audit/guards.template.yml` includes 4 starter guards:
+- G001: API endpoint documentation (critical→P1)
+- G002: Database transaction safety (blocker→P0)
+- G003: Error logging with trace ID (warning→P2)
+- G004: Input validation on public functions (critical→P1)
+
+### Loading and Merging / 加载和合并 (P3.3)
+
+```
+python scripts/merge_guards.py --common guards.common.yml --project guards.project.yml
+```
+
+Project guards override common guards by `id`. The merged result is used for audit. This enables cross-project guard reuse without copy-paste.
+
+---
+
+## Numeric Scoring / 数值评分 (v0.5+)
+
+**Added in v0.5 (P3.2)** in response to Limitation 3 (A+~F letter grades too coarse). Pure computation — no AI involved.
+
+### Score Formula / 评分公式
+
+```
+score = max(0, 100 - (P0 × 20 + P1 × 8 + P2 × 3 + P3 × 1))
+```
+
+### Grade Mapping / 等级映射
+
+| Score Range | Grade |
+|---|---|
+| 95–100 | A+ |
+| 85–94 | A |
+| 75–84 | B+ |
+| 65–74 | B |
+| 55–64 | C+ |
+| 40–54 | D |
+| <40 | F |
+
+### scores.json / 趋势追踪
+
+Append-only time series file in `docs/audit/scores.json`:
+```json
+[
+  {"date": "2026-07-04", "project": "Factor_Miner", "version": "v0.1.0", "score": 68, "grade": "B+", "p0_count": 1, "p1_count": 2, "p2_count": 3, "p3_count": 0}
+]
+```
+
+### Commands / 命令
+
+```
+python scripts/score_tracker.py compute <issues.json> [--project NAME] [--version TAG]
+python scripts/score_tracker.py trend <scores.json>
+```
+
+`compute` calculates score from finding counts, appends to scores.json.
+`trend` prints ASCII trend chart with ▲/▼ arrows and score bars.
+
+### Step 6 Integration / 流程集成
+
+After final report generation (Step 6), run `score_tracker.py compute` to append the current audit score to `scores.json` and print the trend.
+
 
 ## Critical Anti-Patterns
 

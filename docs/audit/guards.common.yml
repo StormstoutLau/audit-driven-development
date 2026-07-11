@@ -1,0 +1,26 @@
+# ADD Common Guards / 共享守卫基线
+# Extend this from project-specific guards.yml via:
+#   extends: "../guards.common.yml"  (relative to project file location)
+#
+# This file is intended for cross-project reuse. Common patterns
+# that apply across the organization go here.
+
+version: "1.0"
+description: "Common guard baseline — reusable across all projects"
+
+# Project-level guards.yml overrides any guard with the same id.
+# Guards are merged: common guards + project guards (dedup by id).
+# If a project defines G005 and common.yml also has G005 → project wins.
+
+guards:
+  - id: "G001"
+    description: "All public API endpoints MUST document request/response schema"
+    scope: "src/api/**/*.ts"
+    severity: "critical"
+    check: "For each file matching scope, verify that every exported route handler has a JSDoc @schema tag or equivalent OpenAPI documentation"
+
+  - id: "G002"
+    description: "Database write operations MUST execute within a transaction"
+    scope: "src/repository/**/*.ts"
+    severity: "blocker"
+    check: "For each file matching scope, verify that INSERT/UPDATE/DELETE calls are wrapped in transaction blocks"
