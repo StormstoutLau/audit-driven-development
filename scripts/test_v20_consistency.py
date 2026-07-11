@@ -106,8 +106,9 @@ check("R18 SKILL.md references spec_graph.json",
 check("R19 SKILL.md references guards.learned.yml",
       "guards.learned.yml" in SKILL,
       "guards.learned.yml not referenced")
+kl_pos = SKILL.lower().find("knowledge loading")
 check("R20 'fail' or 'skip' or 'missing' — knowledge loading failure handling",
-      any(kw in SKILL.lower().split("Knowledge Loading")[-1][:1000]
+      kl_pos > 0 and any(kw in SKILL.lower()[kl_pos:kl_pos+3000]
           for kw in ["fail", "skip", "missing", "absent", "not available"]),
       "No graceful degradation described")
 
@@ -120,12 +121,12 @@ check("C1 ROADMAP P2.7 Status is Done",
                               or "Done" in ROADMAP))
 
 check("C2 ROADMAP Version Anchors contains v2.0",
-      "v2.0" in ROADMAP.split("## Version Anchors")[-1].split("---")[0]
+      "v2.0" in ROADMAP.split("## Version Anchors")[-1].split("\n---\n")[0]
       if "## Version Anchors" in ROADMAP else False,
       "v2.0 not in Version Anchors table")
 
 check("C3 ROADMAP Change Log contains v2.0 entry",
-      "v2.0" in ROADMAP.split("## Change Log")[-1].split("---")[0]
+      "v2.0" in ROADMAP.split("## Change Log")[-1].split("\n---\n")[0]
       if "## Change Log" in ROADMAP else False,
       "No v2.0 entry in Change Log")
 

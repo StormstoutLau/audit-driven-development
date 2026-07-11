@@ -161,6 +161,72 @@ The audit report MUST flag that the spec was mined, not authored. The audit mode
 Mined spec 始终弱于显式 spec。挖掘 spec 的审计评分上限为 B+（与 Tier B 结构审计相同）。Git 历史可能包含错误的"修复"从而编码反模式。建议人工复核挖掘出的约束。
 
 ---
+
+## Knowledge Loading / 知识加载 (v2.0+)
+
+**Added in v2.0** as the first step of the Knowledge Pipeline.
+**v2.0 新增**：知识沉淀流水线的首步——从历史审计中加载结构化知识。
+
+### Step 0.5: Load Accumulated Knowledge / 加载积累知识
+
+Before dispatching any subagent, load structured knowledge from previous audits and reference files. This step runs AFTER Phase 0 (Spec Quality Gate) and BEFORE Phase 1 (Spec Inventory).
+
+在派发任何 subagent 之前，从历史审计和参考文件中加载结构化知识。此步骤在 Phase 0（设计文档质量门）之后、Phase 1（设计文档盘点）之前运行。
+
+#### 1. spec_graph.json — Spec→Code Mapping / Spec→Code 映射
+
+If `docs/audit/spec_graph.json` exists:
+- Inject spec-section→file→line mappings into each subagent prompt
+- Subagents receive pre-verified code locations instead of raw spec documents
+- Reduces context-switching cost and hallucinated file references
+
+若 `docs/audit/spec_graph.json` 存在：
+- 将 spec 章节→文件→行号映射注入每个 subagent prompt
+- Subagent 接收经过预验证的代码位置，而非原始 spec 文档
+- 减少上下文切换成本和幻觉性文件引用
+
+```
+python scripts/spec_graph.py --spec <spec.md> --adrs <adr-dir> --guards <guards.yml> --repo <path> --output docs/audit/spec_graph.json
+```
+
+#### 2. guards.learned.yml — Learned Guards / 学习到的守卫
+
+If `docs/audit/guards.learned.yml` exists:
+- Merge with project guards via `merge_guards.py`
+- Learned guards are marked `source: auto-extracted` — subagent reduces their penalty weight
+- After human review, move learned guards into `guards.project.yml` to upgrade confidence to `verified`
+
+若 `docs/audit/guards.learned.yml` 存在：
+- 通过 `merge_guards.py` 与项目 guards 合并
+- 学习到的守卫标记 `source: auto-extracted` — subagent 降低其扣分权重
+- 人工审查后，将学习到的守卫移入 `guards.project.yml`，将置信度升级为 `verified`
+
+```
+python scripts/merge_guards.py --common docs/audit/guards.learned.yml --project docs/audit/guards.yml
+```
+
+#### 3. scores.json — Trend Tracking / 趋势追踪
+
+If `docs/audit/scores.json` exists:
+- Include score trend chart in audit report footer
+- Highlight modules with declining scores over time for deep audit focus
+
+若 `docs/audit/scores.json` 存在：
+- 在审计报告尾部包含评分趋势图
+- 高亮评分持续下降的模块，引导深度审计焦点
+
+#### Failure Handling / 失败处理
+
+If any knowledge file is missing: skip silently, proceed with normal audit.
+If loading fails (>30s timeout): skip, log warning, proceed.
+**Knowledge is an accelerator, not a prerequisite.** All ADD v1.0 functionality works identically without any knowledge files.
+
+若任一知识文件缺失：静默跳过，继续正常审计。
+若加载失败（超过 30 秒超时）：跳过，记录警告，继续。
+**知识是加速器，不是前置条件。** 所有 ADD v1.0 功能在没有任何知识文件时完全相同。
+
+---
+
 ## The Audit Framework: 4 Phases
 
 ```dot
