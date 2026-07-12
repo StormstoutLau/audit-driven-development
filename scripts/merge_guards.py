@@ -21,11 +21,8 @@ def load_guard_file(path):
 
 def merge_guards(common, project):
     """Merge common + project guards. Project overrides common by id."""
-    guard_map = {}
-    for g in common.get("guards", []):
-        guard_map[g["id"]] = g
-    for g in project.get("guards", []):
-        guard_map[g["id"]] = g  # Project overrides common
+    guard_map = {g["id"]: g for g in common.get("guards", [])}
+    guard_map.update({g["id"]: g for g in project.get("guards", [])})
 
     merged = {
         "version": project.get("version", "1.0"),

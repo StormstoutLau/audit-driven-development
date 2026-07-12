@@ -250,25 +250,15 @@ def extract_reference_rules(references_dir):
 
 
 def deduplicate_guards(guards, similarity_threshold=0.8):
-    """Remove guards with highly similar descriptions."""
-    if len(guards) <= 1:
-        return guards
-
+    """Remove guards with highly similar descriptions. O(n²) worst case, n≈14 typical."""
     result = []
-    skip_indices = set()
-
-    for i, g1 in enumerate(guards):
-        if i in skip_indices:
-            continue
-        for j in range(i + 1, len(guards)):
-            if j in skip_indices:
-                continue
-            g2 = guards[j]
-            ratio = difflib.SequenceMatcher(None, g1["description"], g2["description"]).ratio()
-            if ratio >= similarity_threshold:
-                skip_indices.add(j)
-        result.append(g1)
-
+    for g in guards:
+        if not any(
+            difflib.SequenceMatcher(None, g["description"], r["description"]).ratio()
+            >= similarity_threshold
+            for r in result
+        ):
+            result.append(g)
     return result
 
 

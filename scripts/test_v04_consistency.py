@@ -63,9 +63,12 @@ if rip.exists():
 else:
     checks.append(("D8: rule_index.py has --spec --adrs args", True))
 
-# D9: rule_index.py extracts "must"/"must not" statements
+# D9: rule_index.py extracts "must"/"must not" statements (v2.0.1: merged into _rule_utils.py)
 if rip.exists():
-    checks.append(("D9: rule_index.py extracts must/must-not statements", "must" not in rip.read_text(encoding="utf-8").lower()))
+    rip_src = rip.read_text(encoding="utf-8").lower()
+    ru_src = (REPO / "scripts" / "_rule_utils.py").read_text(encoding="utf-8").lower()
+    checks.append(("D9: rule_index.py extracts must/must-not statements",
+                   "must" not in rip_src and "must" not in ru_src))
 else:
     checks.append(("D9: rule_index.py extracts must/must-not statements", True))
 

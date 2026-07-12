@@ -29,17 +29,18 @@ def verify_line(repo_root, file_path, line_num, keywords):
         return {"confirmed": False, "reason": f"line {line_num} out of range (1-{len(lines)})"}
 
     target_line = lines[line_num - 1]
-    for kw in keywords:
-        if kw.lower() in target_line.lower():
-            return {"confirmed": True, "matched_keyword": kw}
+    target_lower = target_line.lower()
+    if match := next((kw for kw in keywords if kw.lower() in target_lower), None):
+        return {"confirmed": True, "matched_keyword": match}
 
     for offset in range(1, 21):
-        for direction in [-1, 1]:
+        for direction in (-1, 1):
             check_line = line_num + direction * offset
             if 1 <= check_line <= len(lines):
-                for kw in keywords:
-                    if kw.lower() in lines[check_line - 1].lower():
-                        return {"confirmed": True, "matched_keyword": kw, "nearest_line": check_line, "offset": direction * offset}
+                check_lower = lines[check_line - 1].lower()
+                if match := next((kw for kw in keywords if kw.lower() in check_lower), None):
+                    return {"confirmed": True, "matched_keyword": match,
+                            "nearest_line": check_line, "offset": direction * offset}
 
     return {"confirmed": False, "reason": "no keyword match within ±20 lines"}
 

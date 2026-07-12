@@ -39,16 +39,13 @@ def parse_spec_modules(spec_text):
         constraint_texts = [c["text"] for c in constraints]
 
         code_refs = re.findall(r'`([^`]+\.(?:py|ts|js|yml|json|md))`', block)
-        file_refs = []
-        for ref in set(code_refs):
-            line_match = re.search(rf'{re.escape(ref)}(?:\s*L?(\d+)(?:\s*[-–]\s*L?(\d+))?)?', block)
-            line_start = int(line_match.group(1)) if line_match and line_match.group(1) else 1
-            if line_match:
-                file_refs.append({
-                    "file": ref,
-                    "line_start": line_start,
-                    "line_end": int(line_match.group(2)) if line_match and line_match.group(2) else line_start,
-                })
+        file_refs = [
+            {"file": ref, "line_start": ls,
+             "line_end": int(lm.group(2)) if lm.group(2) else ls}
+            for ref in set(code_refs)
+            if (lm := re.search(rf'{re.escape(ref)}(?:\s*L?(\d+)(?:\s*[-–]\s*L?(\d+))?)?', block))
+            and (ls := int(lm.group(1)) if lm.group(1) else 1)
+        ]
 
         sections.append({
             "section": section_title[:100],

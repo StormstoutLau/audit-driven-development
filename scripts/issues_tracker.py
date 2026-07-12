@@ -23,6 +23,7 @@ Commands:
 
 import json
 import sys
+from collections import Counter
 from pathlib import Path
 
 ISSUES_FILE = Path("docs/audit/issues.json")
@@ -139,14 +140,12 @@ def cmd_verify(file_path: str, report_path: str = None):
 def cmd_summary():
     """Print issue status summary."""
     data = json.loads(ISSUES_FILE.read_text(encoding="utf-8"))
-    counts = {"open": 0, "in_progress": 0, "fixed": 0, "verified": 0}
-    for issue in data["issues"]:
-        counts[issue["status"]] = counts.get(issue["status"], 0) + 1
-
+    counts = Counter(issue["status"] for issue in data["issues"])
     total = sum(counts.values())
     print(f"Audit: {data.get('audit_id', 'unknown')}")
     print(f"Total issues: {total}")
-    for status, count in counts.items():
+    for status in ("open", "in_progress", "fixed", "verified"):
+        count = counts.get(status, 0)
         bar = "█" * (count * 20 // max(total, 1))
         print(f"  {status:12s}: {count:3d}  {bar}")
 

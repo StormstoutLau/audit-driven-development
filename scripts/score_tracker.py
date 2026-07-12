@@ -13,29 +13,21 @@ Grade mapping:  A+ >=95, A 85-94, B+ 75-84, B 65-74, C+ 55-64, D 40-54, F <40
 
 import json, sys
 from pathlib import Path
+from collections import Counter
 from datetime import datetime
 from _script_utils import run_script
 
 WEIGHTS = {"P0": 20, "P1": 8, "P2": 3, "P3": 1}
+GRADE_MAP = [(95, "A+"), (85, "A"), (75, "B+"), (65, "B"), (55, "C+"), (40, "D")]
 
 def score_to_grade(score):
-    if score >= 95: return "A+"
-    if score >= 85: return "A"
-    if score >= 75: return "B+"
-    if score >= 65: return "B"
-    if score >= 55: return "C+"
-    if score >= 40: return "D"
-    return "F"
+    return next((g for t, g in GRADE_MAP if score >= t), "F")
 
 def compute_score(issues_json_path):
     """Compute 0-100 numeric score from issues.json."""
     data = json.loads(Path(issues_json_path).read_text(encoding="utf-8"))
-    counts = {s: 0 for s in WEIGHTS}
-    for issue in data.get("issues", []):
-        sev = issue.get("severity", "P3")
-        if sev in counts:
-            counts[sev] += 1
-
+    raw_counts = Counter(issue.get("severity", "P3") for issue in data.get("issues", []))
+    counts = {s: raw_counts.get(s, 0) for s in WEIGHTS}
     penalty = sum(counts[s] * WEIGHTS[s] for s in WEIGHTS)
     score = max(0, 100 - penalty)
     grade = score_to_grade(score)

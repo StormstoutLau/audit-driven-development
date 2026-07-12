@@ -5,9 +5,11 @@ Usage: python scripts/audit_files.py --spec <spec.md> --module <module_name> --b
 Cost cap: max 50 files per module. If >50, warn and pick top 50 by git churn.
 """
 
-import argparse, json, sys, glob as glob_mod, subprocess, os
+import argparse, json, sys, re, glob as glob_mod, subprocess, os
 from pathlib import Path
 from _script_utils import run_script
+
+PY_PATTERN = re.compile(r'`([^`]+\.py)`')
 
 
 def parse_spec_module(spec_path, module_name):
@@ -15,7 +17,7 @@ def parse_spec_module(spec_path, module_name):
     text = Path(spec_path).read_text(encoding="utf-8")
     patterns = []
 
-    for line in text.split("\n"):
+    for line in text.splitlines():
         stripped = line.strip()
         if module_name.lower() in stripped.lower():
             if stripped.startswith("- ") or stripped.startswith("* "):
@@ -23,8 +25,7 @@ def parse_spec_module(spec_path, module_name):
                 if segment.endswith(".py") or segment.endswith("/"):
                     patterns.append(segment)
             if "`" in stripped:
-                import re
-                for m in re.finditer(r'`([^`]+\.py)`', stripped):
+                for m in PY_PATTERN.finditer(stripped):
                     patterns.append(m.group(1))
 
     return patterns or []

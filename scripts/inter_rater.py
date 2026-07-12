@@ -34,18 +34,12 @@ def load_finding_files(findings_path):
     """Extract set of files with findings from an audit result JSON."""
     data = json.loads(Path(findings_path).read_text(encoding="utf-8"))
     findings = data.get("findings", []) if isinstance(data, dict) else data
-    files_with_findings = set()
-
-    for f in findings:
-        if isinstance(f, dict):
-            evidence = f.get("evidence", {})
-            file_path = evidence.get("file", "") if isinstance(evidence, dict) else ""
-            if not file_path:
-                file_path = f.get("file", "")
-            if file_path:
-                files_with_findings.add(file_path)
-
-    return files_with_findings
+    return {
+        (isinstance(f.get("evidence"), dict) and f["evidence"].get("file", "") or "")
+        or f.get("file", "")
+        for f in findings
+        if isinstance(f, dict)
+    } - {""}
 
 
 def load_overlap_files(spec_graph_path, dimension="behavior"):
@@ -149,6 +143,7 @@ def compute_per_dimension_kappa(findings_a_path, findings_b_path, overlap_files)
 def escalate_severity_gaps(findings_a_path, findings_b_path):
     """P2.7 step 5: Flag findings with severity gap > 1 level between subagents.
     Returns list of {file, severity_a, severity_b, gap} for manual review.
+    Optimized: pre-bucket by severity level, 4×4 fixed comparison per file.
     """
     data_a = json.loads(Path(findings_a_path).read_text(encoding="utf-8"))
     data_b = json.loads(Path(findings_b_path).read_text(encoding="utf-8"))
@@ -156,37 +151,39 @@ def escalate_severity_gaps(findings_a_path, findings_b_path):
     findings_b = data_b.get("findings", []) if isinstance(data_b, dict) else data_b
 
     severity_order = {"P0": 0, "P1": 1, "P2": 2, "P3": 3}
+    SEV_LABELS = {0: "P0", 1: "P1", 2: "P2", 3: "P3"}
+
+    def _bucket(findings):
+        by_file = {}
+        for f in findings:
+            if isinstance(f, dict):
+                ev = f.get("evidence", {})
+                fp = ev.get("file", "") if isinstance(ev, dict) else f.get("file", "")
+                if fp:
+                    by_file.setdefault(fp, []).append(f)
+        for fp, flist in by_file.items():
+            buckets = {0: [], 1: [], 2: [], 3: []}
+            for f in flist:
+                sev = severity_order.get(f.get("severity", "P3"), 3)
+                buckets[sev].append(f.get("id", ""))
+            by_file[fp] = buckets
+        return by_file
+
+    ba = _bucket(findings_a)
+    bb = _bucket(findings_b)
+
     escalations = []
-
-    findings_by_file_a = {}
-    findings_by_file_b = {}
-    for f in findings_a:
-        if isinstance(f, dict):
-            ev = f.get("evidence", {})
-            fp = ev.get("file", "") if isinstance(ev, dict) else f.get("file", "")
-            if fp:
-                findings_by_file_a.setdefault(fp, []).append(f)
-    for f in findings_b:
-        if isinstance(f, dict):
-            ev = f.get("evidence", {})
-            fp = ev.get("file", "") if isinstance(ev, dict) else f.get("file", "")
-            if fp:
-                findings_by_file_b.setdefault(fp, []).append(f)
-
-    for fp in set(findings_by_file_a.keys()) & set(findings_by_file_b.keys()):
-        for fa in findings_by_file_a[fp]:
-            sa = severity_order.get(fa.get("severity", "P3"), 3)
-            for fb in findings_by_file_b[fp]:
-                sb = severity_order.get(fb.get("severity", "P3"), 3)
-                gap = abs(sa - sb)
-                if gap > 1:
+    for fp in set(ba) & set(bb):
+        for sa in range(4):
+            for sb in range(4):
+                if abs(sa - sb) > 1 and ba[fp][sa] and bb[fp][sb]:
                     escalations.append({
                         "file": fp,
-                        "finding_a_id": fa.get("id", ""),
-                        "finding_b_id": fb.get("id", ""),
-                        "severity_a": fa.get("severity", ""),
-                        "severity_b": fb.get("severity", ""),
-                        "gap": gap,
+                        "findings_a": ba[fp][sa],
+                        "findings_b": bb[fp][sb],
+                        "severity_a": SEV_LABELS[sa],
+                        "severity_b": SEV_LABELS[sb],
+                        "gap": abs(sa - sb),
                         "needs_manual_review": True,
                     })
 
