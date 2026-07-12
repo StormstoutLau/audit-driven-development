@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADD Logo · 红白机CLI</title>
+<style>
+  :root {
+    --nes-red: #E60012;
+    --nes-gold: #D4A017;
+    --nes-white: #F8F4E6;
+    --nes-dark: #1A1A2E;
+    --terminal-bg: #0D1117;
+    --terminal-green: #39FF14;
+    --terminal-cyan: #00FFFF;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #0a0a0f;
+    display: flex; justify-content: center; align-items: center;
+    min-height: 100vh; font-family: 'Courier New', monospace;
+  }
+
+  .logo-container {
+    position: relative;
+    width: 800px; height: 400px;
+  }
+
+  /* ── NES Cartridge Shell ── */
+  .cartridge {
+    position: absolute;
+    inset: 0;
+    background: var(--nes-red);
+    border-radius: 18px;
+    box-shadow:
+      0 0 0 4px var(--nes-dark),
+      0 0 0 8px var(--nes-red),
+      0 8px 32px rgba(230,0,18,0.3);
+    overflow: hidden;
+  }
+
+  .cartridge::before {
+    content: '';
+    position: absolute;
+    top: 12px; left: 50%; transform: translateX(-50%);
+    width: 300px; height: 6px;
+    background: var(--nes-gold);
+    border-radius: 3px;
+  }
+
+  /* ── Terminal Screen ── */
+  .terminal {
+    position: absolute;
+    top: 36px; left: 32px; right: 32px; bottom: 48px;
+    background: var(--terminal-bg);
+    border-radius: 10px;
+    border: 3px solid var(--nes-dark);
+    padding: 28px 32px;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    box-shadow: inset 0 0 60px rgba(57,255,20,0.06);
+    overflow: hidden;
+  }
+
+  /* scanline overlay */
+  .terminal::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.08) 2px,
+      rgba(0,0,0,0.08) 4px
+    );
+    pointer-events: none; border-radius: 7px;
+  }
+
+  /* ── Prompt Line ── */
+  .prompt-line {
+    display: flex; align-items: baseline; gap: 8px;
+    margin-bottom: 8px;
+    font-size: 18px; color: var(--terminal-cyan);
+    opacity: 0.7;
+    position: relative; z-index: 1;
+  }
+  .prompt-line .dollar { color: var(--terminal-green); font-weight: bold; }
+  .prompt-line .cmd { color: var(--terminal-cyan); }
+
+  /* ── Main Title ── */
+  .title-block {
+    position: relative; z-index: 1;
+  }
+  .title-add {
+    font-size: 96px; font-weight: 900; letter-spacing: 16px;
+    line-height: 1;
+    background: linear-gradient(180deg, #fff 0%, var(--terminal-green) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 20px rgba(57,255,20,0.4))
+            drop-shadow(0 0 40px rgba(57,255,20,0.2));
+  }
+  .title-sub {
+    font-size: 17px; letter-spacing: 6px;
+    color: var(--terminal-cyan);
+    margin-top: 2px;
+    opacity: 0.85;
+  }
+
+  /* ── Blinking Cursor ── */
+  .cursor {
+    display: inline-block; width: 12px; height: 80px;
+    background: var(--terminal-green);
+    margin-left: 4px; vertical-align: middle;
+    animation: blink 1s steps(1) infinite;
+    box-shadow: 0 0 12px var(--terminal-green);
+  }
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+
+  /* ── Bottom Connector Pins ── */
+  .pins {
+    position: absolute; bottom: 14px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 6px; z-index: 2;
+  }
+  .pin {
+    width: 18px; height: 10px;
+    background: var(--nes-gold);
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.3);
+  }
+
+  /* ── Cartridge Label Strip ── */
+  .label-strip {
+    position: absolute; bottom: 32px; left: 32px; right: 32px;
+    height: 20px;
+    background: linear-gradient(90deg,
+      transparent 0%,
+      var(--nes-gold) 35%,
+      var(--nes-gold) 65%,
+      transparent 100%
+    );
+    opacity: 0.25;
+  }
+</style>
+</head>
+<body>
+<div class="logo-container">
+  <div class="cartridge">
+    <div class="terminal">
+      <div class="prompt-line">
+        <span class="dollar">$</span>
+        <span class="cmd">audit --driven --development</span>
+      </div>
+      <div class="title-block">
+        <div class="title-add">
+          ADD<span class="cursor"></span>
+        </div>
+        <div class="title-sub">AUDIT-DRIVEN DEVELOPMENT</div>
+      </div>
+    </div>
+    <div class="pins">
+      <span class="pin"></span><span class="pin"></span><span class="pin"></span>
+      <span class="pin"></span><span class="pin"></span><span class="pin"></span>
+      <span class="pin"></span><span class="pin"></span><span class="pin"></span>
+      <span class="pin"></span><span class="pin"></span><span class="pin"></span>
+      <span class="pin"></span><span class="pin"></span><span class="pin"></span>
+      <span class="pin"></span><span class="pin"></span><span class="pin"></span>
+      <span class="pin"></span><span class="pin"></span><span class="pin"></span>
+    </div>
+    <div class="label-strip"></div>
+  </div>
+</div>
+</body>
+</html>

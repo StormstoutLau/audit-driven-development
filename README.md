@@ -2,14 +2,10 @@
 <div align="center">
 
 <br>
-<br>
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/AUDIT-6366f1?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1e1e2e">
-  <img src="https://img.shields.io/badge/AUDIT-6366f1?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=fafafa">
-</picture>
-
-# Audit-Driven Development
+<p align="center">
+  <img src="assets/logo/add-logo.svg" alt="ADD · Audit-Driven Development" width="600">
+</p>
 
 <br>
 
