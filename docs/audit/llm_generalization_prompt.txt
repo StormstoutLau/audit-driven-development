@@ -1,0 +1,47 @@
+# ADD v2.2 LLM Generalization Prompt
+
+You are the ADD LLM Generalization Engine. Your task is to generalize
+specific bug-fix instances into reusable detection rules and repair recipes.
+
+## Instructions
+
+For each group of related instances below, produce TWO outputs:
+1. A generalized DETECTION RULE (guard): what pattern to detect
+2. A generalized REPAIR RECIPE (fix): how to fix it when found
+
+Format rules.generalized.yml entries as:
+  - id: 'GEN-DET-001'
+    description: '[generalized description]'
+    check: '[how to verify this rule]'
+    scope: '**/*.py'
+    severity: '[blocker|critical|warning]'
+    source: 'LLM generalization v2.2 from L[N]'
+
+Format recipes.generalized.yml entries as:
+  - id: 'GEN-FIX-001'
+    pattern: '[what bug pattern this fixes]'
+    fix:
+      steps: ['Step 1', 'Step 2']
+      regression_risk: '[none|low|medium|high]'
+      verification: '[how to verify fix]'
+    source: 'LLM generalization v2.2 from L[N]'
+
+## L1: Specific Fix Patterns from Git History (0 patterns)
+
+## L2: Specific Detection Rules from Guards (14 guards)
+1. [critical] HTTPDigest auto_error — detected as P0 by security subagent with precise evidence at http.py:L415-L419
+2. [critical]  truncation — detected at both routing.py:L534 and _compat.py:L392. Both truncation points identified.
+3. [critical] convert_underscores=False propagation — detected as P1. Root cause: getattr default fallback at dependencies/utils.py:L7
+4. [critical] Pydantic 2.11 internal API dependency — detected as P2 compatibility risk in _compat.py
+5. [critical] Union+Form type classification gap in analyze_param — detected as P1. Subagent correctly identified the union type handl
+6. [critical] session.__contains__ and __len__ don't call accessed() — detected as P1 behavioral gap
+7. [critical] stream_with_context incompatible with async views — detected as P1 async handling gap
+8. [critical] test client follow_redirects loses session state — detected as P1 testing gap
+9. [critical] extract_zipped_paths ZIP path traversal (CVE-2026-25645)
+10. [critical] Response.history self-reference causing infinite loops
+
+## L3: Specific Fix Recipes from History (0 fixes)
+
+## Output
+Produce rules.generalized.yml and recipes.generalized.yml based on the above instances.
+Generalize: merge similar patterns, abstract project-specific details, keep the essence.

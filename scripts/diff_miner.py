@@ -20,7 +20,6 @@ Performance cap: 60s (max 200 commits)
 """
 
 import argparse, json, sys, subprocess, re, collections
-from itertools import chain
 from pathlib import Path
 from _script_utils import run_script
 

@@ -1,0 +1,6 @@
+{
+  "queries_to_execute": [],
+  "cache_hits": 0,
+  "findings_analyzed": 0,
+  "instructions": "Dispatch each query via run_mcp tool. Server: mcp_english-search (search_web) or mcp_stackexchange (search_questions). Save results back via mcp_lookup cache."
+}

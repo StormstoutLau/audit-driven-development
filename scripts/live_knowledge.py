@@ -21,12 +21,12 @@ def main():
         {"name": "rule_extractor (guard refresh)",
          "cmd": ["python", "scripts/rule_extractor.py",
                  "--benchmark-dir", "docs/benchmark",
-                 "--output", "docs/audit/guards.learned.yml"]},
+                 "--output", f"{args.audit_dir}/guards.learned.yml"]},
         {"name": "spec_graph (index rebuild)",
          "cmd": ["python", "scripts/spec_graph.py",
                  "--spec", "SKILL.md", "--adrs", "docs",
-                 "--guards", "docs/audit/guards.learned.yml",
-                 "--repo", ".", "--output", "docs/audit/spec_graph.json"]},
+                 "--guards", f"{args.audit_dir}/guards.learned.yml",
+                 "--repo", ".", "--output", f"{args.audit_dir}/spec_graph.json"]},
     ]
 
     results = [

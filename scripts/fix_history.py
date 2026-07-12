@@ -103,9 +103,8 @@ def main():
 
     history = load_verified_history(args.history_dir)
 
-    if not history:
-        augmented_count = total_matches = 0
-    else:
+    augmented_count = total_matches = 0
+    if history:
         def _ratio(h, txt):
             return difflib.SequenceMatcher(None, txt, h["claim"].lower()).ratio()
 

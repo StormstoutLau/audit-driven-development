@@ -63,15 +63,16 @@ def main():
 
     log_dir = Path(args.audit_log_dir)
     log_files = sorted(log_dir.glob("*.md"))
+    log_data = {f: parse_audit_log(f) for f in log_files}
 
     all_fps = list(chain.from_iterable(
-        parse_audit_log(f)["fp"] for f in log_files
+        log_data[f]["fp"] for f in log_files
     ))
     all_fns = list(chain.from_iterable(
-        parse_audit_log(f)["fn"] for f in log_files
+        log_data[f]["fn"] for f in log_files
     ))
     all_tps = list(chain.from_iterable(
-        parse_audit_log(f)["tp"] for f in log_files
+        log_data[f]["tp"] for f in log_files
     ))
 
     fp_type_counts = collections.Counter(f["type"] for f in all_fps)

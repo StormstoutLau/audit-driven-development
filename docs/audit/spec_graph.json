@@ -118,17 +118,17 @@
       "constraints": [],
       "code_locations": [
         {
+          "file": "guards.project.yml",
+          "line_start": 1,
+          "line_end": 1
+        },
+        {
           "file": "docs/audit/guards.learned.yml",
           "line_start": 1,
           "line_end": 1
         },
         {
-          "file": "merge_guards.py",
-          "line_start": 1,
-          "line_end": 1
-        },
-        {
-          "file": "guards.project.yml",
+          "file": "docs/audit/spec_graph.json",
           "line_start": 1,
           "line_end": 1
         },
@@ -138,7 +138,76 @@
           "line_end": 1
         },
         {
-          "file": "docs/audit/spec_graph.json",
+          "file": "merge_guards.py",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "Detection Pattern Mining & Fix History Augmentation / 检测模式挖掘 & 修复历史增强 (v2.1+)",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Step 3.5: Run Pattern Mining & Fix Augmentation / 运行模式挖掘 & 修复增强",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": [
+        {
+          "file": "pattern_candidates.json",
+          "line_start": 1,
+          "line_end": 1
+        },
+        {
+          "file": "augmented_issues.json",
+          "line_start": 1,
+          "line_end": 1
+        },
+        {
+          "file": "rule_suggestions.json",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "LLM Generalization & Recipe Book / LLM 泛化 & 配方书 (v2.2+)",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Step 3.6: Generate Generalized Rules & Recipes / 生成通用规则 & 修复配方",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": [
+        {
+          "file": "rules.generalized.yml",
+          "line_start": 1,
+          "line_end": 1
+        },
+        {
+          "file": "recipes.generalized.yml",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
+    },
+    {
+      "section": "External Knowledge Injection & Live Update / 外部知识注入 & 实时更新 (v2.3+)",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": []
+    },
+    {
+      "section": "Step 3.7: External Knowledge Lookup & Live Update",
+      "module": "unknown",
+      "constraints": [],
+      "code_locations": [
+        {
+          "file": "mcp_queries.json",
           "line_start": 1,
           "line_end": 1
         }
@@ -461,12 +530,12 @@
       "constraints": [],
       "code_locations": [
         {
-          "file": "issues.json",
+          "file": "docs/audit/YYYY-MM-DD-code-quality-audit.md",
           "line_start": 1,
           "line_end": 1
         },
         {
-          "file": "docs/audit/YYYY-MM-DD-code-quality-audit.md",
+          "file": "issues.json",
           "line_start": 1,
           "line_end": 1
         }
@@ -921,19 +990,19 @@
       "decision": "Extract \"Constraint:\" sections → explicit constraints",
       "code_evidence": [
         {
+          "file": "scripts/_rule_utils.py",
+          "line": 10,
+          "match": "    \"\"\"Extract must/shall/threshold/invariant statements from text.\"\"\""
+        },
+        {
           "file": "scripts/audit_files.py",
-          "line": 13,
+          "line": 16,
           "match": "    \"\"\"Extract file glob patterns from spec for a given module.\"\"\""
         },
         {
           "file": "scripts/inter_rater.py",
-          "line": 12,
+          "line": 20,
           "match": "  2. Extract files covered by those sections"
-        },
-        {
-          "file": "scripts/inter_rater.py",
-          "line": 25,
-          "match": "    \"\"\"Extract set of files with findings from an audit result JSON.\"\"\""
         }
       ]
     },
@@ -943,7 +1012,7 @@
       "code_evidence": [
         {
           "file": "scripts/inter_rater.py",
-          "line": 14,
+          "line": 22,
           "match": "  4. Build 2x2 contingency matrix:"
         }
       ]
@@ -959,13 +1028,8 @@
       "code_evidence": [
         {
           "file": "scripts/issues_tracker.py",
-          "line": 73,
+          "line": 74,
           "match": "    print(f\"Created {ISSUES_FILE} with {len(issues)} issues (all status=open)\")"
-        },
-        {
-          "file": "scripts/rule_index.py",
-          "line": 55,
-          "match": "    \"\"\"Create keyword→constraint index for fast lookup.\"\"\""
         }
       ]
     },
@@ -974,19 +1038,19 @@
       "decision": "4. Output rule_index.json",
       "code_evidence": [
         {
-          "file": "scripts/inter_rater.py",
+          "file": "scripts/diff_miner.py",
           "line": 17,
-          "match": "  6. Output: kappa value, agreement rate, per-file breakdown"
+          "match": "  4. Output pattern_candidates.json with hotspots, patterns, suggested_guards"
         },
         {
-          "file": "scripts/rule_extractor.py",
+          "file": "scripts/fix_history.py",
           "line": 19,
-          "match": "  10. Output guards.learned.yml in guards.template.yml format"
+          "match": "  6. Output augmented issues JSON"
         },
         {
-          "file": "scripts/rule_index.py",
-          "line": 6,
-          "match": "Output: rule_index.json — keyword → constraint mapping. Subagent queries this"
+          "file": "scripts/inter_rater.py",
+          "line": 25,
+          "match": "  6. Output: kappa value, agreement rate, per-file breakdown, per-dimension kapp"
         }
       ]
     },
@@ -994,6 +1058,11 @@
       "adr": "implementation-plan.md",
       "decision": "python scripts/rule_index.py --spec docs/spec.md --adrs docs/adr/ [--output rule_index.json]",
       "code_evidence": [
+        {
+          "file": "scripts/_rule_utils.py",
+          "line": 2,
+          "match": "Used by both rule_index.py (v1.0) and spec_graph.py (v2.0)."
+        },
         {
           "file": "scripts/rule_index.py",
           "line": 3,
@@ -1003,11 +1072,6 @@
           "file": "scripts/rule_index.py",
           "line": 4,
           "match": "      python scripts/rule_index.py --spec <spec.md>"
-        },
-        {
-          "file": "scripts/spec_graph.py",
-          "line": 2,
-          "match": "Extends rule_index.py with module mapping, ADR tracing, and guard binding."
         }
       ]
     },
@@ -1016,19 +1080,19 @@
       "decision": "Output: rule_index.json",
       "code_evidence": [
         {
-          "file": "scripts/inter_rater.py",
+          "file": "scripts/diff_miner.py",
           "line": 17,
-          "match": "  6. Output: kappa value, agreement rate, per-file breakdown"
+          "match": "  4. Output pattern_candidates.json with hotspots, patterns, suggested_guards"
         },
         {
-          "file": "scripts/rule_extractor.py",
+          "file": "scripts/fix_history.py",
           "line": 19,
-          "match": "  10. Output guards.learned.yml in guards.template.yml format"
+          "match": "  6. Output augmented issues JSON"
         },
         {
-          "file": "scripts/rule_index.py",
-          "line": 6,
-          "match": "Output: rule_index.json — keyword → constraint mapping. Subagent queries this"
+          "file": "scripts/inter_rater.py",
+          "line": 25,
+          "match": "  6. Output: kappa value, agreement rate, per-file breakdown, per-dimension kapp"
         }
       ]
     },
@@ -1069,7 +1133,7 @@
       "code_evidence": [
         {
           "file": "scripts/test_v20_consistency.py",
-          "line": 118,
+          "line": 143,
           "match": "check(\"C1 ROADMAP P2.7 Status is Done\","
         },
         {
@@ -1085,147 +1149,13 @@
       ]
     }
   ],
-  "guard_mappings": [
-    {
-      "guard_id": "LEARNED-FASTAPI_0.11-001",
-      "scope_glob": "**/unknown.py",
-      "resolved_files": [],
-      "audit_lens": "behavior"
-    },
-    {
-      "guard_id": "LEARNED-FASTAPI_0.11-002",
-      "scope_glob": "**/unknown.py",
-      "resolved_files": [],
-      "audit_lens": "behavior"
-    },
-    {
-      "guard_id": "LEARNED-FASTAPI_0.11-003",
-      "scope_glob": "**/unknown.py",
-      "resolved_files": [],
-      "audit_lens": "behavior"
-    },
-    {
-      "guard_id": "LEARNED-FASTAPI_0.11-004",
-      "scope_glob": "**/unknown.py",
-      "resolved_files": [],
-      "audit_lens": "behavior"
-    },
-    {
-      "guard_id": "LEARNED-FASTAPI_0.11-005",
-      "scope_glob": "**/unknown.py",
-      "resolved_files": [],
-      "audit_lens": "behavior"
-    },
-    {
-      "guard_id": "LEARNED-FLASK_3.1.2-006",
-      "scope_glob": "**/unknown.py",
-      "resolved_files": [],
-      "audit_lens": "behavior"
-    },
-    {
-      "guard_id": "LEARNED-FLASK_3.1.2-007",
-      "scope_glob": "**/unknown.py",
-      "resolved_files": [],
-      "audit_lens": "behavior"
-    },
-    {
-      "guard_id": "LEARNED-FLASK_3.1.2-008",
-      "scope_glob": "**/unknown.py",
-      "resolved_files": [],
-      "audit_lens": "behavior"
-    },
-    {
-      "guard_id": "LEARNED-REQUESTS_2.3-009",
-      "scope_glob": "**/utils.py",
-      "resolved_files": [],
-      "audit_lens": "behavior"
-    },
-    {
-      "guard_id": "LEARNED-REQUESTS_2.3-010",
-      "scope_glob": "**/sessions.py",
-      "resolved_files": [],
-      "audit_lens": "behavior"
-    },
-    {
-      "guard_id": "LEARNED-REQUESTS_2.3-011",
-      "scope_glob": "**/utils.py",
-      "resolved_files": [],
-      "audit_lens": "behavior"
-    },
-    {
-      "guard_id": "LEARNED-REQUESTS_2.3-012",
-      "scope_glob": "**/models.py",
-      "resolved_files": [],
-      "audit_lens": "behavior"
-    },
-    {
-      "guard_id": "REF-PYTHON-P-001",
-      "scope_glob": "**/*.py",
-      "resolved_files": [
-        "scripts\\audit_files.py",
-        "scripts\\inter_rater.py",
-        "scripts\\issues_tracker.py",
-        "scripts\\merge_guards.py",
-        "scripts\\rule_extractor.py",
-        "scripts\\rule_index.py",
-        "scripts\\score_tracker.py",
-        "scripts\\spec_graph.py",
-        "scripts\\sync_adapters.py",
-        "scripts\\test_v022_consistency.py",
-        "scripts\\test_v03_consistency.py",
-        "scripts\\test_v04_consistency.py",
-        "scripts\\test_v05_consistency.py",
-        "scripts\\test_v20_consistency.py",
-        "scripts\\verify_lines.py"
-      ],
-      "audit_lens": "behavior"
-    },
-    {
-      "guard_id": "REF-PYTHON-P-002",
-      "scope_glob": "**/*.py",
-      "resolved_files": [
-        "scripts\\audit_files.py",
-        "scripts\\inter_rater.py",
-        "scripts\\issues_tracker.py",
-        "scripts\\merge_guards.py",
-        "scripts\\rule_extractor.py",
-        "scripts\\rule_index.py",
-        "scripts\\score_tracker.py",
-        "scripts\\spec_graph.py",
-        "scripts\\sync_adapters.py",
-        "scripts\\test_v022_consistency.py",
-        "scripts\\test_v03_consistency.py",
-        "scripts\\test_v04_consistency.py",
-        "scripts\\test_v05_consistency.py",
-        "scripts\\test_v20_consistency.py",
-        "scripts\\verify_lines.py"
-      ],
-      "audit_lens": "behavior"
-    }
-  ],
+  "guard_mappings": [],
   "keyword_index": {
     "the": [
       "MUST state the tier and its limitation.",
       "MUST flag that the spec was mined, not authored.",
       "MUST check ALL spec sections, not just the ones with obvious issues.",
       "MUST conform to the JSON schema defined in [`schemas/audit-finding."
-    ],
-    "state": [
-      "MUST state the tier and its limitation."
-    ],
-    "its": [
-      "MUST state the tier and its limitation."
-    ],
-    "tier": [
-      "MUST state the tier and its limitation."
-    ],
-    "and": [
-      "MUST state the tier and its limitation.",
-      "thresholds, and invariants in spec are reflected in code.",
-      "invariants and cross-module contracts."
-    ],
-    "limitation": [
-      "MUST state the tier and its limitation."
     ],
     "must": [
       "MUST state the tier and its limitation.",
@@ -1242,48 +1172,65 @@
       "MUST conform to the JSON schema defined in [`schemas/audit-finding.",
       "MUST be valid JSON conforming to `schemas/audit-finding."
     ],
+    "state": [
+      "MUST state the tier and its limitation."
+    ],
+    "tier": [
+      "MUST state the tier and its limitation."
+    ],
+    "its": [
+      "MUST state the tier and its limitation."
+    ],
+    "and": [
+      "MUST state the tier and its limitation.",
+      "thresholds, and invariants in spec are reflected in code.",
+      "invariants and cross-module contracts."
+    ],
+    "limitation": [
+      "MUST state the tier and its limitation."
+    ],
     "spec": [
       "MUST flag that the spec was mined, not authored.",
       "thresholds, and invariants in spec are reflected in code.",
       "invariants in spec are reflected in code.",
       "MUST check ALL spec sections, not just the ones with obvious issues."
     ],
+    "was": [
+      "MUST flag that the spec was mined, not authored."
+    ],
     "authored": [
       "MUST flag that the spec was mined, not authored.",
       "always weaker than authored specs."
-    ],
-    "flag": [
-      "MUST flag that the spec was mined, not authored.",
-      "required — flag as low-confidence when ≥2 sources disagree."
-    ],
-    "mined": [
-      "MUST flag that the spec was mined, not authored."
-    ],
-    "that": [
-      "MUST flag that the spec was mined, not authored.",
-      "MUST have actually read that line."
-    ],
-    "was": [
-      "MUST flag that the spec was mined, not authored."
     ],
     "not": [
       "MUST flag that the spec was mined, not authored.",
       "MUST check ALL spec sections, not just the ones with obvious issues."
     ],
-    "than": [
-      "always weaker than authored specs."
+    "mined": [
+      "MUST flag that the spec was mined, not authored."
+    ],
+    "flag": [
+      "MUST flag that the spec was mined, not authored.",
+      "required — flag as low-confidence when ≥2 sources disagree."
+    ],
+    "that": [
+      "MUST flag that the spec was mined, not authored.",
+      "MUST have actually read that line."
     ],
     "weaker": [
       "always weaker than authored specs."
     ],
-    "specs": [
+    "than": [
       "always weaker than authored specs."
     ],
     "always": [
       "always weaker than authored specs.",
       "always active; extension lenses are opt-in via `--lens`."
     ],
-    "when": [
+    "specs": [
+      "always weaker than authored specs."
+    ],
+    "low": [
       "required — flag as low-confidence when ≥2 sources disagree."
     ],
     "disagree": [
@@ -1292,7 +1239,7 @@
     "sources": [
       "required — flag as low-confidence when ≥2 sources disagree."
     ],
-    "low": [
+    "when": [
       "required — flag as low-confidence when ≥2 sources disagree."
     ],
     "confidence": [
@@ -1302,10 +1249,13 @@
       "required — flag as low-confidence when ≥2 sources disagree.",
       "required metadata fields (e."
     ],
-    "lens": [
+    "active": [
       "always active; extension lenses are opt-in via `--lens`."
     ],
-    "via": [
+    "opt": [
+      "always active; extension lenses are opt-in via `--lens`."
+    ],
+    "extension": [
       "always active; extension lenses are opt-in via `--lens`."
     ],
     "are": [
@@ -1313,17 +1263,19 @@
       "thresholds, and invariants in spec are reflected in code.",
       "invariants in spec are reflected in code."
     ],
-    "opt": [
+    "via": [
+      "always active; extension lenses are opt-in via `--lens`."
+    ],
+    "lens": [
       "always active; extension lenses are opt-in via `--lens`."
     ],
     "lenses": [
       "always active; extension lenses are opt-in via `--lens`."
     ],
-    "extension": [
-      "always active; extension lenses are opt-in via `--lens`."
-    ],
-    "active": [
-      "always active; extension lenses are opt-in via `--lens`."
+    "code": [
+      "thresholds, and invariants in spec are reflected in code.",
+      "invariants in spec are reflected in code.",
+      "must have a corresponding code change."
     ],
     "invariants": [
       "thresholds, and invariants in spec are reflected in code.",
@@ -1334,13 +1286,14 @@
       "thresholds, and invariants in spec are reflected in code.",
       "invariants in spec are reflected in code."
     ],
-    "code": [
-      "thresholds, and invariants in spec are reflected in code.",
-      "invariants in spec are reflected in code.",
-      "must have a corresponding code change."
-    ],
     "thresholds": [
       "thresholds, and invariants in spec are reflected in code."
+    ],
+    "corresponding": [
+      "must have a corresponding code change."
+    ],
+    "change": [
+      "must have a corresponding code change."
     ],
     "have": [
       "must have a corresponding code change.",
@@ -1348,22 +1301,9 @@
       "MUST have `spec_ref: <doc> §<section>`.",
       "MUST have actually read that line."
     ],
-    "change": [
-      "must have a corresponding code change."
-    ],
-    "corresponding": [
-      "must have a corresponding code change."
-    ],
-    "line": [
-      "must be modified, with optional line range (e.",
-      "MUST have actually read that line."
-    ],
     "with": [
       "must be modified, with optional line range (e.",
       "MUST check ALL spec sections, not just the ones with obvious issues."
-    ],
-    "optional": [
-      "must be modified, with optional line range (e."
     ],
     "range": [
       "must be modified, with optional line range (e."
@@ -1371,34 +1311,31 @@
     "modified": [
       "must be modified, with optional line range (e."
     ],
+    "line": [
+      "must be modified, with optional line range (e.",
+      "MUST have actually read that line."
+    ],
+    "optional": [
+      "must be modified, with optional line range (e."
+    ],
+    "evidence": [
+      "MUST include an evidence pointer.",
+      "MUST have `evidence: <file>:<line_start>-<line_end>`."
+    ],
     "include": [
       "MUST include an evidence pointer."
     ],
     "pointer": [
       "MUST include an evidence pointer."
     ],
-    "evidence": [
-      "MUST include an evidence pointer.",
-      "MUST have `evidence: <file>:<line_start>-<line_end>`."
+    "metadata": [
+      "required metadata fields (e."
     ],
     "fields": [
       "required metadata fields (e."
     ],
-    "metadata": [
-      "required metadata fields (e."
-    ],
     "conforming": [
       "MUST be valid JSON conforming to `schemas/audit-finding.",
-      "MUST be valid JSON conforming to `schemas/audit-finding."
-    ],
-    "json": [
-      "MUST be valid JSON conforming to `schemas/audit-finding.",
-      "MUST conform to the JSON schema defined in [`schemas/audit-finding.",
-      "MUST be valid JSON conforming to `schemas/audit-finding."
-    ],
-    "audit": [
-      "MUST be valid JSON conforming to `schemas/audit-finding.",
-      "MUST conform to the JSON schema defined in [`schemas/audit-finding.",
       "MUST be valid JSON conforming to `schemas/audit-finding."
     ],
     "finding": [
@@ -1415,13 +1352,21 @@
       "MUST conform to the JSON schema defined in [`schemas/audit-finding.",
       "MUST be valid JSON conforming to `schemas/audit-finding."
     ],
+    "json": [
+      "MUST be valid JSON conforming to `schemas/audit-finding.",
+      "MUST conform to the JSON schema defined in [`schemas/audit-finding.",
+      "MUST be valid JSON conforming to `schemas/audit-finding."
+    ],
+    "audit": [
+      "MUST be valid JSON conforming to `schemas/audit-finding.",
+      "MUST conform to the JSON schema defined in [`schemas/audit-finding.",
+      "MUST be valid JSON conforming to `schemas/audit-finding."
+    ],
+    "all": [
+      "MUST check ALL spec sections, not just the ones with obvious issues.",
+      "MUST check ALL P1 categories exhaustively."
+    ],
     "obvious": [
-      "MUST check ALL spec sections, not just the ones with obvious issues."
-    ],
-    "issues": [
-      "MUST check ALL spec sections, not just the ones with obvious issues."
-    ],
-    "sections": [
       "MUST check ALL spec sections, not just the ones with obvious issues."
     ],
     "check": [
@@ -1431,11 +1376,13 @@
     "just": [
       "MUST check ALL spec sections, not just the ones with obvious issues."
     ],
-    "all": [
-      "MUST check ALL spec sections, not just the ones with obvious issues.",
-      "MUST check ALL P1 categories exhaustively."
+    "sections": [
+      "MUST check ALL spec sections, not just the ones with obvious issues."
     ],
     "ones": [
+      "MUST check ALL spec sections, not just the ones with obvious issues."
+    ],
+    "issues": [
       "MUST check ALL spec sections, not just the ones with obvious issues."
     ],
     "categories": [
@@ -1444,13 +1391,13 @@
     "exhaustively": [
       "MUST check ALL P1 categories exhaustively."
     ],
+    "contracts": [
+      "invariants and cross-module contracts."
+    ],
     "cross": [
       "invariants and cross-module contracts."
     ],
     "module": [
-      "invariants and cross-module contracts."
-    ],
-    "contracts": [
       "invariants and cross-module contracts."
     ],
     "file": [
@@ -1462,13 +1409,13 @@
     "line_start": [
       "MUST have `evidence: <file>:<line_start>-<line_end>`."
     ],
-    "section": [
-      "MUST have `spec_ref: <doc> §<section>`."
-    ],
     "spec_ref": [
       "MUST have `spec_ref: <doc> §<section>`."
     ],
     "doc": [
+      "MUST have `spec_ref: <doc> §<section>`."
+    ],
+    "section": [
       "MUST have `spec_ref: <doc> §<section>`."
     ],
     "read": [
@@ -1477,25 +1424,25 @@
     "actually": [
       "MUST have actually read that line."
     ],
-    "schema": [
-      "MUST conform to the JSON schema defined in [`schemas/audit-finding."
-    ],
     "conform": [
       "MUST conform to the JSON schema defined in [`schemas/audit-finding."
     ],
     "defined": [
       "MUST conform to the JSON schema defined in [`schemas/audit-finding."
     ],
-    "from": [
-      "### Constraints from Git History / 来自 Git 历史的约束"
+    "schema": [
+      "MUST conform to the JSON schema defined in [`schemas/audit-finding."
     ],
     "history": [
       "### Constraints from Git History / 来自 Git 历史的约束"
     ],
-    "constraints": [
+    "from": [
       "### Constraints from Git History / 来自 Git 历史的约束"
     ],
     "git": [
+      "### Constraints from Git History / 来自 Git 历史的约束"
+    ],
+    "constraints": [
       "### Constraints from Git History / 来自 Git 历史的约束"
     ]
   },

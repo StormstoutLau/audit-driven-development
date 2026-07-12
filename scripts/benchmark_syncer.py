@@ -45,8 +45,8 @@ def main():
         )
         bugs = [
             {"id": f"NEW-{i+1}",
-             "description": parts[1][:150] if len(parts := line.split(" ", 1)) > 1 else line.strip()[:150],
-             "commit": (parts := line.split(" ", 1))[0]}
+             "description": p[1][:150] if len(p := line.split(" ", 1)) > 1 else line.strip()[:150],
+             "commit": p[0]}
             for i, line in enumerate(result.stdout.strip().split("\n"))
             if line.strip()
         ]
