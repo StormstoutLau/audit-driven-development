@@ -1,6 +1,17 @@
+<br>
 <div align="center">
 
+<br>
+<br>
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://img.shields.io/badge/AUDIT-6366f1?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=1e1e2e">
+  <img src="https://img.shields.io/badge/AUDIT-6366f1?style=for-the-badge&logo=checkmarx&logoColor=white&labelColor=fafafa">
+</picture>
+
 # Audit-Driven Development
+
+<br>
 
 **Tests pass → Code ships.** That is the lie every team tells itself.\
 **测试通过就上线。** 这是每支团队对自己说的谎。
@@ -8,264 +19,258 @@
 <br>
 
 <a href="https://github.com/StormstoutLau/audit-driven-development">
-  <img src="https://img.shields.io/badge/version-2.3-6366f1?style=for-the-badge&logo=github&logoColor=white" />
+  <img alt="version" src="https://img.shields.io/badge/version-2.3-6366f1?style=for-the-badge&logo=github&logoColor=white" />
 </a>
+&nbsp;
 <a href="https://opensource.org/licenses/MIT">
-  <img src="https://img.shields.io/badge/license-MIT-yellow?style=for-the-badge" />
+  <img alt="license" src="https://img.shields.io/badge/license-MIT-yellow?style=for-the-badge" />
 </a>
+&nbsp;
 <a href="https://github.com/StormstoutLau/audit-driven-development">
-  <img src="https://img.shields.io/badge/TDD-199%2F199%20PASS-brightgreen?style=for-the-badge&logo=python&logoColor=white" />
+  <img alt="tdd" src="https://img.shields.io/badge/TDD-199%2F199%20PASS-brightgreen?style=for-the-badge&logo=python&logoColor=white" />
 </a>
+&nbsp;
 <a href="https://github.com/StormstoutLau/audit-driven-development">
-  <img src="https://img.shields.io/badge/score-97%2F100%20A%2B-16a34a?style=for-the-badge&logo=vercel&logoColor=white" />
+  <img alt="score" src="https://img.shields.io/badge/score-97%2F100%20A%2B-16a34a?style=for-the-badge&logo=vercel&logoColor=white" />
 </a>
 
 <br>
 <br>
 
-<table align="center">
-<tr>
-  <td align="center"><b>Detection</b></td>
-  <td align="center"><b>Repair</b></td>
-  <td align="center"><b>Knowledge</b></td>
-  <td align="center"><b>Adapters</b></td>
-</tr>
-<tr>
-  <td align="center"><img src="https://img.shields.io/badge/7-lenses-blue?style=for-the-badge" /></td>
-  <td align="center"><img src="https://img.shields.io/badge/6_stage-闭环-orange?style=for-the-badge" /></td>
-  <td align="center"><img src="https://img.shields.io/badge/3_tier-进化管道-6366f1?style=for-the-badge" /></td>
-  <td align="center"><img src="https://img.shields.io/badge/7-IDEs-32a873?style=for-the-badge" /></td>
-</tr>
-</table>
+```
+  ┌──────────────┐      ┌──────────────┐      ┌──────────────────┐
+  │  DETECTION   │ ───► │   REPAIR     │ ───► │   KNOWLEDGE      │
+  │  7 lenses    │      │  6-stage 闭环 │      │  3-tier ∿ pipeline│
+  │  ──────────  │      │  ──────────  │      │  ─────────────── │
+  │  Spec truth   │      │  Human loop  │      │  Self-evolving    │
+  └──────────────┘      └──────────────┘      └──────────────────┘
+```
 
 <br>
 
-> A self-evolving Trae Skill that inserts an independent audit phase between implementation and done.\
-> **Detection** finds what tests miss. **Repair** closes what detection finds.\
-> **Knowledge Pipeline** learns from every audit — making the system smarter over time.
+> A self-evolving Trae Skill that inserts an independent audit phase between **implementation** and **done**.
+> Detection finds what tests miss. Repair closes what detection finds.
+> The Knowledge Pipeline learns from every audit — making the system **smarter over time**.
 
 </div>
 
 ---
 
+<br>
+
 ## The Problem
 
 > **"164 tests passed"** is the most dangerous phrase in software.
 
-Tests verify behavior within a single module. They cannot verify that Module A keeps the promises Module B depends on — or that the dependency graph still holds — or that the threshold in the spec matches the threshold in the code. **ADD treats the design spec as the source of truth.** Not the test suite.
+Tests verify behavior within a single module. They cannot verify that Module A keeps the promises Module B depends on — that the dependency graph still holds — that the threshold in the spec matches the threshold in the code.
+
+```text
+  Tests pass ──→ ✗ Declare done ──→ ❌ Ship broken code
+
+  Tests pass ──→ ✓ ADD Audit ──→ ✅ Real verification
+```
+
+**ADD treats the design spec as the source of truth.** Not the test suite.
+
+<table align="center"><tr><td>
+
+| What Tests Miss | What ADD Catches |
+|---|---|
+| Cross-module contract violations | 7 typed lens subagents scan every contract |
+| ADR invariant drift | `rule_index.py` extracts must / must-not / threshold |
+| Corrective items left in spec | Corrective Tracking Lens checks every item |
+| Design ↔ code threshold mismatch | Design Aligner Lens compares spec values to code |
+| Error handlers that silently suppress | Error Handler Lens covers propagation + retry |
+
+</td></tr></table>
 
 ---
+
+<br>
 
 ## Proof
 
 Three open-source projects audited. Findings verified against known bug databases.
 
-<table align="center">
-<tr>
-  <td align="center"><h3>Flask 3.1.2</h3></td>
-  <td align="center"><h3>FastAPI 0.115.8</h3></td>
-  <td align="center"><h3>Requests 2.33.0</h3></td>
-</tr>
-<tr>
-  <td align="center">
-    <img src="https://img.shields.io/badge/recall-100%25-success?style=for-the-badge" /><br>
-    <sub>3/3 bugs found · F₁ 94.1%</sub>
-  </td>
-  <td align="center">
-    <img src="https://img.shields.io/badge/recall-83%25-yellow?style=for-the-badge" /><br>
-    <sub>5/6 bugs found · F₁ 83.9%</sub>
-  </td>
-  <td align="center">
-    <img src="https://img.shields.io/badge/recall-100%25-success?style=for-the-badge" /><br>
-    <sub>4/4 bugs found · F₁ 100%</sub>
-  </td>
-</tr>
-</table>
+<div align="center">
 
-<table align="center">
-<tr>
-  <td align="center"><b>Avg Recall</b><br><h2>94.3%</h2></td>
-  <td align="center"><b>Avg Precision</b><br><h2>91.3%</h2></td>
-  <td align="center"><b>Avg F₁</b><br><h2>92.6%</h2></td>
-</tr>
-</table>
+| | Flask 3.1.2 | FastAPI 0.115.8 | Requests 2.33.0 |
+|---|---|---|---|
+| **Bugs Found** | 3 / 3 | 5 / 6 | 4 / 4 |
+| **Recall** | ![](https://img.shields.io/badge/100%25-success?style=flat-square) | ![](https://img.shields.io/badge/83%25-yellow?style=flat-square) | ![](https://img.shields.io/badge/100%25-success?style=flat-square) |
+| **F₁** | 94.1% | 83.9% | 100% |
+
+<br>
+
+| | Recall | Precision | F₁ |
+|---|---|---|---|
+| **Average** | **94.3%** | **91.3%** | **92.6%** |
+
+</div>
 
 ---
 
-## Architecture: Detection → Repair → Knowledge
+<br>
 
-ADD v2.0+ introduces a **dual-track knowledge pipeline** — the system learns from every audit.
-
-```
-┌─────────────────── Knowledge Pipeline ───────────────────┐
-│                                                            │
-│  Detection Track (越检越准)       Repair Track (越修越精)    │
-│         │                                  │               │
-│  v2.0: benchmark → guards         v2.0: fix_suggestion    │
-│  v2.1: git history mining         v2.1: history matching  │
-│  v2.1: audit-log → rules          v2.1: reward signal ▲▼  │
-│  v2.2: LLM generalization         v2.2: fix recipe book   │
-│  v2.3: MCP external search        v2.3: live knowledge    │
-│         │                                  │               │
-│         ▼                                  ▼               │
-│  ┌──────────┐                     ┌──────────────┐        │
-│  │ Detection│──── shared infra ──►│    Repair    │        │
-│  │  Rules   │                     │   Recipes    │        │
-│  └──────────┘                     └──────────────┘        │
-│                                                            │
-└────────────────────────────────────────────────────────────┘
-```
-
-### Scripts (28 total, v2.3)
-
-| Layer | Script | Track |
-|---|---|---|
-| **Core** (v0.1–v1.0) | [audit_files.py](scripts/audit_files.py) · [rule_index.py](scripts/rule_index.py) · [verify_lines.py](scripts/verify_lines.py) · [issues_tracker.py](scripts/issues_tracker.py) · [score_tracker.py](scripts/score_tracker.py) · [merge_guards.py](scripts/merge_guards.py) | Detection + Repair |
-| **Knowledge** (v2.0) | [rule_extractor.py](scripts/rule_extractor.py) · [spec_graph.py](scripts/spec_graph.py) · [inter_rater.py](scripts/inter_rater.py) | Knowledge Pipeline |
-| **Learning** (v2.1) | [diff_miner.py](scripts/diff_miner.py) · [rule_suggester.py](scripts/rule_suggester.py) · [fix_history.py](scripts/fix_history.py) | Detection + Repair |
-| **Generalization** (v2.2) | [llm_generalize.py](scripts/llm_generalize.py) · [fix_recipes.py](scripts/fix_recipes.py) · [rule_validator.py](scripts/rule_validator.py) | Shared Engine |
-| **External** (v2.3) | [mcp_lookup.py](scripts/mcp_lookup.py) · [benchmark_syncer.py](scripts/benchmark_syncer.py) · [live_knowledge.py](scripts/live_knowledge.py) | External Injection |
-
----
-
-## Knowledge Pipeline: Three-Tier Evolution
+## Architecture · Detection → Repair → Knowledge
 
 ```
-Tier 1: Internal Learning (v2.1)
-  diff_miner        → git log --grep="fix|bug|CVE" → pattern clusters
-  rule_suggester    → audit-log TP/FP/FN analysis → guard suggestions
-  fix_history       → difflib semantic match + scores.json reward signal
-                   → ▲ trending = relax threshold, ▼ = tighten
-
-Tier 2: AI Generalization (v2.2)
-  llm_generalize    → L1(git diffs)→L2(guards)→L3(fixes) prompt builder
-  fix_recipes       → 5 built-in + LLM-imported recipe book
-  rule_validator    → benchmark recall validation of generalized rules
-
-Tier 3: External Injection (v2.3)
-  mcp_lookup        → MCP search for P0 findings without fix_suggestion
-  benchmark_syncer  → OSS project monitor (FastAPI/Flask/Requests/Django)
-  live_knowledge    → post-audit auto-update of all knowledge files
+                          ┌───────────────────────┐
+                          │    AUDIT ENGINE        │
+                          │  Phase 1·2·3·4·5·6    │
+                          └───────────┬───────────┘
+                                      │
+          ┌───────────────────────────┼───────────────────────────┐
+          │                           │                           │
+          ▼                           ▼                           ▼
+  ┌───────────────┐         ┌───────────────┐         ┌───────────────────┐
+  │  DETECTION    │         │    REPAIR     │         │    KNOWLEDGE       │
+  │  Track        │   ───►  │    Track      │   ───►  │    Pipeline        │
+  │  (越检越准)    │  shared │  (越修越精)    │  shared │  (self-evolving)   │
+  ├───────────────┤   infra ├───────────────┤   infra ├───────────────────┤
+  │ v2.0: bench→  │         │ v2.0: schema  │         │ v2.1: diff_miner   │
+  │       guard   │         │               │         │       rule_suggest │
+  │ v2.1: git     │         │ v2.1: history │◄────────│       fix_history  │
+  │       mining  │         │       match   │  reward │                   │
+  │ v2.2: LLM    │         │ v2.2: recipe  │  signal │ v2.2: generalize   │
+  │       rule    │         │       book    │   ▲/▼   │       validate     │
+  │ v2.3: MCP    │         │ v2.3: live    │         │ v2.3: external     │
+  │       search  │         │       update  │         │       injection    │
+  └───────────────┘         └───────────────┘         └───────────────────┘
 ```
 
 ### The Rewards Loop
 
-`scores.json` trend acts as reinforcement signal:
+```
+  scores.json trend ▲
+         │
+         ├──改善 → fix_history threshold 0.60 (宽松 · 复用更多方案)
+         ├──退化 → fix_history threshold 0.80 (严格 · 避免无效修复)
+         └──3连▲ → confident mode (threshold -0.05)
+```
 
-- ▲ (improving) → `fix_history` threshold relaxed — reuse more solutions
-- ▼ (declining) → threshold tightened — avoid reusing ineffective fixes
-- 3 consecutive ▲ → **confident mode** — threshold drops 0.05 extra
+This is a **real RL loop** running on real audit data. No simulation.
 
-This is a real RL loop running on real audit data.
+### 28 Scripts · 5 Layers
+
+```
+  Core ──── v0.1→v1.0  │  audit_files · rule_index · verify_lines
+           (6 scripts)  │  issues_tracker · score_tracker · merge_guards
+  ──────────────────────┤
+  Knowledge ─ v2.0      │  rule_extractor · spec_graph · inter_rater
+           (3 scripts)  │
+  ──────────────────────┤
+  Learning ── v2.1      │  diff_miner · rule_suggester · fix_history
+           (3 scripts)  │
+  ──────────────────────┤
+  Generalize  v2.2      │  llm_generalize · fix_recipes · rule_validator
+           (3 scripts)  │
+  ──────────────────────┤
+  External ── v2.3      │  mcp_lookup · benchmark_syncer · live_knowledge
+           (3 scripts)  │
+```
+
+<br>
 
 ---
 
-## Version Journey
+## Version Journey · 7 Days · 8 Versions
 
 ```
-v0.1 ──→ Iron Law + Gate                    (Jul 6)
-v0.2 ──→ Structured Foundation              (Jul 7-9)
-v0.3 ──→ Detection: 94.3% recall, 7 lenses  (Jul 9-10)
-v0.4 ──→ Repair: state machine + iterative  (Jul 10-11)
-v1.0 ──→ Ecosystem: guards + scoring        (Jul 11)
-   │
-v2.0 ──→ Knowledge Pipeline                   (Jul 11)
-         Benchmark→guard extraction
-         Spec↔code mapping
-         Inter-rater reliability (Cohen's κ)
-   │
-v2.1 ──→ Dual-Track Learning                  (Jul 12)
-         diff_miner + rule_suggester
-         fix_history with reward signal
-   │
-v2.2 ──→ LLM Generalization + Recipe Book     (Jul 12)
-         Shared LLM engine for rules + fixes
-         5 built-in repair recipes
-   │
-v2.3 ──→ External Knowledge Injection          (Jul 12)
-         MCP search pipeline
-         Benchmark project syncer
-         Live knowledge auto-update
+  7/6   7/7-9   7/9-10   7/10-11   7/11    7/11    7/12    7/12    7/12
+   │      │       │        │        │       │       │       │       │
+  v0.1 → v0.2 → v0.3 →  v0.4  →  v1.0 → v2.0 → v2.1 → v2.2 → v2.3
+   │      │       │        │        │       │       │       │       │
+  Iron   Struct  Detec   Repair   Eco-   Know-   Dual-   LLM    External
+  Law    Foundation tion  Baseline system  ledge   Track   Gen    Injection
+  ─────────────────────────────────────────────────────────────────────
+  1 行   4 个     12 个   15 个    15 个   16 个   20 个   24 个   28 个
+  SKILL 脚本     脚本    脚本     脚本    脚本    脚本    脚本    scripts
 ```
+
+<br>
 
 ---
 
 ## Quick Start
 
 ```bash
-# Full pipeline — detection through repair, knowledge auto-updates
+# ── Full knowledge pipeline ──────────────────────────────────
 
-# Phase 0.5: Load existing knowledge
-python scripts/spec_graph.py --spec SKILL.md --adrs docs --guards docs/audit/guards.learned.yml --repo .
+# Phase 0.5 · Load existing knowledge
+python scripts/spec_graph.py --spec SKILL.md --adrs docs --repo .
 
-# Phase 3.5: Mine patterns + match history (v2.1)
+# Phase 3.5 · Pattern mining + history matching (v2.1)
 python scripts/diff_miner.py --repo . --since "2024-01-01"
-python scripts/fix_history.py --findings <new_issues.json> --history-dir docs/audit
+python scripts/fix_history.py --findings issues.json --history-dir docs/audit
 
-# Phase 3.6: Build LLM generalization prompt (v2.2)
+# Phase 3.6 · LLM generalization prompt (v2.2)
 python scripts/llm_generalize.py --source-dir docs/audit --output-dir docs/audit
 
-# Phase 3.7: External knowledge lookup (v2.3)
-python scripts/mcp_lookup.py --findings <issues.json> --output docs/audit/mcp_queries.json
+# Phase 3.7 · External knowledge lookup (v2.3)
+python scripts/mcp_lookup.py --findings issues.json --output docs/audit/mcp_queries.json
 
-# Post-audit: auto-update all knowledge (v2.3)
+# Post-audit · auto-update all knowledge (v2.3)
 python scripts/live_knowledge.py --audit-dir docs/audit
 
 # Track scores over time
 python scripts/score_tracker.py trend docs/audit/scores.json
 ```
 
-### Score Trend (Self-Audit History)
+### Self-Audit Score History
 
 ```
-Date         Version           Score Grade  Trend
-07-11        v2.0-self-audit      0     F     ●
-07-12        v2.0.1-reaudit       0     F    ─+0
-07-12        v2.0.1-final        97    A+   ▲+97
-07-12        v2.3-self-audit     97    A+    ─+0
+  Date       Version              Score   Grade   Trend
+  ─────────────────────────────────────────────────────
+  07-11      v2.0-self-audit         0      F       ●
+  07-12      v2.0.1-reaudit          0      F      ─+0
+  07-12      v2.0.1-final           97     A+     ▲+97
+  07-12      v2.3-self-audit        97     A+      ─+0
+  ─────────────────────────────────────────────────────
+  7天后:     从F的废墟到A+的steady state
 ```
+
+<br>
 
 ---
 
 ## Installation
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Trae-SKILL.md-6366f1?style=flat-square&logo=traefik&logoColor=white" />
-  <img src="https://img.shields.io/badge/Claude_Code-SKILL.md-d97706?style=flat-square" />
-  <img src="https://img.shields.io/badge/Cursor-.mdc-2563eb?style=flat-square&logo=cursor&logoColor=white" />
-  <img src="https://img.shields.io/badge/Codex-AGENTS.md-10b981?style=flat-square" />
-  <img src="https://img.shields.io/badge/Copilot-instructions.md-0284c7?style=flat-square&logo=github&logoColor=white" />
-  <img src="https://img.shields.io/badge/Windsurf-.windsurfrules-6366f1?style=flat-square" />
-  <img src="https://img.shields.io/badge/OpenCode-AGENTS.md-ec4899?style=flat-square" />
+
+| | | | | | | |
+|---|---|---|---|---|---|---|
+| ![](https://img.shields.io/badge/Trae-SKILL.md-6366f1?style=flat-square) | ![](https://img.shields.io/badge/Claude_Code-SKILL.md-d97706?style=flat-square) | ![](https://img.shields.io/badge/Cursor-.mdc-2563eb?style=flat-square) | ![](https://img.shields.io/badge/Codex-AGENTS.md-10b981?style=flat-square) | ![](https://img.shields.io/badge/Copilot-instructions.md-0284c7?style=flat-square) | ![](https://img.shields.io/badge/Windsurf-.windsurfrules-6366f1?style=flat-square) | ![](https://img.shields.io/badge/OpenCode-AGENTS.md-ec4899?style=flat-square) |
+
 </p>
 
-| Tool | Path |
-|---|---|
-| Trae | `.trae/skills/audit-driven-development/` |
-| Claude Code | `.claude/skills/audit-driven-development/` |
-| Cursor | `.cursor/rules/` |
-| Codex / OpenCode | `AGENTS.md` |
-| Copilot | `.github/copilot-instructions.md` |
-| Windsurf | `.windsurfrules` |
+All 7 adapters auto-synced from `SKILL.md` via `scripts/sync_adapters.py`. Drop-in compatible. Zero config.
 
-All 7 adapters auto-synced from `SKILL.md` via `scripts/sync_adapters.py`.
+<br>
 
 ---
 
 ## Technical Summary
 
-| Metric | Value |
+| | |
 |---|---|
-| Scripts | 28 production scripts |
-| TDD Coverage | **199/199** across 8 test suites |
-| Benchmark Recall | 94.3% (Flask 100% · FastAPI 83% · Requests 100%) |
-| Self-Audit Score | **97/100 A+** |
-| Knowledge Layers | 3-tier (Internal Learning → AI Generalization → External Injection) |
-| Repair Recipes | 5 built-in human-authored + LLM-imported |
-| External Dependencies | Zero (pure Python stdlib + PyYAML) |
+| **Scripts** | 28 production · 8 test suites |
+| **TDD** | **199/199** all passing |
+| **Benchmark Recall** | 94.3% (Flask 100% · FastAPI 83% · Requests 100%) |
+| **Self-Audit** | **97/100 A+** — steady state after v2.0.1 fixes |
+| **Knowledge** | 3-tier ∿ Internal Learning → AI Generalization → External Injection |
+| **Recipes** | 5 built-in human-authored + LLM-generated |
+| **Dependencies** | Zero — pure Python stdlib + PyYAML |
+| **Adapters** | 7 IDEs drop-in compatible |
+
+<br>
 
 ---
 
-## License
+<div align="center">
 
 [MIT](./LICENSE) © 2026 StormstoutLau
+
+<br>
+
+</div>
