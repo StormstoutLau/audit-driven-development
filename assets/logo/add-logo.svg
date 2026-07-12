@@ -1,94 +1,235 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="800" height="400">
   <defs>
-    <filter id="glow">
-      <feGaussianBlur stdDeviation="3" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    <!-- Phosphor glow -->
+    <filter id="phosphor">
+      <feGaussianBlur stdDeviation="2" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
-    <filter id="scanlines">
-      <feColorMatrix type="saturate" values="0"/>
+    <filter id="strongGlow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="1.5"/>
+    </filter>
+
+    <!-- Matrix digital rain gradient -->
+    <linearGradient id="rainGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9"/>
+      <stop offset="40%" stop-color="#00FF41" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#003B00" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Title gradient: white hot → phosphor green -->
     <linearGradient id="titleGrad" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#FFFFFF"/>
-      <stop offset="100%" stop-color="#39FF14"/>
+      <stop offset="35%" stop-color="#A0FFA0"/>
+      <stop offset="100%" stop-color="#00FF41"/>
     </linearGradient>
+
+    <!-- Screen ambient -->
     <linearGradient id="screenGrad" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#0D1117"/>
-      <stop offset="100%" stop-color="#0A0E14"/>
+      <stop offset="0%" stop-color="#0A0E0A"/>
+      <stop offset="100%" stop-color="#050805"/>
+    </linearGradient>
+
+    <!-- Pattern for digital rain background -->
+    <pattern id="matrixGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+      <rect width="20" height="20" fill="none"/>
+      <circle cx="10" cy="10" r="0.4" fill="#00FF41" opacity="0.06"/>
+    </pattern>
+
+    <!-- Vertical rain drop -->
+    <linearGradient id="dropGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="1"/>
+      <stop offset="30%" stop-color="#00FF41" stop-opacity="0.8"/>
+      <stop offset="80%" stop-color="#00FF41" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#00FF41" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Fade-to-black at screen bottom -->
+    <linearGradient id="screenFade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="85%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.9"/>
     </linearGradient>
   </defs>
 
-  <!-- Background -->
-  <rect width="800" height="400" fill="#0a0a0f" rx="0"/>
+  <!-- Outer void -->
+  <rect width="800" height="400" fill="#020402"/>
 
-  <!-- NES Cartridge Shell -->
-  <rect x="10" y="10" width="780" height="380" rx="18" fill="#E60012"/>
-  <rect x="10" y="10" width="780" height="380" rx="18" fill="none" stroke="#1A1A2E" stroke-width="4"/>
+  <!-- NES Cartridge Shell — dark Matrix edition -->
+  <rect x="10" y="10" width="780" height="380" rx="18" fill="#0D1A0D"/>
+  <rect x="10" y="10" width="780" height="380" rx="18" fill="none" stroke="#00FF41" stroke-width="2" opacity="0.3"/>
 
-  <!-- Cartridge Top Groove -->
-  <rect x="250" y="24" width="300" height="6" rx="3" fill="#D4A017" opacity="0.9"/>
+  <!-- Cartridge Top Groove → Matrix code trench -->
+  <rect x="240" y="22" width="320" height="6" rx="3" fill="#00FF41" opacity="0.35" filter="url(#softGlow)"/>
 
   <!-- Terminal Screen -->
-  <rect x="42" y="48" width="716" height="290" rx="10" fill="url(#screenGrad)"/>
-  <rect x="42" y="48" width="716" height="290" rx="10" fill="none" stroke="#1A1A2E" stroke-width="3"/>
+  <rect x="42" y="44" width="716" height="298" rx="8" fill="url(#screenGrad)"/>
+  <rect x="42" y="44" width="716" height="298" rx="8" fill="none" stroke="#00FF41" stroke-width="1.5" opacity="0.2"/>
 
-  <!-- Scanline overlay -->
-  <g opacity="0.04">
-    <line x1="42" y1="52" x2="758" y2="52" stroke="#fff" stroke-width="1"/>
-    <line x1="42" y1="56" x2="758" y2="56" stroke="#fff" stroke-width="1"/>
-    <line x1="42" y1="60" x2="758" y2="60" stroke="#fff" stroke-width="1"/>
-    <line x1="42" y1="64" x2="758" y2="64" stroke="#fff" stroke-width="1"/>
-    <line x1="42" y1="68" x2="758" y2="68" stroke="#fff" stroke-width="1"/>
-    <line x1="42" y1="72" x2="758" y2="72" stroke="#fff" stroke-width="1"/>
-    <line x1="42" y1="76" x2="758" y2="76" stroke="#fff" stroke-width="1"/>
-    <line x1="42" y1="80" x2="758" y2="80" stroke="#fff" stroke-width="1"/>
+  <!-- Matrix grid dots -->
+  <rect x="42" y="44" width="716" height="298" rx="8" fill="url(#matrixGrid)"/>
+
+  <!-- Digital rain columns (left side, background) -->
+  <g opacity="0.18">
+    <!-- Col 1 -->
+    <text x="58" y="56" font-family="monospace" font-size="11" fill="#00FF41">日</text>
+    <text x="58" y="74" font-family="monospace" font-size="11" fill="#00FF41" opacity="0.7">本</text>
+    <text x="58" y="92" font-family="monospace" font-size="11" fill="#00FF41" opacity="0.5">語</text>
+    <text x="58" y="110" font-family="monospace" font-size="11" fill="#00FF41" opacity="0.3">T</text>
+    <text x="58" y="128" font-family="monospace" font-size="11" fill="#00FF41" opacity="0.1">R</text>
+
+    <!-- Col 2 -->
+    <text x="88" y="140" font-family="monospace" font-size="10" fill="#00FF41">監</text>
+    <text x="88" y="156" font-family="monospace" font-size="10" fill="#00FF41" opacity="0.6">査</text>
+    <text x="88" y="172" font-family="monospace" font-size="10" fill="#00FF41" opacity="0.4">A</text>
+    <text x="88" y="188" font-family="monospace" font-size="10" fill="#00FF41" opacity="0.15">U</text>
+
+    <!-- Col 3 (right side) -->
+    <text x="658" y="58" font-family="monospace" font-size="12" fill="#00FF41">駆</text>
+    <text x="658" y="78" font-family="monospace" font-size="12" fill="#00FF41" opacity="0.6">動</text>
+    <text x="658" y="98" font-family="monospace" font-size="12" fill="#00FF41" opacity="0.4">開</text>
+    <text x="658" y="118" font-family="monospace" font-size="12" fill="#00FF41" opacity="0.2">発</text>
+    <text x="658" y="138" font-family="monospace" font-size="11" fill="#00FF41" opacity="0.1">D</text>
+
+    <!-- Col 4 -->
+    <text x="688" y="170" font-family="monospace" font-size="10" fill="#00FF41">検</text>
+    <text x="688" y="186" font-family="monospace" font-size="10" fill="#00FF41" opacity="0.5">出</text>
+    <text x="688" y="202" font-family="monospace" font-size="10" fill="#00FF41" opacity="0.3">修</text>
+    <text x="688" y="218" font-family="monospace" font-size="10" fill="#00FF41" opacity="0.15">復</text>
+
+    <!-- Col 5 -->
+    <text x="718" y="90" font-family="monospace" font-size="9" fill="#00FF41">知</text>
+    <text x="718" y="104" font-family="monospace" font-size="9" fill="#00FF41" opacity="0.6">識</text>
+    <text x="718" y="118" font-family="monospace" font-size="9" fill="#00FF41" opacity="0.3">進</text>
+    <text x="718" y="132" font-family="monospace" font-size="9" fill="#00FF41" opacity="0.15">化</text>
   </g>
 
+  <!-- Digital rain — animated foreground columns -->
+  <g>
+    <!-- Col 1 animated -->
+    <text x="118" y="52" font-family="monospace" font-size="13" fill="#00FF41" filter="url(#phosphor)">A</text>
+    <text x="118" y="74" font-family="monospace" font-size="13" fill="#00FF41" opacity="0.8">U</text>
+    <text x="118" y="96" font-family="monospace" font-size="13" fill="#00FF41" opacity="0.6">D</text>
+    <text x="118" y="118" font-family="monospace" font-size="13" fill="#00FF41" opacity="0.4">I</text>
+    <text x="118" y="140" font-family="monospace" font-size="13" fill="#00FF41" opacity="0.2">T</text>
+
+    <!-- Col 2 animated (with falling animation targets) -->
+    <text x="148" y="80" font-family="monospace" font-size="14" fill="#00FF41" filter="url(#phosphor)">駆</text>
+    <text x="148" y="106" font-family="monospace" font-size="13" fill="#00FF41" opacity="0.7">動</text>
+    <text x="148" y="130" font-family="monospace" font-size="12" fill="#00FF41" opacity="0.5">型</text>
+    <text x="148" y="152" font-family="monospace" font-size="12" fill="#00FF41" opacity="0.3">開</text>
+    <text x="148" y="172" font-family="monospace" font-size="11" fill="#00FF41" opacity="0.15">発</text>
+
+    <!-- Col 3 -->
+    <text x="608" y="72" font-family="monospace" font-size="13" fill="#00FF41" filter="url(#phosphor)">検</text>
+    <text x="608" y="96" font-family="monospace" font-size="12" fill="#00FF41" opacity="0.7">査</text>
+    <text x="608" y="118" font-family="monospace" font-size="12" fill="#00FF41" opacity="0.5">修</text>
+    <text x="608" y="138" font-family="monospace" font-size="11" fill="#00FF41" opacity="0.3">復</text>
+    <text x="608" y="156" font-family="monospace" font-size="11" fill="#00FF41" opacity="0.15">閉</text>
+    <text x="608" y="172" font-family="monospace" font-size="10" fill="#00FF41" opacity="0.08">環</text>
+
+    <!-- Bright falling characters (animated) -->
+    <text x="178" y="66" font-family="monospace" font-size="16" fill="#FFFFFF" filter="url(#strongGlow)">
+      監
+      <animate attributeName="y" values="66;340" dur="4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0" dur="4s" repeatCount="indefinite"/>
+    </text>
+    <text x="178" y="86" font-family="monospace" font-size="14" fill="#00FF41" filter="url(#phosphor)">
+      査
+      <animate attributeName="y" values="86;350" dur="4.3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.8;0" dur="4.3s" repeatCount="indefinite"/>
+    </text>
+
+    <text x="638" y="48" font-family="monospace" font-size="15" fill="#FFFFFF" filter="url(#strongGlow)">
+      知
+      <animate attributeName="y" values="48;320" dur="3.8s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0" dur="3.8s" repeatCount="indefinite"/>
+    </text>
+    <text x="638" y="66" font-family="monospace" font-size="13" fill="#00FF41" filter="url(#phosphor)">
+      識
+      <animate attributeName="y" values="66;330" dur="4.1s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.7;0" dur="4.1s" repeatCount="indefinite"/>
+    </text>
+
+    <text x="698" y="100" font-family="monospace" font-size="14" fill="#FFFFFF" filter="url(#strongGlow)">
+      E
+      <animate attributeName="y" values="100;360" dur="5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.9;0" dur="5s" repeatCount="indefinite"/>
+    </text>
+
+    <!-- Slow rain in background -->
+    <text x="208" y="30" font-family="monospace" font-size="11" fill="#00FF41" opacity="0.25">
+      進
+      <animate attributeName="y" values="30;300" dur="7s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.25;0" dur="7s" repeatCount="indefinite"/>
+    </text>
+
+    <text x="560" y="40" font-family="monospace" font-size="10" fill="#00FF41" opacity="0.2">
+      化
+      <animate attributeName="y" values="40;310" dur="6.5s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0.2;0" dur="6.5s" repeatCount="indefinite"/>
+    </text>
+  </g>
+
+  <!-- Fade bottom of screen -->
+  <rect x="42" y="44" width="716" height="298" rx="8" fill="url(#screenFade)"/>
+
   <!-- Prompt line -->
-  <text x="74" y="120" font-family="'Courier New', monospace" font-size="18" fill="#39FF14" font-weight="bold">$</text>
-  <text x="94" y="120" font-family="'Courier New', monospace" font-size="18" fill="#00FFFF" opacity="0.7">audit --driven --development</text>
+  <text x="80" y="118" font-family="'Courier New', monospace" font-size="16" fill="#00FF41" filter="url(#phosphor)">
+    <tspan font-weight="bold">$</tspan>
+    <tspan fill="#00FF41" opacity="0.55"> audit --driven --development</tspan>
+  </text>
 
   <!-- ADD Title -->
-  <text x="74" y="240" font-family="'Courier New', monospace" font-size="96" font-weight="900"
-        letter-spacing="16" fill="url(#titleGrad)" filter="url(#glow)">ADD</text>
+  <text x="80" y="238" font-family="'Courier New', monospace" font-size="100" font-weight="900"
+        letter-spacing="20" fill="url(#titleGrad)" filter="url(#strongGlow)">ADD</text>
 
-  <!-- Blinking cursor -->
-  <rect x="434" y="162" width="12" height="78" fill="#39FF14" opacity="0.6">
-    <animate attributeName="opacity" values="0.6;0.6;0;0;0.6" dur="1.2s" repeatCount="indefinite"/>
+  <!-- Blinking block cursor -->
+  <rect x="462" y="155" width="16" height="82" fill="#00FF41" opacity="0.5" filter="url(#phosphor)">
+    <animate attributeName="opacity" values="0.5;0.5;0;0;0.5" dur="1.0s" repeatCount="indefinite"/>
   </rect>
 
   <!-- Subtitle -->
-  <text x="78" y="280" font-family="'Courier New', monospace" font-size="17" fill="#00FFFF"
-        letter-spacing="6" opacity="0.85">AUDIT-DRIVEN DEVELOPMENT</text>
+  <text x="84" y="280" font-family="'Courier New', monospace" font-size="14" fill="#00FF41"
+        letter-spacing="5" opacity="0.6" filter="url(#softGlow)">AUDIT-DRIVEN DEVELOPMENT</text>
 
-  <!-- Cartridge Label Strip (gold) -->
-  <rect x="42" y="318" width="716" height="6" rx="3" fill="#D4A017" opacity="0.25"/>
+  <!-- Matrix code line at bottom -->
+  <text x="84" y="310" font-family="'Courier New', monospace" font-size="10" fill="#00FF41" opacity="0.2">
+    <tspan>def audit(): while True: detect() → repair() → learn()</tspan>
+  </text>
 
-  <!-- Bottom cartridge pins -->
-  <g fill="#D4A017">
-    <rect x="130" y="365" width="16" height="10" rx="3"/>
-    <rect x="156" y="365" width="16" height="10" rx="3"/>
-    <rect x="182" y="365" width="16" height="10" rx="3"/>
-    <rect x="208" y="365" width="16" height="10" rx="3"/>
-    <rect x="234" y="365" width="16" height="10" rx="3"/>
-    <rect x="260" y="365" width="16" height="10" rx="3"/>
-    <rect x="286" y="365" width="16" height="10" rx="3"/>
-    <rect x="312" y="365" width="16" height="10" rx="3"/>
-    <rect x="338" y="365" width="16" height="10" rx="3"/>
-    <rect x="364" y="365" width="16" height="10" rx="3"/>
-    <rect x="390" y="365" width="16" height="10" rx="3"/>
-    <rect x="416" y="365" width="16" height="10" rx="3"/>
-    <rect x="442" y="365" width="16" height="10" rx="3"/>
-    <rect x="468" y="365" width="16" height="10" rx="3"/>
-    <rect x="494" y="365" width="16" height="10" rx="3"/>
-    <rect x="520" y="365" width="16" height="10" rx="3"/>
-    <rect x="546" y="365" width="16" height="10" rx="3"/>
-    <rect x="572" y="365" width="16" height="10" rx="3"/>
-    <rect x="598" y="365" width="16" height="10" rx="3"/>
-    <rect x="624" y="365" width="16" height="10" rx="3"/>
-    <rect x="650" y="365" width="16" height="10" rx="3"/>
+  <!-- Cartridge Label Strip -->
+  <rect x="42" y="322" width="716" height="4" rx="2" fill="#00FF41" opacity="0.12" filter="url(#softGlow)"/>
+
+  <!-- Bottom cartridge pins (Matrix green) -->
+  <g fill="#00FF41" opacity="0.3" filter="url(#softGlow)">
+    <rect x="118" y="366" width="16" height="10" rx="3"/>
+    <rect x="146" y="366" width="16" height="10" rx="3"/>
+    <rect x="174" y="366" width="16" height="10" rx="3"/>
+    <rect x="202" y="366" width="16" height="10" rx="3"/>
+    <rect x="230" y="366" width="16" height="10" rx="3"/>
+    <rect x="258" y="366" width="16" height="10" rx="3"/>
+    <rect x="286" y="366" width="16" height="10" rx="3"/>
+    <rect x="314" y="366" width="16" height="10" rx="3"/>
+    <rect x="342" y="366" width="16" height="10" rx="3"/>
+    <rect x="370" y="366" width="16" height="10" rx="3"/>
+    <rect x="398" y="366" width="16" height="10" rx="3"/>
+    <rect x="426" y="366" width="16" height="10" rx="3"/>
+    <rect x="454" y="366" width="16" height="10" rx="3"/>
+    <rect x="482" y="366" width="16" height="10" rx="3"/>
+    <rect x="510" y="366" width="16" height="10" rx="3"/>
+    <rect x="538" y="366" width="16" height="10" rx="3"/>
+    <rect x="566" y="366" width="16" height="10" rx="3"/>
+    <rect x="594" y="366" width="16" height="10" rx="3"/>
+    <rect x="622" y="366" width="16" height="10" rx="3"/>
+    <rect x="650" y="366" width="16" height="10" rx="3"/>
   </g>
 
-  <!-- Small spec dot (NES cartridge detail) -->
-  <circle cx="580" cy="33" r="5" fill="#1A1A2E" opacity="0.5"/>
-  <circle cx="600" cy="33" r="3" fill="#1A1A2E" opacity="0.3"/>
+  <!-- Glitch strip overlay (periodic) -->
+  <rect x="0" y="0" width="800" height="3" fill="#00FF41" opacity="0">
+    <animate attributeName="opacity" values="0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0.15;0;0;0;0;0;0" dur="8s" repeatCount="indefinite"/>
+  </rect>
 </svg>
