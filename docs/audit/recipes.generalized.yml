@@ -1,0 +1,52 @@
+description: Fix recipe book — 5 human + 0 LLM-imported recipes
+recipes:
+- confidence: verified
+  fix:
+    regression_risk: none
+    steps:
+    - Change .get('key', 'default') to .get('key') or 'default'
+    verification: grep -rn "\.get(" affected_files | grep -v " or "
+  id: FIX-NULL-DICT-GET
+  pattern: dict.get('key', default) returns None when JSON value is null
+  source: v2.0 self-audit ADD-P0-1 + human curation
+- confidence: verified
+  fix:
+    regression_risk: none
+    steps:
+    - import traceback
+    - traceback.print_exc()
+    verification: python -c "import traceback; print('ok')"
+  id: FIX-TRACEBACK-LOSS
+  pattern: Top-level except discards traceback — no traceback.print_exc()
+  source: v2.0 self-audit ADD-P1-2 + human curation
+- confidence: verified
+  fix:
+    regression_risk: low
+    steps:
+    - Add re.search(r'(?:at|in|evidence|file)\s+([\w.\-/]+\.py)(?::L?(\d+))?')
+    - Use finditer-based extraction instead of re.match for non-prefix matches
+    verification: python scripts/rule_extractor.py --benchmark-dir docs/benchmark
+  id: FIX-EVIDENCE-PARSING
+  pattern: Evidence text parse fails for embedded file:line references
+  source: v2.0 self-audit ADD-P0-4 + human curation
+- confidence: verified
+  fix:
+    regression_risk: medium
+    steps:
+    - Parse evidence to extract actual file path with embedded pattern
+    - Fall back to known_bugs[].file or scoped_modules inference
+    verification: grep -c 'unknown.py' docs/audit/guards.learned.yml
+  id: FIX-SCOPE-GLOB
+  pattern: Guard scope glob resolves to **/unknown.py — useless
+  source: v2.0 self-audit ADD-P0-4 scope fix + human curation
+- confidence: verified
+  fix:
+    regression_risk: low
+    steps:
+    - 'Add: if result.returncode not in (0, 1): continue'
+    - Add PermissionError, OSError to exception handling
+    verification: python scripts/spec_graph.py --spec SKILL.md
+  id: FIX-RETURNCODE-CHECK
+  pattern: subprocess.run without returncode check — errors silent
+  source: v2.0 self-audit ADD-P2-3 + human curation
+version: '2.2'

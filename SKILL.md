@@ -272,6 +272,63 @@ Knowledge augmentation is an accelerator, not a prerequisite.
 
 ---
 
+## LLM Generalization & Recipe Book / LLM 泛化 & 配方书 (v2.2+)
+
+**Added in v2.2** as the third step of the Knowledge Pipeline.
+
+### Step 3.6: Generate Generalized Rules & Recipes / 生成通用规则 & 修复配方
+
+After Step 3.5 (Pattern Mining + Fix Augmentation):
+
+```bash
+# Build LLM generalization prompt from v2.1 data
+python scripts/llm_generalize.py --source-dir docs/audit --output-dir docs/audit
+
+# Manage fix recipe book (5 built-in + LLM-imported)
+python scripts/fix_recipes.py --recipes docs/audit/recipes.generalized.yml --output docs/audit/recipes.generalized.yml
+
+# Validate generalized rules against benchmark known bugs
+python scripts/rule_validator.py --rules docs/audit/rules.generalized.yml --benchmark-dir docs/benchmark
+```
+
+Outputs: `llm_generalization_prompt.txt` → feed to Subagent → `rules.generalized.yml` + `recipes.generalized.yml`.
+
+Built-in recipes (5 human-authored):
+- `FIX-NULL-DICT-GET`, `FIX-TRACEBACK-LOSS`, `FIX-EVIDENCE-PARSING`, `FIX-SCOPE-GLOB`, `FIX-RETURNCODE-CHECK`
+
+Rule validation: each generalized rule is matched against benchmark known bugs via difflib.
+Verified rules (precision >= 0.4) are marked `verified`; low-confidence rules are `flagged_for_review`.
+
+---
+
+## External Knowledge Injection & Live Update / 外部知识注入 & 实时更新 (v2.3+)
+
+**Added in v2.3** as the final step of the Knowledge Pipeline.
+
+### Step 3.7: External Knowledge Lookup & Live Update
+
+After Fix Augmentation (Step 3.5) and Rule Generalization (Step 3.6):
+
+```bash
+# Build MCP search queries for P0 findings without fixes
+python scripts/mcp_lookup.py --findings <issues.json> --output docs/audit/mcp_queries.json
+
+# Sync benchmark data from open-source projects (monthly, manual trigger)
+python scripts/benchmark_syncer.py --project fastapi --output docs/benchmark/fastapi-new.json --dry-run
+```
+
+After audit completion:
+
+```bash
+# Auto-update all knowledge files
+python scripts/live_knowledge.py --audit-dir docs/audit
+```
+
+MCP query execution: the main agent reads `mcp_queries.json` and dispatches `run_mcp` calls.
+Results are cached in `.mcp_cache/` (24h TTL) and written to `references/` as persisted reference files.
+
+---
+
 ## The Audit Framework: 4 Phases
 
 ```dot
