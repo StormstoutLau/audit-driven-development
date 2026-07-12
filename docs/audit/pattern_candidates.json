@@ -1,0 +1,9 @@
+{
+  "repo": "F:\\Coding\\audit-driven-development",
+  "since": "2024-01-01",
+  "fix_commits_analyzed": 0,
+  "hotspots": [],
+  "patterns": [],
+  "security_patterns": [],
+  "suggested_guards": []
+}

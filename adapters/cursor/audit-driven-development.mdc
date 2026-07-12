@@ -229,6 +229,50 @@ If loading fails (>30s timeout): skip, log warning, proceed.
 
 ---
 
+## Detection Pattern Mining & Fix History Augmentation / 检测模式挖掘 & 修复历史增强 (v2.1+)
+
+**Added in v2.1** as the second step of the Knowledge Pipeline.
+**v2.1 新增**：知识沉淀管道的第二步——从 git 历史挖掘 bug 模式 + 从历史修复中匹配方案。
+
+### Step 3.5: Run Pattern Mining & Fix Augmentation / 运行模式挖掘 & 修复增强
+
+After Phase 3 (Aggregate Findings), before Phase 4 (Fix Baseline):
+
+#### Detection Track: diff_miner + rule_suggester / 检测轨道
+
+```bash
+# Mine bug-fix patterns from git history
+python scripts/diff_miner.py --repo <path> --since "2024-01-01" --output docs/audit/pattern_candidates.json
+
+# Suggest new guards from accumulated audit-log patterns
+python scripts/rule_suggester.py --audit-log-dir docs/audit-log --output docs/audit/rule_suggestions.json
+```
+
+Outputs: `pattern_candidates.json` (hotspots + patterns + guard suggestions), `rule_suggestions.json` (FP/FN analysis → suggested actions).
+
+#### Repair Track: fix_history / 修复轨道
+
+```bash
+# Match new findings against history verified fixes
+python scripts/fix_history.py --findings <new_issues.json> --history-dir docs/audit --output docs/audit/augmented_issues.json
+```
+
+Reward signal: scores.json trend automatically adjusts match threshold:
+- ▲ (improving): threshold relaxed (0.60) — reuse more historical solutions
+- ▼ (declining): threshold tightened (0.80) — avoid reusing ineffective solutions
+- ─ (stable): default threshold (0.65)
+- 3 consecutive ▲: confident mode (threshold - 0.05 extra)
+
+Output: `augmented_issues.json` — findings now carry `suggested_fix`, `match_score`, `source_history_id` from verified historical fixes.
+
+#### Failure Handling / 失败处理
+
+All three scripts are deterministic and use `_script_utils.run_script(main)` for consistent error handling.
+If any script fails or times out (>30s): skip, log warning, proceed with original issues.
+Knowledge augmentation is an accelerator, not a prerequisite.
+
+---
+
 ## The Audit Framework: 4 Phases
 
 ```dot

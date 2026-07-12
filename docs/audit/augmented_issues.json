@@ -1,0 +1,291 @@
+{
+  "audit_id": "2026-07-11-v2.0-self-audit",
+  "fix_history_meta": {
+    "trend": "─",
+    "threshold_used": 0.65,
+    "history_entries_loaded": 12,
+    "findings_augmented": 0,
+    "findings_with_any_match_above_50": 0,
+    "confident_mode": false
+  },
+  "issues": [
+    {
+      "id": "ADD-P0-1",
+      "file": "scripts/rule_extractor.py",
+      "line": 125,
+      "severity": "P0",
+      "category": "behavior",
+      "spec_ref": "v2.0 spec §5.1 parse_evidence()",
+      "claim": "parse_evidence() crashes on JSON evidence: null — dict.get('evidence', '') returns None when value is null, causing re.match(pattern, None) TypeError",
+      "status": "open",
+      "fix_suggestion": {
+        "steps": [
+          "Change L125: evidence_text = match.get('evidence') or ''"
+        ],
+        "affected_files": [
+          "scripts/rule_extractor.py:L125"
+        ],
+        "regression_risk": "none",
+        "verification_command": "python scripts/test_v20_consistency.py",
+        "impact": "Corrupted benchmark JSON causes entire audit pipeline crash instead of skipping single project",
+        "mitigation": "None"
+      }
+    },
+    {
+      "id": "ADD-P0-2",
+      "file": "docs/ROADMAP.md",
+      "line": 69,
+      "severity": "P0",
+      "category": "contract",
+      "spec_ref": "ROADMAP §P2.7 (L316-L327)",
+      "claim": "P2.7 marked 'Done (inter_rater.py v2.0)' but only 40% implemented — missing dual-subagent dispatch, per-dimension kappa, severity escalation",
+      "status": "open",
+      "fix_suggestion": {
+        "steps": [
+          "Either implement full P2.7 spec (3-4 hours) or downgrade ROADMAP status to 'Partial — kappa engine only'"
+        ],
+        "affected_files": [
+          "docs/ROADMAP.md:L69",
+          "scripts/inter_rater.py"
+        ],
+        "regression_risk": "medium",
+        "verification_command": "python scripts/inter_rater.py --help",
+        "impact": "v1.0 Stable claim ('P0-P3 all complete') is undermined",
+        "mitigation": "Downgrade ROADMAP P2.7 to 'Partial' until full spec implemented"
+      }
+    },
+    {
+      "id": "ADD-P0-3",
+      "file": "scripts/test_v20_consistency.py",
+      "line": 90,
+      "severity": "P0",
+      "category": "blind_spot",
+      "spec_ref": "v2.0 spec §8 TDD Strategy",
+      "claim": "TDD checks R14/R15/R16 are string-matching only — a stub script with print('kappa: 0.5') would pass all 3 checks",
+      "status": "open",
+      "fix_suggestion": {
+        "steps": [
+          "R14: Actually import and call inter_rater.compute_cohens_kappa() with test data",
+          "R15: Verify kappa output format is valid JSON with kappa/agreement_rate fields",
+          "R16: Verify kappa computation is correct with known test vectors"
+        ],
+        "affected_files": [
+          "scripts/test_v20_consistency.py:L88-L95"
+        ],
+        "regression_risk": "none",
+        "verification_command": "python scripts/test_v20_consistency.py",
+        "impact": "False sense of security — P2.7 functional gaps undiscovered by TDD",
+        "mitigation": "Manual verification of P2.7 until TDD upgraded"
+      }
+    },
+    {
+      "id": "ADD-P0-4",
+      "file": "scripts/rule_extractor.py",
+      "line": 62,
+      "severity": "P0",
+      "category": "behavior",
+      "spec_ref": "v2.0 spec §5.1 parse_evidence()",
+      "claim": "9/12 benchmark TP produce guards with scope '**/unknown.py' — 75% of learned guards are useless because evidence text format not parsed",
+      "status": "open",
+      "fix_suggestion": {
+        "steps": [
+          "Step 1: Enhance parse_evidence to try embedded file:line extraction from free-text evidence",
+          "Step 2: Pattern: '(?:at|in|evidence|file)\\s+([\\w./-]+\\.py):L?(\\d+)'",
+          "Step 3: Re-run rule_extractor to regenerate guards.learned.yml with correct scopes"
+        ],
+        "affected_files": [
+          "scripts/rule_extractor.py:L62-L98 (parse_evidence)"
+        ],
+        "regression_risk": "low",
+        "verification_command": "python scripts/rule_extractor.py --benchmark-dir docs/benchmark; grep -c 'unknown.py' docs/audit/guards.learned.yml",
+        "impact": "v2.0 core value proposition ('12 TP → reusable guards') is undermined",
+        "mitigation": "Manually add file paths to benchmark JSON evidence fields"
+      }
+    },
+    {
+      "id": "ADD-P1-1",
+      "file": "scripts/inter_rater.py",
+      "line": 1,
+      "severity": "P1",
+      "category": "contract",
+      "spec_ref": "ROADMAP §P2.7 (L316-L327)",
+      "claim": "P2.7 implementation incomplete — missing subagent dispatch orchestration, per-dimension kappa, severity escalation flag",
+      "status": "open",
+      "fix_suggestion": {
+        "steps": [
+          "Step 1: Add subagent dispatch orchestration function",
+          "Step 2: Add per-dimension kappa calculation (signature/behavior/contract/...)",
+          "Step 3: Add severity discrepancy escalation (>1 level → manual review flag)"
+        ],
+        "affected_files": [
+          "scripts/inter_rater.py"
+        ],
+        "regression_risk": "low",
+        "verification_command": "python scripts/inter_rater.py --help",
+        "impact": "P2.7 (last P2 item) still incomplete",
+        "mitigation": "Manual dual-subagent review until automation ready"
+      }
+    },
+    {
+      "id": "ADD-P1-2",
+      "file": "scripts/rule_extractor.py",
+      "line": 303,
+      "severity": "P1",
+      "category": "behavior",
+      "spec_ref": "ROADMAP §Design Constraint 1 (scripts must be debuggable)",
+      "claim": "Top-level except discards traceback — only json.dumps({'error': str(e)}) to stderr, no traceback.print_exc()",
+      "status": "open",
+      "fix_suggestion": {
+        "steps": [
+          "Add 'import traceback' and 'traceback.print_exc()' to all 3 v2.0 scripts' except blocks (rule_extractor:L303, spec_graph:L251, inter_rater:L251)"
+        ],
+        "affected_files": [
+          "scripts/rule_extractor.py:L303",
+          "scripts/spec_graph.py:L251",
+          "scripts/inter_rater.py:L136"
+        ],
+        "regression_risk": "none",
+        "verification_command": "python -c \"import traceback; print('ok')\"",
+        "impact": "Production debugging impossible without traceback",
+        "mitigation": "Run scripts with PYTHONTRACEBACK=1 or wrap in debug harness"
+      }
+    },
+    {
+      "id": "ADD-P1-3",
+      "file": "docs/ROADMAP.md",
+      "line": 588,
+      "severity": "P1",
+      "category": "corrective",
+      "spec_ref": "ROADMAP §Version Anchors",
+      "claim": "Version Anchors v2.0 status is '🚧 In Progress' but all 4 deliverables are implemented and 122/122 tests pass",
+      "status": "open",
+      "fix_suggestion": {
+        "steps": [
+          "Change '🚧 In Progress' to '✅ Done' in ROADMAP v2.0 Version Anchors row"
+        ],
+        "affected_files": [
+          "docs/ROADMAP.md:L588"
+        ],
+        "regression_risk": "none",
+        "verification_command": "grep 'v2.0.*Done' docs/ROADMAP.md",
+        "impact": "Documentation inconsistency — Change Log says Done, Anchors says In Progress",
+        "mitigation": "None"
+      }
+    },
+    {
+      "id": "ADD-P1-4",
+      "file": "scripts/rule_index.py",
+      "line": 25,
+      "severity": "P1",
+      "category": "contract",
+      "spec_ref": "v2.0 spec §5.2 (spec_graph extends rule_index)",
+      "claim": "extract_constraints() and index_rules() are copy-pasted in spec_graph.py instead of imported from rule_index.py",
+      "status": "open",
+      "fix_suggestion": {
+        "steps": [
+          "Extract shared functions to scripts/_rule_utils.py",
+          "Import in both rule_index.py and spec_graph.py"
+        ],
+        "affected_files": [
+          "scripts/rule_index.py",
+          "scripts/spec_graph.py",
+          "scripts/_rule_utils.py (new)"
+        ],
+        "regression_risk": "medium",
+        "verification_command": "python scripts/rule_index.py --spec SKILL.md; python scripts/spec_graph.py --spec SKILL.md",
+        "impact": "Dual maintenance risk — changes to one copy must be manually replicated",
+        "mitigation": "Current behavior identical — no immediate functional issue"
+      }
+    },
+    {
+      "id": "ADD-P2-1",
+      "file": "scripts/rule_extractor.py",
+      "line": 295,
+      "severity": "P2",
+      "category": "behavior",
+      "spec_ref": "v2.0 spec §5.1 guard format",
+      "claim": "category field present in memory but not serialized to guards.learned.yml YAML output",
+      "status": "open",
+      "fix_suggestion": {
+        "steps": [
+          "Add 'category' field to YAML output in main() guard serialization loop"
+        ],
+        "affected_files": [
+          "scripts/rule_extractor.py:L295-L305"
+        ],
+        "regression_risk": "none",
+        "verification_command": "python -c \"import yaml; d=yaml.safe_load(open('docs/audit/guards.learned.yml')); assert 'category' in d['guards'][0]\"",
+        "impact": "spec_graph.py guard binding always gets default category='behavior'",
+        "mitigation": "Manual category assignment in guards.learned.yml"
+      }
+    },
+    {
+      "id": "ADD-P2-2",
+      "file": "SKILL.md",
+      "line": 206,
+      "severity": "P2",
+      "category": "corrective",
+      "spec_ref": "SKILL.md §Step 0.5 guards.learned.yml",
+      "claim": "merge_guards command uses --project docs/audit/guards.yml but script convention uses guards.project.yml and file does not exist",
+      "status": "open",
+      "fix_suggestion": {
+        "steps": [
+          "Change '--project docs/audit/guards.yml' to '--project docs/audit/guards.project.yml'"
+        ],
+        "affected_files": [
+          "SKILL.md:L206"
+        ],
+        "regression_risk": "none",
+        "verification_command": "grep 'guards.yml' SKILL.md | grep -v 'guards.learned' | grep -v 'guards.template' | grep -v 'guards.common' | grep -v 'guards.project'",
+        "impact": "User confusion when copy-pasting command fails",
+        "mitigation": "Create docs/audit/guards.yml symlink or copy"
+      }
+    },
+    {
+      "id": "ADD-P2-3",
+      "file": "scripts/spec_graph.py",
+      "line": 167,
+      "severity": "P2",
+      "category": "behavior",
+      "spec_ref": "ROADMAP §Design Constraint 1 (deterministic scripts)",
+      "claim": "grep_code_evidence subprocess.run has no returncode check — git errors silently produce empty evidence, indistinguishable from 'no match'",
+      "status": "open",
+      "fix_suggestion": {
+        "steps": [
+          "Add: if result.returncode != 0 and result.returncode != 1: stderr note"
+        ],
+        "affected_files": [
+          "scripts/spec_graph.py:L167-L172"
+        ],
+        "regression_risk": "none",
+        "verification_command": "python scripts/spec_graph.py --spec SKILL.md",
+        "impact": "Git errors (permission denied, not a repo) silently return empty ADR evidence",
+        "mitigation": "Check stderr output after running spec_graph.py"
+      }
+    },
+    {
+      "id": "ADD-P2-4",
+      "file": "scripts/",
+      "line": 1,
+      "severity": "P2",
+      "category": "contract",
+      "spec_ref": "ROADMAP §Design Constraint 4 (pluggable)",
+      "claim": "8 scripts repeat same try/except/E pattern — any improvement requires touching 8 files",
+      "status": "open",
+      "fix_suggestion": {
+        "steps": [
+          "Create scripts/_script_utils.py with run_script(main_fn) decorator",
+          "Migrate all scripts to use shared helper"
+        ],
+        "affected_files": [
+          "scripts/_script_utils.py (new)",
+          "8 existing scripts"
+        ],
+        "regression_risk": "medium",
+        "verification_command": "python scripts/test_v20_consistency.py",
+        "impact": "High maintenance overhead for error handling changes",
+        "mitigation": "Defer to v2.1 refactor"
+      }
+    }
+  ]
+}
