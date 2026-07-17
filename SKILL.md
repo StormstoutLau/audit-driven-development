@@ -329,7 +329,7 @@ Results are cached in `.mcp_cache/` (24h TTL) and written to `references/` as pe
 
 ---
 
-## The Audit Framework: 4 Phases
+## The Audit Framework: 5 Phases
 
 ```dot
 digraph audit_cycle {
@@ -337,10 +337,11 @@ digraph audit_cycle {
     p1 [label="Phase 1\nSpec Inventory", shape=box, style=filled, fillcolor="#ffcccc"];
     p2 [label="Phase 2\nMulti-Dimensional Audit", shape=box, style=filled, fillcolor="#ccffcc"];
     p3 [label="Phase 3\nFix Priority Matrix", shape=box, style=filled, fillcolor="#ccccff"];
+    p35 [label="Phase 3.5\nFinding Verification", shape=box, style=filled, fillcolor="#ff9999"];
     p4 [label="Phase 4\nFix Baseline + Tracking", shape=box, style=filled, fillcolor="#fffccc"];
     next [label="Next\n(fix / regression / iterate)", shape=ellipse];
 
-    p1 -> p2 -> p3 -> p4 -> next;
+    p1 -> p2 -> p3 -> p35 -> p4 -> next;
 }
 ```
 
@@ -394,6 +395,67 @@ digraph audit_cycle {
 2. 1 行修复的 P0 优先于 100 行重构的 P1
 3. 影响多模块的问题优先于单模块问题
 4. 修正项未落实优先于新增问题（修正项是设计承诺）
+
+### Phase 3.5: Finding Verification — 幻觉防护 (v3.5+)
+
+**Added in v3.5** in response to subagent hallucination. Before any P0 finding enters the fix baseline, it MUST pass mandatory source-code-level verification. This is a hard gate — no P0 finding skips Phase 3.5.
+
+**v3.5 新增**，回应 subagent 幻觉问题。任何 P0 发现进入修复基线前，必须通过强制源码级验证。这是一个硬性关卡——任何 P0 发现都不能跳过 Phase 3.5。
+
+**Rule / 规则**: 每一条 P0 finding 必须经过 4 级源码验证，未通过验证的 finding 不得进入 Phase 4 修复基线。
+
+#### 4-Level Verification / 四级验证
+
+| Level | 验证内容 | 通过条件 | 失败后果 |
+|---|---|---|---|
+| **L1** | 文件存在性 | `evidence.file` 在 repo 中存在 | `unverified` — 幻觉，移出基线 |
+| **L2** | 行号有效性 | `evidence.line_start` 在文件行数范围内 | `unverified` — 幻觉，移出基线 |
+| **L3** | 关键词匹配 | claim 关键词在 ±20 行内出现 | `unverified` — 证据不匹配，移出基线 |
+| **L4** | 结构性验证 | 代码模式与 claim 类型一致（missing/wrong/violates/dead_code/import） | `partial` — 降级 P0→P1，标记人工审核 |
+
+#### Action Matrix / 动作矩阵
+
+| 验证结果 | 动作 | 严重度变化 | 后续处理 |
+|---|---|---|---|
+| **verified** (L4) | 保留 | P0 不变 | 进入 Phase 4 修复基线 |
+| **partial** (L3 only) | 降级 | P0 → P1 | 标记 `_phase35_action: downgraded`，需人工审核 |
+| **unverified** (L1/L2 fail) | 移出 | 从基线移除 | 记录到 `hallucination_log.json`，不进入修复流程 |
+
+#### Usage / 用法
+
+```bash
+# Mandatory: run after Phase 3 aggregation, before Phase 4 fix baseline
+python scripts/verify_findings.py \
+  --findings <phase3_findings.json> \
+  --repo <repo_root> \
+  --output docs/audit/verified_findings.json \
+  --hallucination-log docs/audit/hallucination_log.json
+```
+
+**Exit codes**:
+- `0` = all P0 findings verified (no hallucinations)
+- `1` = hallucinations detected (findings removed from baseline)
+
+**Integration**: Phase 3.5 runs AFTER Phase 3 (Aggregate + Prioritize) and BEFORE Step 3.5 (Pattern Mining), Step 3.6 (LLM Generalization), Step 3.7 (External Knowledge), and Phase 4 (Fix Baseline). Hallucinated findings never enter the knowledge pipeline or fix baseline.
+
+#### Claim Type Classification / 声明类型分类
+
+The L4 structural verifier classifies each claim into one or more types:
+
+| Claim Type | Pattern Match | Verification Logic |
+|---|---|---|
+| `missing` | "missing/lacks/absent/without/not handled" | Verify the claimed element IS absent in context |
+| `wrong` | "wrong/incorrect/invalid/mismatch/should be" | Verify the wrong pattern IS present in context |
+| `violates` | "violates/breaks/conflicts with/against spec" | Verify the violation pattern IS present |
+| `dead_code` | "dead code/unreachable/unused/never called" | Verify code follows return/raise/exit |
+| `import_related` | "import/from X import/dependency" | Verify the import statement exists |
+| `generic` | (none of the above) | Keyword presence check in context |
+
+#### Failure Handling / 失败处理
+
+- `verify_findings.py` is deterministic and uses `_script_utils.run_script(main)` for consistent error handling.
+- If the script itself fails (timeout >30s, unhandled exception): Phase 3.5 is bypassed, all P0 findings flagged with `_phase35_bypassed: true`, and a warning is logged. The audit proceeds but with reduced confidence.
+- Hallucination log is persisted to `docs/audit/hallucination_log.json` for post-mortem analysis.
 
 ### Phase 4: Fix Baseline + Tracking (修复基线 + 跟踪表)
 
@@ -664,6 +726,23 @@ These scripts are NOT subagent tasks. They are deterministic pre-processing run 
 2. 按 P0/P1/P2/P3 分级
 3. 按 Tier 1/2/3 排序（Detection→Priority）
 4. 识别"低成本高影响"修复（1 行修复的 P0 优先）
+
+### Step 3.5: Verify P0 Findings — 幻觉防护 (Detection, v3.5+)
+
+**MANDATORY gate between Detection and Repair.** Before any P0 finding enters the fix baseline, force source-code-level verification.
+
+```bash
+python scripts/verify_findings.py \
+  --findings <phase3_findings.json> \
+  --repo <repo_root> \
+  --output docs/audit/verified_findings.json \
+  --hallucination-log docs/audit/hallucination_log.json
+```
+
+- Each P0 finding undergoes 4-level verification (L1: file exists, L2: line valid, L3: keyword match, L4: structural check)
+- Unverified findings (hallucinations) are removed from baseline and logged to `hallucination_log.json`
+- Partially verified findings are downgraded P0→P1 with human review flag
+- See §Phase 3.5 for full specification
 
 ### Repair Phase / 修复阶段
 

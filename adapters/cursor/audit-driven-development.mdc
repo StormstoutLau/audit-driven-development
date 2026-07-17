@@ -330,7 +330,7 @@ Results are cached in `.mcp_cache/` (24h TTL) and written to `references/` as pe
 
 ---
 
-## The Audit Framework: 4 Phases
+## The Audit Framework: 5 Phases
 
 ```dot
 digraph audit_cycle {
@@ -338,10 +338,11 @@ digraph audit_cycle {
     p1 [label="Phase 1\nSpec Inventory", shape=box, style=filled, fillcolor="#ffcccc"];
     p2 [label="Phase 2\nMulti-Dimensional Audit", shape=box, style=filled, fillcolor="#ccffcc"];
     p3 [label="Phase 3\nFix Priority Matrix", shape=box, style=filled, fillcolor="#ccccff"];
+    p35 [label="Phase 3.5\nFinding Verification", shape=box, style=filled, fillcolor="#ff9999"];
     p4 [label="Phase 4\nFix Baseline + Tracking", shape=box, style=filled, fillcolor="#fffccc"];
     next [label="Next\n(fix / regression / iterate)", shape=ellipse];
 
-    p1 -> p2 -> p3 -> p4 -> next;
+    p1 -> p2 -> p3 -> p35 -> p4 -> next;
 }
 ```
 
@@ -395,6 +396,36 @@ digraph audit_cycle {
 2. 1 行修复的 P0 优先于 100 行重构的 P1
 3. 影响多模块的问题优先于单模块问题
 4. 修正项未落实优先于新增问题（修正项是设计承诺）
+
+### Phase 3.5: Finding Verification — 幻觉防护 (v3.5+)
+
+**Added in v3.5** in response to subagent hallucination. Before any P0 finding enters the fix baseline, it MUST pass mandatory source-code-level verification. This is a hard gate — no P0 finding skips Phase 3.5.
+
+**v3.5 新增**，回应 subagent 幻觉问题。任何 P0 发现进入修复基线前，必须通过强制源码级验证。这是一个硬性关卡——任何 P0 发现都不能跳过 Phase 3.5。
+
+**Rule / 规则**: Every P0 finding must pass 4-level source verification. Unverified findings are removed from the fix baseline.
+
+#### 4-Level Verification / 四级验证
+
+| Level | Check | Pass Condition | Fail Consequence |
+|---|---|---|---|
+| **L1** | File existence | `evidence.file` exists in repo | `unverified` — removed from baseline |
+| **L2** | Line validity | `evidence.line_start` within file range | `unverified` — removed from baseline |
+| **L3** | Keyword match | Claim keywords found in ±20 lines | `unverified` — removed from baseline |
+| **L4** | Structural check | Code pattern matches claim type | `partial` — downgrade P0→P1, human review |
+
+#### Usage
+
+```bash
+python scripts/verify_findings.py \
+  --findings <phase3_findings.json> \
+  --repo <repo_root> \
+  --output docs/audit/verified_findings.json \
+  --hallucination-log docs/audit/hallucination_log.json
+```
+
+- Exit 0 = all verified; Exit 1 = hallucinations detected
+- Runs AFTER Phase 3, BEFORE Step 3.5/3.6/3.7 and Phase 4
 
 ### Phase 4: Fix Baseline + Tracking (修复基线 + 跟踪表)
 
@@ -665,6 +696,22 @@ These scripts are NOT subagent tasks. They are deterministic pre-processing run 
 2. 按 P0/P1/P2/P3 分级
 3. 按 Tier 1/2/3 排序（Detection→Priority）
 4. 识别"低成本高影响"修复（1 行修复的 P0 优先）
+
+### Step 3.5: Verify P0 Findings — 幻觉防护 (Detection, v3.5+)
+
+**MANDATORY gate.** Before any P0 finding enters the fix baseline, force source-code-level verification.
+
+```bash
+python scripts/verify_findings.py \
+  --findings <phase3_findings.json> \
+  --repo <repo_root> \
+  --output docs/audit/verified_findings.json \
+  --hallucination-log docs/audit/hallucination_log.json
+```
+
+- Each P0 finding undergoes 4-level verification (L1-L4)
+- Unverified findings (hallucinations) are removed from baseline
+- Partially verified findings are downgraded P0→P1 with human review flag
 
 ### Repair Phase / 修复阶段
 
