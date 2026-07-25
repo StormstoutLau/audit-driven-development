@@ -219,8 +219,8 @@ def _verify_missing(claim, context_text, all_lines, line_num):
                 "missing_thing": missing_thing,
                 "found_in_context": pattern_present}
 
-    return {"confirmed": True, "reason": "could_not_extract_missing_thing",
-            "note": "unable to determine what is claimed missing"}
+    return {"confirmed": False, "reason": "could_not_extract_missing_thing",
+            "note": "unable to determine what is claimed missing — downgraded to P1 for human review"}
 
 
 def _check_pattern_present(thing, context_text):
@@ -277,7 +277,7 @@ def _verify_wrong(claim, context_text):
                 "wrong_thing": wrong_thing,
                 "found_in_context": found}
 
-    return {"confirmed": True, "reason": "could_not_extract_wrong_thing"}
+    return {"confirmed": False, "reason": "could_not_extract_wrong_thing"}
 
 
 def _verify_violates(claim, context_text):
@@ -301,7 +301,7 @@ def _verify_violates(claim, context_text):
                 "violation_thing": violation_thing,
                 "evidence_in_context": found}
 
-    return {"confirmed": True, "reason": "could_not_extract_violation_thing"}
+    return {"confirmed": False, "reason": "could_not_extract_violation_thing"}
 
 
 def _verify_dead_code(context_text, all_lines, line_num):
@@ -348,6 +348,35 @@ def _verify_generic(claim, context_text):
 
 
 # ── Main Verification Pipeline ──
+
+def verify_single_finding_l1l2(finding, repo_root):
+    """Run L1+L2-only verification for P1 findings (lightweight existence check).
+
+    Used by verify_all_findings() for P1 severity to catch file/line hallucinations
+    without incurring L3/L4 structural verification cost.
+    """
+    fid = finding.get("id", "unknown")
+    claim = finding.get("claim", "")
+    evidence = finding.get("evidence", {})
+    file_path = evidence.get("file", "") or finding.get("file", "")
+    line_num = evidence.get("line_start", 0) or finding.get("line", 0)
+    severity = finding.get("severity", "P1")
+
+    result = {"id": fid, "severity": severity, "file": file_path,
+              "line": line_num, "claim": claim}
+
+    l1l2 = verify_l1_l2(repo_root, file_path, line_num)
+    result["l1l2"] = l1l2
+
+    if not l1l2["confirmed"]:
+        result["verification_level"] = l1l2["level"]
+        result["action"] = "unverified"
+        return result, "unverified"
+
+    result["verification_level"] = 2
+    result["action"] = "verified_l1l2"
+    return result, "verified_l1l2"
+
 
 def verify_single_finding(finding, repo_root):
     """Run full 4-level verification on a single finding.
@@ -399,7 +428,8 @@ def verify_single_finding(finding, repo_root):
 
 
 def verify_all_findings(findings, repo_root):
-    """Run verification on all P0 findings. P1-P3 are skipped (not verified).
+    """Run verification on all P0 (full L1-L4) and P1 (lightweight L1+L2) findings.
+    P2-P3 are skipped.
 
     Returns verified findings with actions and a hallucination log.
     """
@@ -408,13 +438,32 @@ def verify_all_findings(findings, repo_root):
     downgraded = []
 
     for f in findings:
-        if f.get("severity") != "P0":
-            # P1-P3 pass through unchanged
+        sev = f.get("severity")
+
+        if sev not in ("P0", "P1"):
+            # P2-P3 pass through unchanged
             f["_phase35_verified"] = True
             f["_phase35_action"] = "skipped"
             verified.append(f)
             continue
 
+        if sev == "P1":
+            # P1: L1+L2 only (existence check, low cost)
+            result, action = verify_single_finding_l1l2(f, repo_root)
+            if action == "verified_l1l2":
+                f["_phase35_verified"] = True
+                f["_phase35_action"] = "verified_l1l2"
+                f["_phase35_verification"] = {k: v for k, v in result.items()
+                                              if k not in f}
+                verified.append(f)
+            else:  # unverified
+                hallucinations.append({"id": result["id"], "claim": result["claim"],
+                                       "file": result["file"], "line": result["line"],
+                                       "severity": "P1",
+                                       "reason": result.get("l1l2", {}).get("reason", "unknown")})
+            continue
+
+        # P0: full L1-L4 verification
         result, action = verify_single_finding(f, repo_root)
 
         if action == "verified":
@@ -435,6 +484,7 @@ def verify_all_findings(findings, repo_root):
         else:  # unverified
             hallucinations.append({"id": result["id"], "claim": result["claim"],
                                    "file": result["file"], "line": result["line"],
+                                   "severity": "P0",
                                    "reason": result.get("l1l2", {}).get("reason",
                                         result.get("l3", {}).get("reason", "unknown"))})
             # Do NOT add to verified list — removed from fix baseline
@@ -478,9 +528,12 @@ def main():
         "phase": "3.5 Finding Verification",
         "summary": {
             "total_findings": len(items),
-            "verified": sum(1 for f in verified if f.get("_phase35_action") == "verified"),
+            "verified_p0": sum(1 for f in verified if f.get("_phase35_action") == "verified"),
+            "verified_p1_l1l2": sum(1 for f in verified if f.get("_phase35_action") == "verified_l1l2"),
             "downgraded": len(downgraded),
             "removed_hallucinations": len(hallucinations),
+            "hallucinations_p0": sum(1 for h in hallucinations if h.get("severity") == "P0"),
+            "hallucinations_p1": sum(1 for h in hallucinations if h.get("severity") == "P1"),
             "skipped": sum(1 for f in verified if f.get("_phase35_action") == "skipped"),
         },
         "downgraded": downgraded,

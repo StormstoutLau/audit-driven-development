@@ -65,8 +65,16 @@ test_findings = [
      "claim": "dead code in verify_lines.py",
      "evidence": {"file": "scripts/verify_lines.py", "line_start": 99999, "line_end": 99999},
      "spec_ref": "spec.md", "confidence": "low", "fix_cost": "1-line"},
-    {"id": "E2E-P1-SKIPPED", "severity": "P1", "category": "signature",
-     "claim": "minor naming issue",
+    {"id": "E2E-P1-VERIFIED-L1L2", "severity": "P1", "category": "signature",
+     "claim": "minor naming issue in verify_line function",
+     "evidence": {"file": "scripts/verify_lines.py", "line_start": 1, "line_end": 1},
+     "spec_ref": "spec.md", "confidence": "high", "fix_cost": "1-line"},
+    {"id": "E2E-P1-UNVERIFIED-FILE", "severity": "P1", "category": "behavior",
+     "claim": "missing validation in nonexistent.py",
+     "evidence": {"file": "scripts/nonexistent_p1.py", "line_start": 5, "line_end": 5},
+     "spec_ref": "spec.md", "confidence": "medium", "fix_cost": "1-line"},
+    {"id": "E2E-P2-SKIPPED", "severity": "P2", "category": "signature",
+     "claim": "style issue",
      "evidence": {"file": "scripts/verify_lines.py", "line_start": 1, "line_end": 1},
      "spec_ref": "spec.md", "confidence": "high", "fix_cost": "1-line"},
 ]
@@ -84,16 +92,31 @@ check("V9 E2E runs without crash", e2e_result.returncode in (0, 1))
 try:
     e2e_output = json.loads(e2e_result.stdout)
     summary = e2e_output.get("summary", {})
-    check("V10 E2E summary has verified >= 1", summary.get("verified", 0) >= 1)
-    check("V11 E2E summary has removed_hallucinations >= 2", summary.get("removed_hallucinations", 0) >= 2)
+    check("V10 E2E summary has verified_p0 >= 1", summary.get("verified_p0", 0) >= 1)
+    check("V11 E2E summary has removed_hallucinations >= 3",
+          summary.get("removed_hallucinations", 0) >= 3,
+          f"got {summary.get('removed_hallucinations')}")
     check("V12 E2E summary has skipped >= 1", summary.get("skipped", 0) >= 1)
+    check("V12b E2E summary has verified_p1_l1l2 >= 1",
+          summary.get("verified_p1_l1l2", 0) >= 1,
+          f"got {summary.get('verified_p1_l1l2')}")
+    check("V12c E2E summary has hallucinations_p0 >= 2",
+          summary.get("hallucinations_p0", 0) >= 2,
+          f"got {summary.get('hallucinations_p0')}")
+    check("V12d E2E summary has hallucinations_p1 >= 1",
+          summary.get("hallucinations_p1", 0) >= 1,
+          f"got {summary.get('hallucinations_p1')}")
     hallucinations = e2e_output.get("hallucinations", [])
-    check("V13 hallucination log has entries", len(hallucinations) >= 2)
+    check("V13 hallucination log has entries", len(hallucinations) >= 3)
     verified_findings = e2e_output.get("verified_findings", [])
     verified_p0 = [f for f in verified_findings if f.get("_phase35_action") == "verified"]
     check("V14 verified P0 finding has _phase35_action=verified", len(verified_p0) >= 1)
     check("V15 verified P0 finding has verification_level=4",
           any(f.get("verification_level") == 4 for f in verified_findings))
+    verified_p1 = [f for f in verified_findings if f.get("_phase35_action") == "verified_l1l2"]
+    check("V15b verified P1 finding has _phase35_action=verified_l1l2", len(verified_p1) >= 1)
+    p1_hallucinations = [h for h in hallucinations if h.get("severity") == "P1"]
+    check("V15c P1 hallucination logged with severity=P1", len(p1_hallucinations) >= 1)
 except json.JSONDecodeError:
     check("V9-V15 JSON parse", False, f"stdout: {e2e_result.stdout[:200]}")
 
@@ -151,6 +174,47 @@ wrong_result = vf._verify_wrong(
     "wrong threshold value 0.5", "threshold = 0.5\n")
 check("U10 _verify_wrong confirms presence when pattern present",
       wrong_result.get("confirmed") == True)
+
+# L4 conservative fallback: unparseable claims return confirmed=False (not True)
+# This is the critical fix — prevents hallucinations from passing L4 via unparseable claims
+# Use a claim that triggers "missing" classification but can't extract what's missing
+missing_fallback = vf._verify_missing(
+    "the code is missing", "def foo():\n    pass\n", [], 1)
+check("U11 _verify_missing fallback returns confirmed=False for unparseable claim",
+      missing_fallback.get("confirmed") == False,
+      f"got {missing_fallback.get('confirmed')}")
+
+wrong_fallback = vf._verify_wrong(
+    "some vague wrongness without extractable pattern", "def foo():\n    pass\n")
+check("U12 _verify_wrong fallback returns confirmed=False for unparseable claim",
+      wrong_fallback.get("confirmed") == False,
+      f"got {wrong_fallback.get('confirmed')}")
+
+violates_fallback = vf._verify_violates(
+    "some vague violation without extractable pattern", "def foo():\n    pass\n")
+check("U13 _verify_violates fallback returns confirmed=False for unparseable claim",
+      violates_fallback.get("confirmed") == False,
+      f"got {violates_fallback.get('confirmed')}")
+
+# P1 L1L2 verification function exists
+check("U14 verify_single_finding_l1l2 function exists",
+      hasattr(vf, "verify_single_finding_l1l2"))
+
+# P1 L1L2: valid file+line → verified_l1l2
+p1_valid = vf.verify_single_finding_l1l2(
+    {"id": "P1-TEST", "severity": "P1", "claim": "test",
+     "evidence": {"file": "scripts/verify_lines.py", "line_start": 1, "line_end": 1}},
+    str(ROOT))
+check("U15 P1 L1L2 valid finding returns verified_l1l2",
+      p1_valid[1] == "verified_l1l2", f"got {p1_valid[1]}")
+
+# P1 L1L2: nonexistent file → unverified
+p1_bad = vf.verify_single_finding_l1l2(
+    {"id": "P1-BAD", "severity": "P1", "claim": "test",
+     "evidence": {"file": "scripts/nonexistent.py", "line_start": 1, "line_end": 1}},
+    str(ROOT))
+check("U16 P1 L1L2 nonexistent file returns unverified",
+      p1_bad[1] == "unverified", f"got {p1_bad[1]}")
 
 # ── Cross-Regression ──
 print("\n── Cross-Regression ──")
