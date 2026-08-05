@@ -236,8 +236,34 @@ def verify_l4_structural(lines, line_num, claim, claim_types,
                 "reason": "no_structural_checks_applicable",
                 "claim_types": claim_types}
 
-    # P0-2: prefer "verified", fallback to "confirmed" (backward compat)
-    verified = all(c.get("verified", c.get("confirmed", False)) for c in all_checks)
+    # E2E-2b fix: 准确率优先聚合 — 结构化检查 (Tier 1/2) 优先于 Tier 3 正则
+    # 如果任一结构化检查 (tier <= 2) verified=True,则整体 verified=True,
+    # 忽略 Tier 3 正则的 verified=False (正则无法理解代码结构,易误判)
+    # 仅当所有结构化检查都 verified=False/None 时,才采用 Tier 3 结果
+    structural_checks = [c for c in all_checks if c.get("tier", 3) <= 2]
+    regex_checks = [c for c in all_checks if c.get("tier", 3) == 3]
+
+    if structural_checks:
+        # 有结构化检查: 任一 True -> 整体 True (准确率优先)
+        any_structural_true = any(
+            c.get("verified", c.get("confirmed", False)) for c in structural_checks
+        )
+        if any_structural_true:
+            verified = True
+        else:
+            # 结构化检查全部 False/None — 如果有 None (无法判定),看 Tier 3
+            any_structural_none = any(
+                c.get("verified") is None for c in structural_checks
+            )
+            if any_structural_none and regex_checks:
+                verified = any(c.get("verified", c.get("confirmed", False))
+                               for c in regex_checks)
+            else:
+                verified = False
+    else:
+        # 无结构化检查 (全是 Tier 3): 全部 True 才 True
+        verified = all(c.get("verified", c.get("confirmed", False)) for c in all_checks)
+
     return {"level": 4 if verified else 3, "confirmed": verified, "verified": verified,
             "claim_types": claim_types, "checks": checks,
             "reason": "all structural checks passed" if verified else "structural verification failed"}
