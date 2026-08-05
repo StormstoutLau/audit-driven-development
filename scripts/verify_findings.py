@@ -142,15 +142,16 @@ def verify_l3(lines, line_num, keywords):
             "keywords_searched": keywords}
 
 
-def verify_l4_structural(lines, line_num, claim, claim_types):
-    """Level 4: Structural claim verification — check if the actual code matches the claim.
+def verify_l4_structural(lines, line_num, claim, claim_types,
+                         repo_root=None, file_path=None):
+    """Level 4: Structural claim verification with Tier 2 fallback.
 
-    For each claim type, performs source-code-level verification:
-    - missing: verify the claimed element IS absent in the context window
-    - wrong: verify the wrong pattern IS present in the context window
-    - violates: verify the violation pattern IS present
-    - dead_code: verify the code appears unreachable
-    - import_related: verify the import statement exists
+    Tier 2 (ast CFG) for dead_code/import_related — higher accuracy (~90%).
+    Tier 3 (regex) for missing/wrong/violates/generic + Tier 2 fallback (~42%).
+
+    P0-2 unified schema: all Tier results include "verified" field (True|False|None).
+    Tier 3 (regex) originally returns "confirmed", mapped to "verified" for consistency.
+    "verified=None" means this Tier cannot decide → trigger fallback to next Tier.
     """
     context_start = max(0, line_num - 25)
     context_end = min(len(lines), line_num + 25)
@@ -159,34 +160,71 @@ def verify_l4_structural(lines, line_num, claim, claim_types):
 
     checks = {}
 
-    if "missing" in claim_types:
-        checks["missing"] = _verify_missing(claim, context_text, lines, line_num)
-
-    if "wrong" in claim_types:
-        checks["wrong"] = _verify_wrong(claim, context_text)
-
-    if "violates" in claim_types:
-        checks["violates"] = _verify_violates(claim, context_text)
-
     if "dead_code" in claim_types:
-        checks["dead_code"] = _verify_dead_code(context_text, lines, line_num)
+        result = None
+        # Tier 2: Python ast CFG (higher accuracy)
+        if repo_root and file_path:
+            try:
+                import ast_cfg
+                result = ast_cfg.verify_dead_code(repo_root, file_path, line_num)
+            except Exception:
+                result = None
+        # Tier 3: regex fallback
+        if not result or result.get("verified") is None:
+            regex_result = _verify_dead_code(context_text, lines, line_num)
+            regex_result["tier"] = 3
+            regex_result["verified"] = regex_result["confirmed"]  # P0-2: field alignment
+            checks["dead_code"] = regex_result
+        else:
+            checks["dead_code"] = result
 
     if "import_related" in claim_types:
-        checks["import_related"] = _verify_import(claim, context_text, lines, line_num)
+        result = None
+        # Tier 2: Python ast import graph
+        if repo_root:
+            try:
+                import ast_cfg
+                result = ast_cfg.verify_imports(repo_root, claim)
+            except Exception:
+                result = None
+        # Tier 3: regex fallback
+        if not result or result.get("verified") is None:
+            regex_result = _verify_import(claim, context_text, lines, line_num)
+            regex_result["tier"] = 3
+            regex_result["verified"] = regex_result["confirmed"]  # P0-2: field alignment
+            checks["import_related"] = regex_result
+        else:
+            checks["import_related"] = result
 
-    # If no specific claim type matched, do generic verification
+    # missing/wrong/violates/generic: Tier 3 regex only (no structural improvement)
+    if "missing" in claim_types:
+        checks["missing"] = _verify_missing(claim, context_text, lines, line_num)
+        checks["missing"]["tier"] = 3
+        checks["missing"]["verified"] = checks["missing"]["confirmed"]  # P0-2
+    if "wrong" in claim_types:
+        checks["wrong"] = _verify_wrong(claim, context_text)
+        checks["wrong"]["tier"] = 3
+        checks["wrong"]["verified"] = checks["wrong"]["confirmed"]  # P0-2
+    if "violates" in claim_types:
+        checks["violates"] = _verify_violates(claim, context_text)
+        checks["violates"]["tier"] = 3
+        checks["violates"]["verified"] = checks["violates"]["confirmed"]  # P0-2
     if "generic" in claim_types and not checks:
         checks["generic"] = _verify_generic(claim, context_text)
+        checks["generic"]["tier"] = 3
+        checks["generic"]["verified"] = checks["generic"]["confirmed"]  # P0-2
 
     all_checks = [v for v in checks.values() if isinstance(v, dict)]
     if not all_checks:
-        return {"level": 3, "confirmed": False, "reason": "no_structural_checks_applicable",
+        return {"level": 3, "confirmed": False, "verified": False,  # P0-2: dual field
+                "reason": "no_structural_checks_applicable",
                 "claim_types": claim_types}
 
-    confirmed = all(c.get("confirmed", False) for c in all_checks)
-    return {"level": 4 if confirmed else 3, "confirmed": confirmed,
+    # P0-2: prefer "verified", fallback to "confirmed" (backward compat)
+    verified = all(c.get("verified", c.get("confirmed", False)) for c in all_checks)
+    return {"level": 4 if verified else 3, "confirmed": verified, "verified": verified,
             "claim_types": claim_types, "checks": checks,
-            "reason": "all structural checks passed" if confirmed else "structural verification failed"}
+            "reason": "all structural checks passed" if verified else "structural verification failed"}
 
 
 def _verify_missing(claim, context_text, all_lines, line_num):
@@ -413,9 +451,10 @@ def verify_single_finding(finding, repo_root):
         result["action"] = "unverified"
         return result, "unverified"
 
-    # L4: Structural verification
+    # L4: Structural verification (Tier 2 fallback needs repo_root + file_path)
     claim_types = classify_claim(claim)
-    l4 = verify_l4_structural(l1l2["lines"], line_num, claim, claim_types)
+    l4 = verify_l4_structural(l1l2["lines"], line_num, claim, claim_types,
+                              repo_root=repo_root, file_path=file_path)
     result["l4"] = l4
     result["verification_level"] = l4["level"]
 
