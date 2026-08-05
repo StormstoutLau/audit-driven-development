@@ -54,13 +54,17 @@ DEAD_CODE_PATTERNS = [
         r"\bdead\s+code\b", r"\bunreachable\b", r"\bunused\b",
         r"\bnever\s+(?:called|used|executed|reached)\b",
         r"\bimported\s+but\s+(?:never|not)\s+used\b",
+        r"\bimport\b.*\b(?:not|never)\s+used\b",
     ]
 ]
 
 IMPORT_PATTERNS = [
     re.compile(p, re.IGNORECASE) for p in [
-        r"\bimport\b", r"\bfrom\s+\S+\s+import\b",
-        r"\bdependency\b", r"\bdepends\s+on\b",
+        r"\bcircular\s+(?:dep|dependency|import)\b",
+        r"\bimport\s+cycle\b",
+        r"\bmutual\s+import\b",
+        r"\bdependency\s+(?:cycle|issue|problem|violation)\b",
+        r"\bdepends\s+on\s+(?:each\s+other|circular|mutual)\b",
     ]
 ]
 
@@ -142,6 +146,35 @@ def verify_l3(lines, line_num, keywords):
             "keywords_searched": keywords}
 
 
+def _get_function_context(lines, line_num):
+    """Phase 3: 扩展 context 到 enclosing function 全范围.
+
+    解决原 ±25 行窗口的局限: 如果 claim 在函数内, 但 try/except 在 30 行外,
+    ±25 窗口看不到 → 假阳性. 全函数窗口能覆盖整个函数体.
+
+    Returns:
+        str: context text for L4 verification.
+    """
+    import ast
+    try:
+        source = "\n".join(lines)
+        tree = ast.parse(source)
+        for node in ast.walk(tree):
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                if (node.lineno <= line_num and
+                    hasattr(node, "end_lineno") and
+                    node.end_lineno and node.end_lineno >= line_num):
+                    start = max(0, node.lineno - 1)
+                    end = min(len(lines), node.end_lineno)
+                    return "\n".join(lines[start:end])
+    except Exception:
+        pass
+    # Fallback: ±50 行 (原 ±25 的 2 倍)
+    context_start = max(0, line_num - 50)
+    context_end = min(len(lines), line_num + 50)
+    return "\n".join(lines[context_start:context_end])
+
+
 def verify_l4_structural(lines, line_num, claim, claim_types,
                          repo_root=None, file_path=None):
     """Level 4: Structural claim verification with Tier 2 fallback.
@@ -153,10 +186,9 @@ def verify_l4_structural(lines, line_num, claim, claim_types,
     Tier 3 (regex) originally returns "confirmed", mapped to "verified" for consistency.
     "verified=None" means this Tier cannot decide → trigger fallback to next Tier.
     """
-    context_start = max(0, line_num - 25)
-    context_end = min(len(lines), line_num + 25)
-    context_lines = lines[context_start:context_end]
-    context_text = "\n".join(context_lines)
+    # Phase 3: 扩展 context 到 enclosing function 全范围 (解决 ±25 窗口局限).
+    # 如果 line 在函数内, 用函数全范围; 否则回退到 ±50 行 (原 ±25 的 2 倍).
+    context_text = _get_function_context(lines, line_num)
 
     checks = {}
 
@@ -172,12 +204,30 @@ def verify_l4_structural(lines, line_num, claim, claim_types,
             except Exception:
                 result = None
         # Tier 2: Python ast CFG (higher accuracy ~90%, zero deps)
-        if (not result or result.get("verified") is None) and repo_root and file_path:
+        # Phase 8: Joern dead_code is method-level (no callers); claims are
+        #   usually statement-level (unreachable after return). Method-level
+        #   dead (Joern True) does NOT pinpoint the specific statement, and
+        #   method reachable (Joern False) does NOT imply statement reachable.
+        #   Strategy: always run Tier 2 for double-check.
+        #     - Joern True + Tier 2 True → keep Joern (tier=1, both agree)
+        #     - Joern True + Tier 2 False → use Tier 2 (statement-level precise)
+        #     - Joern False/None + Tier 2 any → use Tier 2
+        #     - Joern True + Tier 2 None → keep Joern (Tier 2 cannot decide)
+        if repo_root and file_path:
             try:
                 import ast_cfg
-                result = ast_cfg.verify_dead_code(repo_root, file_path, line_num)
+                result_t2 = ast_cfg.verify_dead_code(repo_root, file_path, line_num)
+                if result_t2 and result_t2.get("verified") is not None:
+                    # Tier 2 has a definitive answer
+                    joern_true = (result and result.get("verified") is True)
+                    tier2_true = (result_t2.get("verified") is True)
+                    if joern_true and tier2_true:
+                        pass  # both agree True → keep Joern (tier=1)
+                    else:
+                        result = result_t2  # disagreement or Joern non-True → Tier 2 wins
+                # else: Tier 2 None → keep Joern result (if any)
             except Exception:
-                result = None
+                pass  # keep Joern result (if any)
         # Tier 3: regex fallback (~42%, always available)
         if not result or result.get("verified") is None:
             regex_result = _verify_dead_code(context_text, lines, line_num)
@@ -197,12 +247,18 @@ def verify_l4_structural(lines, line_num, claim, claim_types,
             except Exception:
                 result = None
         # Tier 2: Python ast import graph
-        if (not result or result.get("verified") is None) and repo_root:
+        # Phase 8: Joern verified=False → degrade to Tier 2 (conservative).
+        #   Joern Python support (pysrc2cpg) may be incomplete; Tier 2 uses
+        #   Python stdlib ast for reliable import graph construction.
+        #   Only verified=True (confirmed cycle) prevents degradation.
+        if (not result or result.get("verified") is not True) and repo_root:
             try:
                 import ast_cfg
-                result = ast_cfg.verify_imports(repo_root, claim)
+                result_t2 = ast_cfg.verify_imports(repo_root, claim)
+                if result_t2 and result_t2.get("verified") is not None:
+                    result = result_t2
             except Exception:
-                result = None
+                pass
         # Tier 3: regex fallback
         if not result or result.get("verified") is None:
             regex_result = _verify_import(claim, context_text, lines, line_num)
@@ -503,14 +559,34 @@ def verify_single_finding(finding, repo_root):
     if l4["confirmed"]:
         result["action"] = "verified"
         return result, "verified"
-    else:
-        result["action"] = "partial"
-        return result, "partial"
+
+    # Phase 1: 区分 Tier 1/2 结构化证伪 (→ removed) vs Tier 3 regex 失败 (→ downgraded)
+    # Tier 1/2 verified=False 是基于 CFG/import-graph 的结构化证明, 置信度高 → removed
+    # Tier 3 verified=False 仅 regex 失败, 置信度低 → downgraded (保守, 避免误删)
+    checks = l4.get("checks", {})
+    structural_false = any(
+        isinstance(c, dict) and c.get("tier", 3) <= 2 and c.get("verified") is False
+        for c in checks.values()
+    )
+    if structural_false:
+        result["action"] = "unverified"
+        result["unverified_reason"] = "tier12_structural_disproof"
+        return result, "unverified"
+
+    result["action"] = "partial"
+    return result, "partial"
 
 
-def verify_all_findings(findings, repo_root):
+def verify_all_findings(findings, repo_root, verify_p1_l4=False):
     """Run verification on all P0 (full L1-L4) and P1 (lightweight L1+L2) findings.
     P2-P3 are skipped.
+
+    Args:
+        findings: list of finding dicts.
+        repo_root: path to repo root for source verification.
+        verify_p1_l4: if True, also run L4 structural verification on P1 findings
+            (default False for backward compatibility; set True when finding count
+            is low and higher recall is needed).
 
     Returns verified findings with actions and a hallucination log.
     """
@@ -529,19 +605,46 @@ def verify_all_findings(findings, repo_root):
             continue
 
         if sev == "P1":
-            # P1: L1+L2 only (existence check, low cost)
+            # P1: L1+L2 only by default; optional L4 when verify_p1_l4=True
             result, action = verify_single_finding_l1l2(f, repo_root)
-            if action == "verified_l1l2":
+            if action != "verified_l1l2":
+                # L1/L2 failed → hallucination (file/line not found)
+                hallucinations.append({"id": result["id"], "claim": result["claim"],
+                                       "file": result["file"], "line": result["line"],
+                                       "severity": "P1",
+                                       "reason": result.get("l1l2", {}).get("reason", "unknown")})
+                continue
+
+            # L1+L2 passed. If verify_p1_l4, also run L4 structural verification
+            if verify_p1_l4:
+                result_p1, action_p1 = verify_single_finding(f, repo_root)
+                if action_p1 == "verified":
+                    f["_phase35_verified"] = True
+                    f["_phase35_action"] = "verified_l1l2_l4"
+                    f["_phase35_verification"] = {k: v for k, v in result_p1.items()
+                                                  if k not in f}
+                    verified.append(f)
+                elif action_p1 == "unverified":
+                    # Phase 1: Tier 1/2 structural disproof → removed
+                    hallucinations.append({
+                        "id": result_p1["id"], "claim": result_p1["claim"],
+                        "file": result_p1["file"], "line": result_p1["line"],
+                        "severity": "P1",
+                        "reason": result_p1.get("unverified_reason",
+                                                 result_p1.get("l4", {}).get("reason", "tier12 disproof"))})
+                else:  # partial → downgraded (kept as P1, flagged)
+                    f["_phase35_verified"] = False
+                    f["_phase35_action"] = "downgraded_l1l2_l4"
+                    f["_phase35_verification"] = {k: v for k, v in result_p1.items()
+                                                  if k not in f}
+                    verified.append(f)
+            else:
+                # Default: L1+L2 only
                 f["_phase35_verified"] = True
                 f["_phase35_action"] = "verified_l1l2"
                 f["_phase35_verification"] = {k: v for k, v in result.items()
                                               if k not in f}
                 verified.append(f)
-            else:  # unverified
-                hallucinations.append({"id": result["id"], "claim": result["claim"],
-                                       "file": result["file"], "line": result["line"],
-                                       "severity": "P1",
-                                       "reason": result.get("l1l2", {}).get("reason", "unknown")})
             continue
 
         # P0: full L1-L4 verification
@@ -563,11 +666,21 @@ def verify_all_findings(findings, repo_root):
                                           if k not in f}
             verified.append(f)
         else:  # unverified
+            # Preserve L4/tier info for benchmark tier distribution analysis
+            l4_data = result.get("l4", {})
+            checks = l4_data.get("checks", {})
+            best_tier = 0
+            for c in checks.values():
+                if isinstance(c, dict) and c.get("tier", 0) > 0:
+                    if best_tier == 0 or c["tier"] < best_tier:
+                        best_tier = c["tier"]
             hallucinations.append({"id": result["id"], "claim": result["claim"],
                                    "file": result["file"], "line": result["line"],
                                    "severity": "P0",
                                    "reason": result.get("l1l2", {}).get("reason",
-                                        result.get("l3", {}).get("reason", "unknown"))})
+                                        result.get("l3", {}).get("reason", "unknown")),
+                                   "l4": l4_data if checks else None,
+                                   "best_tier": best_tier})
             # Do NOT add to verified list — removed from fix baseline
 
     return verified, hallucinations, downgraded

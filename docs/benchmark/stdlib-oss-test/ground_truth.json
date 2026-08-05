@@ -1,0 +1,92 @@
+[
+  {
+    "id": "OSS-H1",
+    "severity": "P0",
+    "claim": "dead code after return in nonexistent function",
+    "evidence": {
+      "file": "nonexistent_file.py",
+      "line_start": 1
+    },
+    "ground_truth": "hallucination_file_not_found"
+  },
+  {
+    "id": "OSS-H2",
+    "severity": "P0",
+    "claim": "dead code at end of file beyond last line",
+    "evidence": {
+      "file": "json/decoder.py",
+      "line_start": 9999
+    },
+    "ground_truth": "hallucination_line_out_of_range"
+  },
+  {
+    "id": "OSS-H3",
+    "severity": "P0",
+    "claim": "dead code after return in decode method",
+    "evidence": {
+      "file": "json/decoder.py",
+      "line_start": 100
+    },
+    "ground_truth": "hallucination_reachable_code_claimed_dead"
+  },
+  {
+    "id": "OSS-H4",
+    "severity": "P0",
+    "claim": "unreachable code after return in raw_decode",
+    "evidence": {
+      "file": "json/decoder.py",
+      "line_start": 200
+    },
+    "ground_truth": "hallucination_reachable_code_claimed_dead"
+  },
+  {
+    "id": "OSS-H5",
+    "severity": "P0",
+    "claim": "circular dependency between json.decoder and csv modules",
+    "evidence": {
+      "file": "json/decoder.py",
+      "line_start": 1
+    },
+    "ground_truth": "hallucination_no_cycle"
+  },
+  {
+    "id": "OSS-H6",
+    "severity": "P0",
+    "claim": "missing error handling in JSONDecoder.decode for invalid input",
+    "evidence": {
+      "file": "json/decoder.py",
+      "line_start": 330
+    },
+    "ground_truth": "hallucination_error_handling_present"
+  },
+  {
+    "id": "OSS-H7",
+    "severity": "P1",
+    "claim": "dead code after return in reader.__next__",
+    "evidence": {
+      "file": "csv.py",
+      "line_start": 100
+    },
+    "ground_truth": "hallucination_reachable_p1"
+  },
+  {
+    "id": "OSS-H8",
+    "severity": "P0",
+    "claim": "wrong API usage in nonexistent_function call",
+    "evidence": {
+      "file": "csv.py",
+      "line_start": 50
+    },
+    "ground_truth": "hallucination_wrong_api"
+  },
+  {
+    "id": "OSS-R1",
+    "severity": "P0",
+    "claim": "import statement exists in json/decoder.py",
+    "evidence": {
+      "file": "json/decoder.py",
+      "line_start": 1
+    },
+    "ground_truth": "real_import_exists"
+  }
+]

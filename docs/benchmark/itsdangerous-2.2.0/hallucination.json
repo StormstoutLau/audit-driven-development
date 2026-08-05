@@ -1,0 +1,38 @@
+{
+  "hallucinations": [
+    {
+      "id": "ITD-H1",
+      "claim": "dead code after return in nonexistent_module function",
+      "file": "nonexistent_module.py",
+      "line": 10,
+      "severity": "P0",
+      "reason": "file_not_found"
+    },
+    {
+      "id": "ITD-H2",
+      "claim": "dead code at line beyond end of signer.py",
+      "file": "signer.py",
+      "line": 9999,
+      "severity": "P0",
+      "reason": "line 9999 out of range (1-267)"
+    },
+    {
+      "id": "ITD-H4",
+      "claim": "circular dependency between signer and serializer modules",
+      "file": "signer.py",
+      "line": 1,
+      "severity": "P0",
+      "reason": "no keyword match within ±20 lines"
+    },
+    {
+      "id": "ITD-H6",
+      "claim": "wrong API usage — nonexistent_function call in encoding",
+      "file": "encoding.py",
+      "line": 5,
+      "severity": "P0",
+      "reason": "no keyword match within ±20 lines"
+    }
+  ],
+  "count": 4,
+  "timestamp": "2026-08-05T17:57:28.526885"
+}

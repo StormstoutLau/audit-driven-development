@@ -1,0 +1,50 @@
+[
+  {
+    "id": "SA-1",
+    "ground_truth": "hallucination_no_return_in_function",
+    "expected_action": "removed",
+    "note": "visit_FunctionDef has NO return statement — 'dead code after return' claim is hallucination. Line 60 is self.visit(stmt) in a for loop, fully reachable."
+  },
+  {
+    "id": "SA-2",
+    "ground_truth": "hallucination_subprocess_has_try_except",
+    "expected_action": "removed_or_downgraded",
+    "note": "subprocess.run timeout IS caught"
+  },
+  {
+    "id": "SA-3",
+    "ground_truth": "hallucination_no_circular_dep",
+    "expected_action": "removed_or_downgraded",
+    "note": "no circular dependency exists"
+  },
+  {
+    "id": "SA-4",
+    "ground_truth": "hallucination_alias_not_dead_code",
+    "expected_action": "removed",
+    "note": "Line 171 is 'visit_Raise = visit_Return' alias assignment at class level, not 'dead code after raise'. Claim is hallucination."
+  },
+  {
+    "id": "SA-5",
+    "ground_truth": "hallucination_empty_output_handled",
+    "expected_action": "removed_or_downgraded",
+    "note": "empty output IS handled"
+  },
+  {
+    "id": "SA-6",
+    "ground_truth": "hallucination_spec_comment",
+    "expected_action": "removed",
+    "note": "spec comment, not code bug"
+  },
+  {
+    "id": "SA-7",
+    "ground_truth": "hallucination_has_try_except",
+    "expected_action": "removed_or_downgraded",
+    "note": "has try/except OSError"
+  },
+  {
+    "id": "SA-8",
+    "ground_truth": "real_bug",
+    "expected_action": "verified_l1l2",
+    "note": "scope issue in except handler (P1)"
+  }
+]

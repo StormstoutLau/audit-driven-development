@@ -153,8 +153,8 @@ check("U3 classify_claim('violates ADR invariant') -> ['violates']",
       "violates" in vf.classify_claim("violates ADR invariant"))
 check("U4 classify_claim('dead code in module') -> ['dead_code']",
       "dead_code" in vf.classify_claim("dead code in module"))
-check("U5 classify_claim('import not used') -> ['import_related']",
-      "import_related" in vf.classify_claim("import from X not used"))
+check("U5 classify_claim('import not used') -> ['dead_code']",
+      "dead_code" in vf.classify_claim("import from X not used"))
 check("U6 classify_claim('no match') -> ['generic']",
       "generic" in vf.classify_claim("no match pattern here"))
 

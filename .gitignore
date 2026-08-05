@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.eggs/
+.pytest_cache/
+
+# Joern
+_joern-cli-*.zip
+joern-cli/
+/tmp/add_joern_cache/
+
+# Benchmark tarballs (source already extracted)
+docs/benchmark/oss-cache/*.tar.gz
+docs/benchmark/oss-cache/*.zip
+
+# Workspace / temp
+workspace/
+scripts/workspace/
+
+# OS
+.DS_Store
+Thumbs.db

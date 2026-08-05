@@ -66,13 +66,18 @@ def _get_cache_dir():
 
 # ── Availability Detection ──────────────────────────────────────────────
 
+# WSL2 detection cache: None = not checked yet; (True, dict|None) = checked
+_WSL_DETECT_CACHE = None
+
 
 def _detect_wsl():
-    """Detect if running inside Windows WSL2.
+    """Detect if running INSIDE Windows WSL2 (Linux/WSL host).
 
     WSL2 exposes /proc/sys/kernel/osrelease containing "microsoft" or "WSL".
-    Used to decide whether to invoke joern via wsl.exe (Windows host) or
-    directly (Linux/WSL inside).
+    This detects whether the current Python process is itself running inside
+    WSL2 (not whether WSL2 is available from Windows).
+
+    For Windows→WSL2 cross-environment detection, see _detect_wsl_from_windows().
 
     Returns:
         bool: True if inside WSL2, False otherwise (native Linux/Win/macOS).
@@ -82,7 +87,7 @@ def _detect_wsl():
     if force is not None:
         return force == "1"
     if os.name == "nt":
-        return False  # Windows host; Joern runs via wsl.exe if available
+        return False  # Windows host; not inside WSL2
     try:
         with open("/proc/sys/kernel/osrelease", "r") as f:
             release = f.read().lower()
@@ -91,15 +96,118 @@ def _detect_wsl():
         return False
 
 
+def _detect_wsl_from_windows():
+    """Detect WSL2 + Joern availability FROM a Windows host.
+
+    Phase 6: Fixes the Windows→WSL2 call chain break. On Windows, Joern CLI
+    is installed inside WSL2 (not on Windows itself), so we must:
+      1. Verify wsl.exe is available
+      2. Probe WSL2 for joern-parse at known install paths
+      3. Probe WSL2 for JDK 21 (required by Joern)
+      4. Return paths for command construction
+
+    Test overrides (avoid actual WSL2 calls in unit tests):
+      - JOERN_FORCE_WSL=1 + JOERN_WSL_JOERN_PATH + JOERN_WSL_JAVA_HOME:
+        Returns dict immediately without probing WSL2
+
+    Returns:
+        dict|None: {"joern_path": str, "java_home": str} or None if not found.
+        None means: not on Windows, or WSL2 unavailable, or Joern not installed.
+    """
+    global _WSL_DETECT_CACHE
+    if _WSL_DETECT_CACHE is not None:
+        # Cache hit: (True, dict) for positive, (True, None) for negative
+        return _WSL_DETECT_CACHE[1]
+
+    # Test override: explicit paths without WSL2 probing
+    if os.environ.get("JOERN_FORCE_WSL") == "1":
+        joern_path = os.environ.get("JOERN_WSL_JOERN_PATH")
+        java_home = os.environ.get("JOERN_WSL_JAVA_HOME")
+        if joern_path and java_home:
+            result = {"joern_path": joern_path, "java_home": java_home}
+            _WSL_DETECT_CACHE = (True, result)
+            return result
+        # FORCE_WSL without explicit paths: fall through to actual probing
+
+    # Only attempt WSL2 probing on Windows (or when forced)
+    if os.name != "nt" and os.environ.get("JOERN_FORCE_WSL") != "1":
+        _WSL_DETECT_CACHE = (True, None)
+        return None
+
+    # Check wsl.exe availability on Windows
+    if os.name == "nt":
+        try:
+            wsl_check = subprocess.run(
+                ["wsl.exe", "-l", "-v"], capture_output=True, text=True, timeout=5)
+            if wsl_check.returncode != 0:
+                _WSL_DETECT_CACHE = (True, None)
+                return None
+        except (subprocess.TimeoutExpired, FileNotFoundError, OSError):
+            _WSL_DETECT_CACHE = (True, None)
+            return None
+
+    # Source-level facts (verified 2026-08-05 via _check_wsl.py):
+    #   - Joern: /home/pengliu2026/bin/joern/joern-cli/joern-parse
+    #   - JDK:   /home/pengliu2026/jdk/bin/java (Temurin 21.0.12 LTS)
+    candidate_joern = [
+        "/home/pengliu2026/bin/joern/joern-cli/joern-parse",
+    ]
+    joern_home = os.environ.get("JOERN_HOME")
+    if joern_home:
+        candidate_joern.insert(0, f"{joern_home}/joern-cli/joern-parse")
+        candidate_joern.insert(1, f"{joern_home}/joern-parse")
+
+    candidate_java = [
+        "/home/pengliu2026/jdk",
+    ]
+
+    found_joern = None
+    found_java = None
+
+    for jp in candidate_joern:
+        try:
+            cmd = ["wsl.exe", "-e", "bash", "-c", f"test -x '{jp}' && echo FOUND"]
+            r = subprocess.run(cmd, capture_output=True, text=True, timeout=8)
+            if "FOUND" in r.stdout:
+                found_joern = jp
+                break
+        except (subprocess.TimeoutExpired, FileNotFoundError, OSError):
+            continue
+
+    if found_joern is None:
+        _WSL_DETECT_CACHE = (True, None)
+        return None
+
+    for jh in candidate_java:
+        try:
+            cmd = ["wsl.exe", "-e", "bash", "-c", f"test -x '{jh}/bin/java' && echo FOUND"]
+            r = subprocess.run(cmd, capture_output=True, text=True, timeout=8)
+            if "FOUND" in r.stdout:
+                found_java = jh
+                break
+        except (subprocess.TimeoutExpired, FileNotFoundError, OSError):
+            continue
+
+    if found_java is None:
+        # Joern found but JDK missing — Joern won't run, treat as unavailable
+        _WSL_DETECT_CACHE = (True, None)
+        return None
+
+    result = {"joern_path": found_joern, "java_home": found_java}
+    _WSL_DETECT_CACHE = (True, result)
+    return result
+
+
 def _find_joern_binary():
     """Locate joern-parse binary. Returns absolute path str or None.
 
     Search order:
-      1. $JOERN_HOME/joern-cli/joern-parse (explicit override)
-      2. shutil.which("joern-parse")  (PATH lookup)
-      3. Common install paths: ~/bin/joern/joern-cli/joern-parse
+      1. $JOERN_HOME/joern-cli/joern-parse (explicit override, local)
+      2. shutil.which("joern-parse")  (PATH lookup, local)
+      3. Common install paths: ~/bin/joern/joern-cli/joern-parse (local)
+      4. Phase 6: WSL2 detection via _detect_wsl_from_windows() (Windows→WSL2)
     """
-    # 1. Explicit override
+    # 1. Explicit override (local filesystem)
     joern_home = os.environ.get("JOERN_HOME")
     if joern_home:
         candidate = Path(joern_home) / "joern-cli" / "joern-parse"
@@ -119,6 +227,13 @@ def _find_joern_binary():
     common = home / "bin" / "joern" / "joern-cli" / "joern-parse"
     if common.exists() and os.access(common, os.X_OK):
         return str(common)
+
+    # 4. Phase 6: Windows→WSL2 cross-environment detection
+    #    On Windows host, Joern is installed inside WSL2, not locally.
+    #    Return the WSL2 path so command builders know to wrap with wsl.exe.
+    wsl_info = _detect_wsl_from_windows()
+    if wsl_info is not None:
+        return wsl_info["joern_path"]
 
     return None
 
@@ -189,28 +304,34 @@ def _gen_dead_code_script(line):
       - cpg.method.lineNumber(N)  (NOT cpg.method.location.line(N))
       - target.flatMap(_.caller.l) (NOT reachableBy)
 
-    A method is "dead" if no caller exists (excluding <module> entry point).
+    Phase 7 fix (two hallucinations, E2E verified 2026-08-05):
+      H1: @main annotation does NOT work in Joern v4.0.595 script mode.
+          All @main scripts fail with "Error during compilation: ScalaReplPP.main".
+          Fix: use bare statements (REPL semantics); cpg is auto-available via
+          positional CPG arg (joern --script script.sc /path/to/cpg.bin).
+      H2: <module> exclusion was wrong. A method called only from <module>
+          (Python module-level code) is NOT dead — it's reachable.
+          E2E proof: def foo(): ... foo() → dead=true (wrong, foo is called).
+          Fix: remove .filter(_.name != "<module>"); any caller = not dead.
+
+    A method is "dead" if NO caller exists at all (zero incoming call edges).
 
     Args:
         line: int target line number.
 
     Returns:
-        str: Scala script ready for `joern --script`.
+        str: Scala script (bare statements, no @main) for `joern --script`.
     """
-    return f"""import io.joern.joerncli.*
-import io.shiftleft.semanticcpg.*
-import io.shiftleft.codepropertygraph.generated.Cpg
-
-@main def checkDead(cpgFile: String): Unit =
-  val cpg = loadCpg(cpgFile)
-  // P1-5 verified API: cpg.method.lineNumber(N) for call-graph target lookup
-  val target = cpg.method.lineNumber({line}).l
-  // P1-5 verified API: caller.l (call graph edges), not data-flow APIs
-  val callers = target.flatMap(_.caller.l)
-  // <module> is the implicit entry; exclude it from "real" callers
-  val isDead = callers.filter(_.name != "<module>").isEmpty
-  println(s"dead=${{isDead}}")
-  println(s"size=${{target.size}}")
+    return f"""// Phase 7: bare script (REPL semantics), cpg auto-available via positional arg
+// P1-5 verified API: cpg.method.lineNumber(N) for call-graph target lookup
+val target = cpg.method.lineNumber({line}).l
+// P1-5 verified API: caller.l (call graph edges), not data-flow APIs
+val callers = target.flatMap(_.caller.l)
+// Phase 7 fix: any caller (including module entry) means reachable
+val isDead = callers.isEmpty
+println(s"dead=" + isDead)
+println(s"size=" + target.size)
+println(s"callers=" + callers.map(_.name).mkString(","))
 """
 
 
@@ -222,53 +343,102 @@ def _gen_import_script():
       - imp.importedEntity          (NOT imp.imported)
       - imp.file.head.name          (file that contains the import)
 
+    Phase 7 fix (H1 hallucination, E2E verified 2026-08-05):
+      @main annotation does NOT work in Joern v4.0.595 script mode.
+      Fix: use bare statements; cpg is auto-available via positional CPG arg.
+
+    Phase 8 fix (B1 bug, source-level traced 2026-08-05):
+      Node naming mismatch: imp.file.head.name = "mod_a.py" (with .py suffix)
+      but imp.importedEntity = "mod_b" (without .py). DFS cannot find back-edge
+      because "mod_b" is not a graph key (only "mod_b.py" is).
+      E2E proof: mod_a<->mod_b cycle → has_cycle=false (wrong).
+      ast_cfg.py L418 uses with_suffix("") to strip .py correctly.
+      Fix: strip .py suffix from src file name to unify node naming.
+
     Builds a directed import graph and runs DFS cycle detection.
 
     Returns:
-        str: Scala script ready for `joern --script`.
+        str: Scala script (bare statements, no @main) for `joern --script`.
     """
-    return """import io.joern.joerncli.*
-import io.shiftleft.semanticcpg.*
-import io.shiftleft.codepropertygraph.generated.Cpg
+    return """// Phase 7: bare script (REPL semantics), cpg auto-available via positional arg
+// P1-5 verified API: cpg.imports.l + imp.importedEntity (Option[String])
 import scala.collection.mutable
 
-@main def checkCyclic(cpgFile: String): Unit =
-  val cpg = loadCpg(cpgFile)
-  // P1-5 verified API: cpg.imports.l + imp.importedEntity (Option[String])
-  val imports = cpg.imports.l
-  val edges = imports.flatMap { imp =>
-    imp.importedEntity.map(e => (imp.file.head.name, e))
+val imports = cpg.imports.l
+val edges = imports.flatMap { imp =>
+  // Phase 8: strip .py suffix from file name to unify node naming
+  // src = "mod_a.py" → "mod_a", dst = "mod_b" (already no suffix)
+  val rawSrc = imp.file.head.name
+  val src = if (rawSrc.endsWith(".py")) rawSrc.substring(0, rawSrc.length - 3) else rawSrc
+  imp.importedEntity.map(e => (src, e))
+}
+// Build adjacency map
+val graph = mutable.Map.empty[String, Set[String]].withDefaultValue(Set.empty)
+edges.foreach { case (src, dst) =>
+  graph(src) = graph(src) + dst
+}
+// DFS 3-color cycle detection
+val WHITE = 0
+val GRAY = 1
+val BLACK = 2
+val color = mutable.Map.empty[String, Int].withDefaultValue(WHITE)
+var hasCycle = false
+def dfs(node: String): Unit =
+  if hasCycle then return
+  color(node) = GRAY
+  for (next <- graph(node)) {
+    if (color(next) == GRAY) { hasCycle = true; return }
+    if (color(next) == WHITE) dfs(next)
+    if (hasCycle) return
   }
-  // Build adjacency map
-  val graph = mutable.Map.empty[String, Set[String]].withDefaultValue(Set.empty)
-  edges.foreach { case (src, dst) =>
-    graph(src) = graph(src) + dst
+  color(node) = BLACK
+for (n <- graph.keys) {
+  if (color(n) == WHITE) {
+    dfs(n)
   }
-  // DFS 3-color cycle detection
-  val WHITE, GRAY, BLACK = 0, 1, 2
-  val color = mutable.Map.empty[String, Int].withDefaultValue(WHITE)
-  var hasCycle = false
-  def dfs(node: String): Unit =
-    if hasCycle then return
-    color(node) = GRAY
-    for (next <- graph(node)) {
-      if (color(next) == GRAY) { hasCycle = true; return }
-      if (color(next) == WHITE) dfs(next)
-      if (hasCycle) return
-    }
-    color(node) = BLACK
-  for (n <- graph.keys) {
-    if (color(n) == WHITE) {
-      dfs(n)
-      if (hasCycle) return // early exit
-    }
-  }
-  println(s"has_cycle=${hasCycle}")
-  println(s"size=${graph.size}")
+}
+println(s"has_cycle=" + hasCycle)
+println(s"size=" + graph.size)
 """
 
 
 # ── Subprocess Command Builders ─────────────────────────────────────────
+
+
+def _is_wsl2_mode():
+    """Check if we're in Windows→WSL2 cross-environment mode.
+
+    Returns True if Joern will be invoked via wsl.exe from a Windows host.
+    """
+    return _detect_wsl_from_windows() is not None
+
+
+def _build_wsl_bash_command(linux_command, java_home=None):
+    """Wrap a Linux command with wsl.exe invocation for Windows→WSL2 mode.
+
+    Constructs: wsl.exe -e bash -c "export JAVA_HOME=... && export PATH=... && <cmd>"
+
+    Args:
+        linux_command: str the Linux command to run inside WSL2.
+        java_home: str JAVA_HOME path in WSL2 (from _detect_wsl_from_windows).
+
+    Returns:
+        list[str]: command tokens ["wsl.exe", "-e", "bash", "-c", bash_script]
+    """
+    wsl_info = _detect_wsl_from_windows()
+    if wsl_info is not None:
+        jh = java_home or wsl_info.get("java_home", "")
+        # Set JAVA_HOME and PATH inside bash to avoid Windows PATH pollution.
+        # Source-level fact: WSL2 default PATH includes Windows paths with
+        # parentheses (Program Files (x86)) causing bash syntax errors.
+        bash_script = (
+            f"export JAVA_HOME='{jh}' && "
+            f"export PATH=\"$JAVA_HOME/bin:/usr/bin:/bin\" && "
+            f"{linux_command}"
+        )
+    else:
+        bash_script = linux_command
+    return ["wsl.exe", "-e", "bash", "-c", bash_script]
 
 
 def _build_joern_parse_command(repo_path, cpg_output_path, language="pythonsrc"):
@@ -278,17 +448,28 @@ def _build_joern_parse_command(repo_path, cpg_output_path, language="pythonsrc")
       - --language pythonsrc  (NOT --language python, which invokes py2cpg.sh
         that does not exist in Joern v4.0.595)
 
+    Phase 6: In WSL2 mode (Windows host), wraps command with wsl.exe.
+
     Args:
-        repo_path: str path to repo root (input).
-        cpg_output_path: str path to write CPG binary (output).
+        repo_path: str path to repo root (input, already WSL2-translated).
+        cpg_output_path: str path to write CPG binary (already WSL2-translated).
         language: str language frontend. Default "pythonsrc" for Python.
 
     Returns:
         list[str]: command tokens for subprocess.run.
     """
     joern_binary = _find_joern_binary() or "joern-parse"
-    # WSL2 path translation: Windows repo path -> /mnt/<drive>/...
-    # (handled by caller; here we trust the given path is already WSL2-native)
+
+    # Phase 6: WSL2 mode — wrap with wsl.exe -e bash -c
+    if _is_wsl2_mode():
+        # Quote paths for bash safety (paths may contain spaces in theory)
+        linux_cmd = (
+            f"'{joern_binary}' --language {language} "
+            f"-o '{cpg_output_path}' '{repo_path}'"
+        )
+        return _build_wsl_bash_command(linux_cmd)
+
+    # Native mode (Linux or inside WSL2)
     return [
         joern_binary,
         "--language", language,
@@ -300,9 +481,16 @@ def _build_joern_parse_command(repo_path, cpg_output_path, language="pythonsrc")
 def _build_joern_query_command(cpg_path, script_path):
     """Build the joern (interactive) command to run a Scala script on a CPG.
 
+    Phase 7 fix: pass CPG as positional arg (NOT --param cpgFile=...).
+      Joern v4.0.595 script mode uses REPL semantics — @main annotations
+      do NOT compile. Bare scripts access `cpg` auto-variable when CPG is
+      passed as positional arg: `joern --script script.sc /path/to/cpg.bin`.
+
+    Phase 6: In WSL2 mode (Windows host), wraps command with wsl.exe.
+
     Args:
-        cpg_path: str path to CPG binary.
-        script_path: str path to Scala script file.
+        cpg_path: str path to CPG binary (already WSL2-translated).
+        script_path: str path to Scala script file (already WSL2-translated).
 
     Returns:
         list[str]: command tokens for subprocess.run.
@@ -311,26 +499,48 @@ def _build_joern_query_command(cpg_path, script_path):
     # Strip "-parse" suffix to get the interactive `joern` launcher
     if joern_binary.endswith("joern-parse"):
         joern_binary = joern_binary[:-len("-parse")]
+
+    # Phase 6: WSL2 mode — wrap with wsl.exe -e bash -c
+    if _is_wsl2_mode():
+        # Phase 7: positional CPG arg (not --param)
+        linux_cmd = (
+            f"'{joern_binary}' --script '{script_path}' '{cpg_path}'"
+        )
+        return _build_wsl_bash_command(linux_cmd)
+
+    # Native mode: positional CPG arg
     return [
         joern_binary,
         "--script", script_path,
-        "--param", f"cpgFile={cpg_path}",
+        cpg_path,
     ]
 
 
 def _build_clean_env():
     """Build a clean env for Joern subprocess (avoid Windows PATH pollution).
 
-    WSL2 default PATH includes Windows paths with parentheses (Program Files (x86))
-    which cause bash syntax errors. We override PATH to include only:
-      - $JAVA_HOME/bin (JDK 21 required by Joern)
-      - $HOME/bin/joern/joern-cli (Joern itself)
-      - /usr/bin, /bin (system utilities)
+    Phase 6: In WSL2 mode, JAVA_HOME is the WSL2 path (not Windows path).
+    The env dict is used for API consistency and testing; actual WSL2
+    execution embeds env vars in the bash command string (see
+    _build_wsl_bash_command).
+
+    Native mode (Linux/WSL2-inside): override PATH to avoid Windows PATH
+    pollution from WSL2's default PATH interop.
     """
     env = os.environ.copy()
+
+    # Phase 6: WSL2 cross-environment mode
+    wsl_info = _detect_wsl_from_windows()
+    if wsl_info is not None:
+        env["JAVA_HOME"] = wsl_info["java_home"]
+        env["JOERN_WSL_MODE"] = "1"
+        return env
+
+    # Native mode (Linux or inside WSL2)
     java_home = env.get("JAVA_HOME", str(Path.home() / "jdk"))
     joern_cli = str(Path.home() / "bin" / "joern" / "joern-cli")
     # Override PATH: keep JDK + Joern + system; drop Windows paths
+    # (applies when running inside WSL2 where Windows PATH is interop'd)
     if _detect_wsl() or os.name != "nt":
         env["PATH"] = f"{java_home}/bin:{joern_cli}:/usr/bin:/bin"
     env["JAVA_HOME"] = java_home

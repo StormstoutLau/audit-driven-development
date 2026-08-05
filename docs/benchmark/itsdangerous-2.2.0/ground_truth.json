@@ -1,0 +1,70 @@
+[
+  {
+    "id": "ITD-H1",
+    "ground_truth": "hallucination_file_not_found",
+    "expected_tier": "L1",
+    "expected_action": "removed"
+  },
+  {
+    "id": "ITD-H2",
+    "ground_truth": "hallucination_line_out_of_range",
+    "expected_tier": "L2",
+    "expected_action": "removed"
+  },
+  {
+    "id": "ITD-H3",
+    "ground_truth": "hallucination_reachable_code_claimed_dead",
+    "expected_tier": "L4-Tier2-ast-cfg",
+    "expected_action": "downgraded_or_removed",
+    "note": "unsign method line 254 is reachable (return value path), ast CFG should detect reachability"
+  },
+  {
+    "id": "ITD-H4",
+    "ground_truth": "hallucination_no_cycle",
+    "expected_tier": "L4-Tier2-import-graph",
+    "expected_action": "downgraded_or_removed",
+    "note": "no circular dependency between signer and serializer (one-way: serializer imports signer)"
+  },
+  {
+    "id": "ITD-H5",
+    "ground_truth": "hallucination_error_handling_present",
+    "expected_tier": "L4-Tier3-regex",
+    "expected_action": "downgraded_or_removed",
+    "note": "validate method at line 262 HAS try/except BadSignature"
+  },
+  {
+    "id": "ITD-H6",
+    "ground_truth": "hallucination_wrong_api",
+    "expected_tier": "L3",
+    "expected_action": "removed",
+    "note": "no keyword match for nonexistent_function in encoding.py"
+  },
+  {
+    "id": "ITD-R1",
+    "ground_truth": "real_import_exists",
+    "expected_tier": "L3-or-L4",
+    "expected_action": "verified",
+    "note": "signer.py line 4 imports hashlib"
+  },
+  {
+    "id": "ITD-R2",
+    "ground_truth": "real_raise_statement",
+    "expected_tier": "L3-or-L4",
+    "expected_action": "verified",
+    "note": "signer.py line 22 has raise NotImplementedError()"
+  },
+  {
+    "id": "ITD-R3",
+    "ground_truth": "real_error_handling_present",
+    "expected_tier": "L3-or-L4",
+    "expected_action": "verified",
+    "note": "signer.py line 262 has try/except BadSignature"
+  },
+  {
+    "id": "ITD-R4",
+    "ground_truth": "real_class_definition",
+    "expected_tier": "L1-L2-only-P1",
+    "expected_action": "verified_l1l2",
+    "note": "P1 finding, lightweight L1+L2 verification only"
+  }
+]

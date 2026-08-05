@@ -1,0 +1,89 @@
+{
+  "project": "audit-driven-development",
+  "version": "v2.4",
+  "audit_date": "2026-08-05",
+  "audit_mode": "self-audit Phase 3.5 verification",
+  "description": "Self-audit: 在 ADD 项目自身代码上验证 Phase 3.5 三层降级 verify_findings.py",
+  "findings": [
+    {
+      "id": "SA-1",
+      "severity": "P0",
+      "claim": "dead code after return in visit_FunctionDef — _current_successors cleared but subsequent statement unreachable",
+      "evidence": {
+        "file": "scripts/ast_cfg.py",
+        "line_start": 60
+      },
+      "dimension": "structural"
+    },
+    {
+      "id": "SA-2",
+      "severity": "P0",
+      "claim": "missing error handling in _generate_cpg — subprocess.run timeout not caught",
+      "evidence": {
+        "file": "scripts/joern_cpg.py",
+        "line_start": 310
+      },
+      "dimension": "error_handling"
+    },
+    {
+      "id": "SA-3",
+      "severity": "P0",
+      "claim": "circular dependency between verify_findings and joern_cpg modules",
+      "evidence": {
+        "file": "scripts/verify_findings.py",
+        "line_start": 170
+      },
+      "dimension": "architecture"
+    },
+    {
+      "id": "SA-4",
+      "severity": "P0",
+      "claim": "dead code after raise in visit_Raise alias — visit_Return clears successors but raise path not handled",
+      "evidence": {
+        "file": "scripts/ast_cfg.py",
+        "line_start": 171
+      },
+      "dimension": "structural"
+    },
+    {
+      "id": "SA-5",
+      "severity": "P1",
+      "claim": "missing input validation in _parse_joern_output — empty output not handled",
+      "evidence": {
+        "file": "scripts/joern_cpg.py",
+        "line_start": 275
+      },
+      "dimension": "validation"
+    },
+    {
+      "id": "SA-6",
+      "severity": "P0",
+      "claim": "wrong API usage — cpg.method.location.line(N) should be cpg.method.lineNumber(N)",
+      "evidence": {
+        "file": "scripts/joern_cpg.py",
+        "line_start": 100
+      },
+      "dimension": "api_correctness"
+    },
+    {
+      "id": "SA-7",
+      "severity": "P0",
+      "claim": "missing file existence check in _run_joern_query — script_file write may fail silently",
+      "evidence": {
+        "file": "scripts/joern_cpg.py",
+        "line_start": 335
+      },
+      "dimension": "error_handling"
+    },
+    {
+      "id": "SA-8",
+      "severity": "P1",
+      "claim": "wrong variable scope — _current_successors not reset before except handler iteration",
+      "evidence": {
+        "file": "scripts/ast_cfg.py",
+        "line_start": 135
+      },
+      "dimension": "scope"
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "project": "itsdangerous",
+  "version": "2.2.0",
+  "audit_date": "2026-08-05",
+  "audit_mode": "structural verification benchmark",
+  "description": "Mixed hallucination + real pattern benchmark against itsdangerous 2.2.0 src",
+  "findings": [
+    {
+      "id": "ITD-H1",
+      "severity": "P0",
+      "claim": "dead code after return in nonexistent_module function",
+      "evidence": {
+        "file": "nonexistent_module.py",
+        "line_start": 10
+      },
+      "dimension": "structural"
+    },
+    {
+      "id": "ITD-H2",
+      "severity": "P0",
+      "claim": "dead code at line beyond end of signer.py",
+      "evidence": {
+        "file": "signer.py",
+        "line_start": 9999
+      },
+      "dimension": "structural"
+    },
+    {
+      "id": "ITD-H3",
+      "severity": "P0",
+      "claim": "dead code after return in unsign method — subsequent statements unreachable",
+      "evidence": {
+        "file": "signer.py",
+        "line_start": 254
+      },
+      "dimension": "structural"
+    },
+    {
+      "id": "ITD-H4",
+      "severity": "P0",
+      "claim": "circular dependency between signer and serializer modules",
+      "evidence": {
+        "file": "signer.py",
+        "line_start": 1
+      },
+      "dimension": "architecture"
+    },
+    {
+      "id": "ITD-H5",
+      "severity": "P0",
+      "claim": "missing error handling in validate method — no try/except for BadSignature",
+      "evidence": {
+        "file": "signer.py",
+        "line_start": 258
+      },
+      "dimension": "error_handling"
+    },
+    {
+      "id": "ITD-H6",
+      "severity": "P0",
+      "claim": "wrong API usage — nonexistent_function call in encoding",
+      "evidence": {
+        "file": "encoding.py",
+        "line_start": 5
+      },
+      "dimension": "api_correctness"
+    },
+    {
+      "id": "ITD-R1",
+      "severity": "P0",
+      "claim": "import statement exists in signer module — imports hashlib",
+      "evidence": {
+        "file": "signer.py",
+        "line_start": 4
+      },
+      "dimension": "structural"
+    },
+    {
+      "id": "ITD-R2",
+      "severity": "P0",
+      "claim": "raise NotImplementedError in SigningAlgorithm.get_signature — abstract method",
+      "evidence": {
+        "file": "signer.py",
+        "line_start": 22
+      },
+      "dimension": "structural"
+    },
+    {
+      "id": "ITD-R3",
+      "severity": "P0",
+      "claim": "try/except error handling exists in validate method for BadSignature",
+      "evidence": {
+        "file": "signer.py",
+        "line_start": 262
+      },
+      "dimension": "error_handling"
+    },
+    {
+      "id": "ITD-R4",
+      "severity": "P1",
+      "claim": "class SigningAlgorithm definition exists in signer module",
+      "evidence": {
+        "file": "signer.py",
+        "line_start": 15
+      },
+      "dimension": "structural"
+    }
+  ]
+}

@@ -15,7 +15,7 @@
 <br>
 
 <a href="https://github.com/StormstoutLau/audit-driven-development">
-  <img alt="version" src="https://img.shields.io/badge/version-2.3-6366f1?style=for-the-badge&logo=github&logoColor=white" />
+  <img alt="version" src="https://img.shields.io/badge/version-2.4-6366f1?style=for-the-badge&logo=github&logoColor=white" />
 </a>
 &nbsp;
 <a href="https://opensource.org/licenses/MIT">
@@ -23,7 +23,7 @@
 </a>
 &nbsp;
 <a href="https://github.com/StormstoutLau/audit-driven-development">
-  <img alt="tdd" src="https://img.shields.io/badge/TDD-199%2F199%20PASS-brightgreen?style=for-the-badge&logo=python&logoColor=white" />
+  <img alt="tdd" src="https://img.shields.io/badge/TDD-204%2F204%20PASS-brightgreen?style=for-the-badge&logo=python&logoColor=white" />
 </a>
 &nbsp;
 <a href="https://github.com/StormstoutLau/audit-driven-development">
@@ -86,23 +86,27 @@ Tests verify behavior within a single module. They cannot verify that Module A k
 
 ## Proof
 
-Three open-source projects audited. Findings verified against known bug databases.
+Three repos benchmarked for hallucination detection — the verification system that prevents false findings from entering the repair baseline. Phase 8 fix eliminated all false positives (zero real bugs deleted).
 
 <div align="center">
 
-| | Flask 3.1.2 | FastAPI 0.115.8 | Requests 2.33.0 |
+| | ADD self-audit | Python stdlib | itsdangerous 2.2.0 |
 |---|---|---|---|
-| **Bugs Found** | 3 / 3 | 5 / 6 | 4 / 4 |
-| **Recall** | ![](https://img.shields.io/badge/100%25-success?style=flat-square) | ![](https://img.shields.io/badge/83%25-yellow?style=flat-square) | ![](https://img.shields.io/badge/100%25-success?style=flat-square) |
-| **F₁** | 94.1% | 83.9% | 100% |
+| **Findings** | 8 | 9 | 10 |
+| **TP / FP / FN / TN** | 4 / 0 / 3 / 1 | 6 / 0 / 2 / 1 | 5 / 0 / 1 / 4 |
+| **Precision** | ![](https://img.shields.io/badge/100%25-success?style=flat-square) | ![](https://img.shields.io/badge/100%25-success?style=flat-square) | ![](https://img.shields.io/badge/100%25-success?style=flat-square) |
+| **Recall** | ![](https://img.shields.io/badge/57%25-yellow?style=flat-square) | ![](https://img.shields.io/badge/75%25-yellow?style=flat-square) | ![](https://img.shields.io/badge/83%25-yellowgreen?style=flat-square) |
+| **F₁** | 72.7% | 85.7% | 90.9% |
 
 <br>
 
 | | Recall | Precision | F₁ |
 |---|---|---|---|
-| **Average** | **94.3%** | **91.3%** | **92.6%** |
+| **Aggregate (27 findings)** | **71.4%** | **100.0%** | **83.3%** |
 
 </div>
+
+> **Honest disclosure**: Earlier README versions cited 94.3% recall from preliminary Flask/FastAPI/Requests runs. Those numbers were inflated by ground-truth mislabeling and a `classify_claim` bug that misrouted "import exists" claims to circular-dependency verification. Phase 8 (2026-08-06) fixed both issues — precision held at 100%, recall settled at its true value. See [v2.4-phase8-performance-report.md](docs/benchmark/v2.4-phase8-performance-report.md).
 
 ---
 
@@ -251,8 +255,8 @@ All 7 adapters auto-synced from `SKILL.md` via `scripts/sync_adapters.py`. Drop-
 | | |
 |---|---|
 | **Scripts** | 28 production · 8 test suites |
-| **TDD** | **199/199** all passing |
-| **Benchmark Recall** | 94.3% (Flask 100% · FastAPI 83% · Requests 100%) |
+| **TDD** | **204/204** all passing (v2.4 153 + v3.5 51) |
+| **Benchmark** | Recall 71.4% · Precision 100% · F1 83.3% (27 findings, 3 repos) |
 | **Self-Audit** | **97/100 A+** — steady state after v2.0.1 fixes |
 | **Knowledge** | 3-tier ∿ Internal Learning → AI Generalization → External Injection |
 | **Recipes** | 5 built-in human-authored + LLM-generated |

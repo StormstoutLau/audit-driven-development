@@ -79,9 +79,9 @@ print(f"  Repo: {repo_root}")
 print(f"  Created 4 .py files: dead_code_demo, mod_a/mod_b (cycle), risky_op, clean_code")
 
 
-# ── E2E-1: dead_code claim — Tier 2 ast CFG ─────────────────────────────
+# ── E2E-1: dead_code claim — Tier 1/2 (Joern available via WSL2) ────────
 
-print("\n-- E2E-1: dead_code claim (Tier 2 ast CFG) --")
+print("\n-- E2E-1: dead_code claim (Tier 1/2) --")
 
 try:
     import verify_findings
@@ -97,16 +97,19 @@ try:
           f"keys: {list(result.keys())}")
     check("E2E-1b dead_code detected (verified=True)",
           result.get("verified") is True, f"got {result.get('verified')}")
-    check("E2E-1c tier is 2 (ast CFG, Joern unavailable on Win)",
-          result.get("checks", {}).get("dead_code", {}).get("tier") == 2,
-          f"got {result.get('checks', {}).get('dead_code', {}).get('tier')}")
+    # Phase 8: tier depends on Joern availability.
+    #   Joern available + both agree True → tier=1 (method-level dead + stmt-level dead)
+    #   Joern unavailable → tier=2 (ast CFG only)
+    dc_tier = result.get("checks", {}).get("dead_code", {}).get("tier")
+    check("E2E-1c tier is 1 or 2 (Joern available → 1, else 2)",
+          dc_tier in (1, 2), f"got tier={dc_tier}")
 except Exception as e:
     check("E2E-1 dead_code claim", False, f"Exception: {e}")
 
 
-# ── E2E-2: import_related claim — Tier 2 ast import graph ───────────────
+# ── E2E-2: import_related claim — Tier 1/2 (Joern available via WSL2) ───
 
-print("\n-- E2E-2: import_related claim (Tier 2 import graph) --")
+print("\n-- E2E-2: import_related claim (Tier 1/2) --")
 
 try:
     result = verify_findings.verify_l4_structural(
@@ -119,9 +122,12 @@ try:
           f"keys: {list(result.keys())}")
     check("E2E-2b circular import detected (verified=True)",
           result.get("verified") is True, f"got {result.get('verified')}")
+    # Phase 8: tier depends on Joern availability + import node naming fix.
+    #   Joern available + cycle detected (Phase 8 .py suffix fix) → tier=1
+    #   Joern unavailable or False → degrade to Tier 2 → tier=2
     import_tier = result.get("checks", {}).get("import_related", {}).get("tier")
-    check("E2E-2c tier is 2 (ast import graph)",
-          import_tier == 2, f"got {import_tier}")
+    check("E2E-2c tier is 1 or 2 (Joern available → 1, else 2)",
+          import_tier in (1, 2), f"got {import_tier}")
 except Exception as e:
     check("E2E-2 import_related claim", False, f"Exception: {e}")
 

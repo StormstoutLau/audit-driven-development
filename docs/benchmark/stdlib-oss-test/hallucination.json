@@ -1,0 +1,30 @@
+{
+  "hallucinations": [
+    {
+      "id": "OSS-H1",
+      "claim": "dead code after return in nonexistent function",
+      "file": "nonexistent_file.py",
+      "line": 1,
+      "severity": "P0",
+      "reason": "file_not_found"
+    },
+    {
+      "id": "OSS-H2",
+      "claim": "dead code at end of file beyond last line",
+      "file": "json/decoder.py",
+      "line": 9999,
+      "severity": "P0",
+      "reason": "line 9999 out of range (1-357)"
+    },
+    {
+      "id": "OSS-H8",
+      "claim": "wrong API usage in nonexistent_function call",
+      "file": "csv.py",
+      "line": 50,
+      "severity": "P0",
+      "reason": "no keyword match within ±20 lines"
+    }
+  ],
+  "count": 3,
+  "timestamp": "2026-08-05T17:54:10.906736"
+}

@@ -1,0 +1,14 @@
+{
+  "hallucinations": [
+    {
+      "id": "SA-6",
+      "claim": "wrong API usage — cpg.method.location.line(N) should be cpg.method.lineNumber(N)",
+      "file": "scripts/joern_cpg.py",
+      "line": 100,
+      "severity": "P0",
+      "reason": "no keyword match within ±20 lines"
+    }
+  ],
+  "count": 1,
+  "timestamp": "2026-08-05T17:53:31.888601"
+}

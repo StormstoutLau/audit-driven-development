@@ -18,6 +18,7 @@ Performance:
 
 import ast
 import os
+import re
 import sys
 import time
 from collections import deque
@@ -234,14 +235,29 @@ def is_reachable(cfg_nodes, cfg_edges, entry_line, target_line):
 
 
 def _find_enclosing_function(tree, target_line):
-    """Find the FunctionDef node whose body contains target_line. Returns None if module-level."""
+    """Find the *innermost* FunctionDef whose body contains target_line.
+
+    Returns None if target_line is module-level (not inside any function).
+
+    Phase 5 fix (OSS-H3): return the most specific (smallest span) function,
+    not the first one found by ast.walk. This fixes false positives where an
+    outer function (e.g. py_scanstring lineno=69 end_lineno=126) was returned
+    instead of the inner method (e.g. __init__ lineno=100 end_lineno=112),
+    causing the target line to not be a CFG node → verified=None → Tier 3
+    regex false positive.
+    """
+    best = None
+    best_span = float("inf")
     for node in ast.walk(tree):
         if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             if (node.lineno <= target_line and
                 hasattr(node, "end_lineno") and
                 node.end_lineno and node.end_lineno >= target_line):
-                return node
-    return None
+                span = node.end_lineno - node.lineno
+                if span < best_span:
+                    best = node
+                    best_span = span
+    return best
 
 
 def verify_dead_code_in_source(source_code, line):
@@ -274,8 +290,15 @@ def verify_dead_code_in_source(source_code, line):
         scope = "module"
 
     if line not in builder.nodes:
-        return {"verified": None,
-                "evidence": f"line {line} not a CFG node in {scope} (may be blank/comment)",
+        # Phase 5 fix (OSS-H3): non-statement lines (else:, except:, blank,
+        # comment, continuation) cannot be "dead code" — they're not executable
+        # statements. Returning None caused Tier 3 regex fallback which produced
+        # false positives (e.g. "return" keyword in nearby context matched).
+        # Conservative fix: verified=False (claim is hallucination) because
+        # dead_code claim's burden of proof requires an unreachable *statement*,
+        # and a non-statement line cannot satisfy that.
+        return {"verified": False,
+                "evidence": f"line {line} not a CFG node in {scope} (non-statement: blank/comment/keyword) — cannot be dead code",
                 "tier": 2, "latency_ms": int((time.perf_counter() - t0) * 1000)}
 
     reachable = is_reachable(builder.nodes, builder.edges, entry_line, line)
@@ -420,8 +443,136 @@ def build_import_graph(repo_root):
     return graph
 
 
+# ── Phase 4: claim → module pair parsing + targeted cycle detection ─────
+
+
+def _normalize_module(name):
+    """Normalize a module name: strip .py suffix, keep dots for package paths."""
+    if name.lower().endswith(".py"):
+        name = name[:-3]
+    return name
+
+
+def _parse_modules_from_claim(claim):
+    """Parse module names from a circular-dependency claim.
+
+    Returns:
+        list of module name strings (deduped, order-preserving), or None if
+        the claim is generic (no specific modules mentioned).
+
+    Examples:
+        "circular dependency between a and b"   -> ["a", "b"]
+        "a imports b imports a"                 -> ["a", "b"]
+        "circular dependency among a, b, c"     -> ["a", "b", "c"]
+        "a imports itself"                      -> ["a"]
+        "circular dependency between a.py b.py" -> ["a", "b"]
+        "circular dependency"                   -> None (generic, fallback)
+    """
+    if not claim:
+        return None
+
+    # Pattern 1: "X imports itself" (self-loop, check first so "itself" isn't
+    # captured as a module name by Pattern 3)
+    m = re.search(r"([\w\.]+)\s+imports?\s+itself", claim, re.IGNORECASE)
+    if m:
+        return [_normalize_module(m.group(1))]
+
+    # Pattern 2: "between X and Y" (X/Y may contain dots for package paths)
+    m = re.search(r"\bbetween\s+([\w\.]+)\s+and\s+([\w\.]+)", claim, re.IGNORECASE)
+    if m:
+        return [_normalize_module(m.group(1)), _normalize_module(m.group(2))]
+
+    # Pattern 3: "X imports Y [imports Z]" (chain) — guard against "no imports"
+    # which is not a circular-dependency claim about specific modules
+    if not re.search(r"\bno\s+imports?\b", claim, re.IGNORECASE):
+        m = re.search(r"([\w\.]+)\s+imports\s+([\w\.]+)(?:\s+imports\s+([\w\.]+))?",
+                      claim, re.IGNORECASE)
+        if m:
+            mods = [_normalize_module(m.group(1)), _normalize_module(m.group(2))]
+            if m.group(3):
+                mods.append(_normalize_module(m.group(3)))
+            return list(dict.fromkeys(mods))  # dedupe preserving order
+
+    # Pattern 4: "among X, Y, [and] Z" — normalize ", and " → ", " before split
+    m = re.search(r"\bamong\s+(.+?)(?:\s*$|\s*\.)", claim, re.IGNORECASE)
+    if m:
+        text = re.sub(r",?\s+and\s+", ", ", m.group(1))  # "a, b, and c" → "a, b, c"
+        parts = [p.strip() for p in text.split(",") if p.strip()]
+        mods = [_normalize_module(p) for p in parts if p]
+        if mods:
+            return list(dict.fromkeys(mods))
+
+    # No specific modules mentioned → generic claim, caller falls back
+    return None
+
+
+def _find_cycle_containing(graph, modules):
+    """Find a simple cycle that contains all the specified modules.
+
+    Returns the cycle as a list like ["a", "b", "a"], or None if no such
+    cycle exists.
+
+    Algorithm:
+      - Single module: check for self-loop (m in graph[m]).
+      - Multi-module: DFS with backtracking from modules[0] (anchor), looking
+        for a path back to anchor that visits every module in `modules`.
+        Pruned by max_depth = |graph| + 1 (simple cycle upper bound).
+    """
+    if not modules:
+        return None
+
+    modules_set = set(modules)
+
+    # All claimed modules must exist in the import graph
+    for m in modules_set:
+        if m not in graph:
+            return None
+
+    # Single-module case: self-loop only
+    if len(modules) == 1:
+        anchor = modules[0]
+        if anchor in graph.get(anchor, []):
+            return [anchor, anchor]
+        return None
+
+    # Multi-module case: DFS with backtracking
+    anchor = modules[0]
+    target_remaining = modules_set - {anchor}
+    max_depth = len(graph) + 1  # simple cycle cannot exceed |V|+1 nodes
+
+    # Stack entries: (current_node, path_list, remaining_target_set)
+    stack = [(anchor, [anchor], set(target_remaining))]
+
+    while stack:
+        current, path, remaining = stack.pop()
+
+        if len(path) > max_depth:
+            continue
+
+        for neighbor in graph.get(current, []):
+            if neighbor == anchor and len(path) > 1:
+                # Found a cycle back to anchor
+                if not remaining:
+                    return path + [anchor]
+                # Cycle exists but doesn't include all claimed modules;
+                # keep searching other branches
+                continue
+
+            # Avoid revisiting nodes (simple cycle constraint)
+            if neighbor not in path:
+                new_remaining = remaining - {neighbor}
+                new_path = path + [neighbor]
+                stack.append((neighbor, new_path, new_remaining))
+
+    return None
+
+
 def verify_imports_in_repo(repo_root, claim):
     """Verify an import-related (circular dependency) claim. Returns unified schema.
+
+    Phase 4: parse specific module names from the claim and verify a cycle
+    exists through those modules. If the claim is generic (no specific
+    modules), fall back to detecting any cycle (backward compatible).
 
     Returns:
         {"verified": True|False|None, "evidence": str, "tier": 2,
@@ -434,16 +585,33 @@ def verify_imports_in_repo(repo_root, claim):
         return {"verified": None, "evidence": f"build_import_graph error: {e}",
                 "tier": 2, "cycle": None, "latency_ms": int((time.perf_counter() - t0) * 1000)}
 
-    cycle = detect_cycle(graph)
+    # Phase 4: parse specific modules from claim
+    modules = _parse_modules_from_claim(claim)
+
+    if modules is None:
+        # Generic claim (no specific modules) → fall back to any-cycle detection
+        cycle = detect_cycle(graph)
+        latency_ms = int((time.perf_counter() - t0) * 1000)
+        if cycle:
+            return {"verified": True,
+                    "evidence": f"ast import graph: cycle detected: {' -> '.join(cycle)}",
+                    "tier": 2, "cycle": cycle, "latency_ms": latency_ms}
+        else:
+            return {"verified": False,
+                    "evidence": f"ast import graph: no cycle in {len(graph)} modules",
+                    "tier": 2, "cycle": None, "latency_ms": latency_ms}
+
+    # Specific modules mentioned → verify cycle through exactly those modules
+    cycle = _find_cycle_containing(graph, modules)
     latency_ms = int((time.perf_counter() - t0) * 1000)
 
     if cycle:
         return {"verified": True,
-                "evidence": f"ast import graph: cycle detected: {' -> '.join(cycle)}",
+                "evidence": f"ast import graph: cycle through {modules}: {' -> '.join(cycle)}",
                 "tier": 2, "cycle": cycle, "latency_ms": latency_ms}
     else:
         return {"verified": False,
-                "evidence": f"ast import graph: no cycle in {len(graph)} modules",
+                "evidence": f"ast import graph: no cycle through {modules} in {len(graph)} modules",
                 "tier": 2, "cycle": None, "latency_ms": latency_ms}
 
 
