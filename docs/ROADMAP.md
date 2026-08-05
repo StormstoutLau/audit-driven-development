@@ -589,7 +589,7 @@ Initial 80% single-threshold was too aggressive for OSS projects where design do
 | v2.1 | Dual-Track Learning | Detection: diff_miner.py (git→bug pattern), rule_suggester.py (audit-log→rule). Repair: fix_history.py (semantic match + reward signal). 双轨并行 — Detection 侧从开源 git 挖模式, Repair 侧从历史审计匹配修复方案. scores.json 趋势作为强化学习奖励信号. | — | 🚧 In Progress (3 scripts + test) |
 | v2.2 | LLM Generalization + Recipe Book | Detection: llm_generalize.py (具体bug→通用规则), rule_validator.py (benchmark复测). Repair: fix_recipes.py (人类+LLM双源配方库). 双轨合并 — 共享 LLM 泛化引擎. | — | 🚧 In Progress (3 scripts + test) |
 | v2.3 | External Knowledge + Community | Detection: mcp_lookup.py (结构化MCP搜索+缓存), benchmark_syncer.py (标杆项目持续监控), add-rules独立仓库. Repair: mcp_lookup侧修复方案搜索, live_knowledge.py (post-audit自动更新). 外部知识注入管道 — 从开源标杆项目获取知识. | — | 🚧 Design Complete |
-| v2.4 | CPG Integration: Formal-Grade Hallucination Defense | Phase 2.4a: ast_cfg.py (Tier 2, ~90%, Python stdlib 零依赖). Phase 2.4b: joern_cpg.py (Tier 1, ~95%, Joern CLI v4.0.595 + JDK 21 可选). verify_findings.py 三层降级 Tier 1→2→3. P1-5 实测验证 4 个 Joern API 路径. | — | 🚧 In Progress (Phase 2.4a ✅, Phase 2.4b ✅) |
+| v2.4 | CPG Integration: Formal-Grade Hallucination Defense | Phase 2.4a: ast_cfg.py (Tier 2, ~90%, Python stdlib 零依赖). Phase 2.4b: joern_cpg.py (Tier 1, ~95%, Joern CLI v4.0.595 + JDK 21 可选). Phase 2.4c: SKILL.md + 7 adapters + ROADMAP 同步. verify_findings.py 三层降级 Tier 1→2→3. P1-5 实测验证 4 个 Joern API 路径. 66/66 + 51/51 测试通过. | — | ✅ Done |
 
 Total: P0+P1+P2+P3 complete. **1.0 reached.** v2.0→v2.3 comprehensive upgrade roadmap finalized. **16 scripts (v2.0), 28 scripts (v2.3), ~3,500 lines, knowledge accumulation + autonomous learning + external injection.**
 
