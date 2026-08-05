@@ -401,6 +401,8 @@ digraph audit_cycle {
 
 **Added in v3.5** in response to subagent hallucination. Before any P0 or P1 finding enters the fix baseline, it MUST pass source-code-level verification. P0 findings undergo full 4-level verification; P1 findings undergo lightweight L1+L2 existence check. This is a hard gate.
 
+**v3.5 新增**，回应 subagent 幻觉问题。任何 P0/P1 发现进入修复基线前，必须通过源码级验证。P0 经过完整 4 级验证；P1 经过轻量级 L1+L2 存在性检查。这是一个硬性关卡。
+
 **Rule / 规则**:
 - P0 finding: 必须通过 4 级源码验证（L1-L4），未通过不得进入 Phase 4 修复基线
 - P1 finding: 必须通过 L1+L2 存在性验证，未通过（文件/行号幻觉）移出基线
@@ -413,7 +415,25 @@ digraph audit_cycle {
 | **L1** | 文件存在性 | `evidence.file` 在 repo 中存在 | `unverified` — 幻觉，移出基线 | P0 + P1 |
 | **L2** | 行号有效性 | `evidence.line_start` 在文件行数范围内 | `unverified` — 幻觉，移出基线 | P0 + P1 |
 | **L3** | 关键词匹配 | claim 关键词在 ±20 行内出现 | `unverified` — 证据不匹配，移出基线 | P0 only |
-| **L4** | 结构性验证 | 代码模式与 claim 类型一致 | `partial` — 降级 P0→P1，标记人工审核 | P0 only |
+| **L4** | 结构性验证 | 代码模式与 claim 类型一致（missing/wrong/violates/dead_code/import） | `partial` — 降级 P0→P1，标记人工审核 | P0 only |
+
+#### Tier 分层验证 (v2.4+)
+
+L4 结构性验证内部按"准确率优先"分层降级。上层不可用时自动降级，永不崩溃。
+
+| Tier | 引擎 | 准确率 | 依赖 | 覆盖 claim 类型 | 模块 |
+|---|---|---|---|---|---|
+| **Tier 1** | Joern CPG | ~95% | Joern CLI v4.0+ + JDK 21（可选，Windows 需 WSL2） | `dead_code`, `import_related` | `scripts/joern_cpg.py` |
+| **Tier 2** | Python ast CFG | ~90% | Python 3.8+ 标准库（零依赖） | `dead_code`, `import_related` | `scripts/ast_cfg.py` |
+| **Tier 3** | 正则启发式 | ~42% | 无 | 所有 claim 类型 | `verify_findings.py` 内联 |
+
+**降级策略**: Tier 1 → Tier 2 → Tier 3。任一 Tier 返回 `verified=None`（无法判定）即触发降级；异常被捕获并降级。任何环境下 Tier 3 正则始终可用，保证不崩溃。
+
+**P1-5 验证 API (Joern v4.0.595, 2026-08-05)**:
+- `cpg.method.lineNumber(N)`（非 `location.line(N)`）
+- `target.flatMap(_.caller.l).isEmpty`（非 `reachableBy`）
+- `cpg.imports.l` + `imp.importedEntity`（非 `imp.imported`）
+- `--language pythonsrc`（非 `--language python`）
 
 #### Action Matrix / 动作矩阵
 
@@ -421,12 +441,13 @@ digraph audit_cycle {
 |---|---|---|---|
 | **verified** (P0 L4) | 保留 | P0 不变 | 进入 Phase 4 修复基线 |
 | **verified_l1l2** (P1 L1+L2) | 保留 | P1 不变 | 进入 Phase 4 修复基线 |
-| **partial** (P0 L3 only, L4 fail) | 降级 | P0 → P1 | 标记人工审核 |
-| **unverified** (L1/L2 fail) | 移出 | 从基线移除 | 记录到 `hallucination_log.json`（区分 P0/P1） |
+| **partial** (P0 L3 only, L4 fail) | 降级 | P0 → P1 | 标记 `_phase35_action: downgraded`，需人工审核 |
+| **unverified** (L1/L2 fail) | 移出 | 从基线移除 | 记录到 `hallucination_log.json`（区分 P0/P1 幻觉），不进入修复流程 |
 
 #### Usage / 用法
 
 ```bash
+# Mandatory: run after Phase 3 aggregation, before Phase 4 fix baseline
 python scripts/verify_findings.py \
   --findings <phase3_findings.json> \
   --repo <repo_root> \
@@ -438,9 +459,11 @@ python scripts/verify_findings.py \
 - `0` = all P0/P1 findings verified (no hallucinations)
 - `1` = hallucinations detected (findings removed from baseline)
 
-**Integration**: Phase 3.5 runs AFTER Phase 3 (Aggregate + Prioritize) and BEFORE the knowledge pipeline (Step 3.5 Pattern Mining, Step 3.6 LLM Generalization, Step 3.7 External Knowledge) and Phase 4 (Fix Baseline).
+**Integration**: Phase 3.5 runs AFTER Phase 3 (Aggregate + Prioritize) and BEFORE the knowledge pipeline (Step 3.5 Pattern Mining, Step 3.6 LLM Generalization, Step 3.7 External Knowledge) and Phase 4 (Fix Baseline). Hallucinated findings never enter the knowledge pipeline or fix baseline.
 
 #### Claim Type Classification / 声明类型分类
+
+The L4 structural verifier classifies each claim into one or more types:
 
 | Claim Type | Pattern Match | Verification Logic |
 |---|---|---|
@@ -451,13 +474,13 @@ python scripts/verify_findings.py \
 | `import_related` | "import/from X import/dependency" | Verify the import statement exists |
 | `generic` | (none of the above) | Keyword presence check in context |
 
-**L4 conservative fallback**: When structural verification cannot extract claim keywords, `confirmed=False` is returned → P0 downgraded to P1 for human review.
+**L4 conservative fallback**: When structural verification cannot extract claim keywords (e.g., complex multi-clause claims), `confirmed=False` is returned. This triggers `partial` action → P0 downgraded to P1 for human review. This conservative policy prevents hallucinations from passing L4 via unparseable claims.
 
 #### Failure Handling / 失败处理
 
-- `verify_findings.py` is deterministic and uses `_script_utils.run_script(main)`.
-- If the script fails (timeout >30s): Phase 3.5 is bypassed, findings flagged `_phase35_bypassed: true`.
-- Hallucination log persists to `docs/audit/hallucination_log.json` with `severity` field distinguishing P0 vs P1.
+- `verify_findings.py` is deterministic and uses `_script_utils.run_script(main)` for consistent error handling.
+- If the script itself fails (timeout >30s, unhandled exception): Phase 3.5 is bypassed, all P0 findings flagged with `_phase35_bypassed: true`, and a warning is logged. The audit proceeds but with reduced confidence.
+- Hallucination log is persisted to `docs/audit/hallucination_log.json` for post-mortem analysis, with `severity` field distinguishing P0 vs P1 hallucinations.
 
 ### Phase 4: Fix Baseline + Tracking (修复基线 + 跟踪表)
 

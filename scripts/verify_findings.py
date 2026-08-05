@@ -162,14 +162,23 @@ def verify_l4_structural(lines, line_num, claim, claim_types,
 
     if "dead_code" in claim_types:
         result = None
-        # Tier 2: Python ast CFG (higher accuracy)
+        # Tier 1: Joern CPG (highest accuracy ~95%, optional dependency)
+        # P1-5: joern_cpg never raises in normal operation, but V9 test hook
+        # (JOERN_FORCE_RAISE=1) simulates runtime failure -> must catch & degrade
         if repo_root and file_path:
+            try:
+                import joern_cpg
+                result = joern_cpg.verify_dead_code(repo_root, file_path, line_num)
+            except Exception:
+                result = None
+        # Tier 2: Python ast CFG (higher accuracy ~90%, zero deps)
+        if (not result or result.get("verified") is None) and repo_root and file_path:
             try:
                 import ast_cfg
                 result = ast_cfg.verify_dead_code(repo_root, file_path, line_num)
             except Exception:
                 result = None
-        # Tier 3: regex fallback
+        # Tier 3: regex fallback (~42%, always available)
         if not result or result.get("verified") is None:
             regex_result = _verify_dead_code(context_text, lines, line_num)
             regex_result["tier"] = 3
@@ -180,8 +189,15 @@ def verify_l4_structural(lines, line_num, claim, claim_types,
 
     if "import_related" in claim_types:
         result = None
-        # Tier 2: Python ast import graph
+        # Tier 1: Joern CPG (highest accuracy, optional)
         if repo_root:
+            try:
+                import joern_cpg
+                result = joern_cpg.verify_imports(repo_root, claim)
+            except Exception:
+                result = None
+        # Tier 2: Python ast import graph
+        if (not result or result.get("verified") is None) and repo_root:
             try:
                 import ast_cfg
                 result = ast_cfg.verify_imports(repo_root, claim)

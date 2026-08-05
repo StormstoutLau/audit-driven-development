@@ -416,6 +416,24 @@ digraph audit_cycle {
 | **L3** | 关键词匹配 | claim 关键词在 ±20 行内出现 | `unverified` — 证据不匹配，移出基线 | P0 only |
 | **L4** | 结构性验证 | 代码模式与 claim 类型一致（missing/wrong/violates/dead_code/import） | `partial` — 降级 P0→P1，标记人工审核 | P0 only |
 
+#### Tier 分层验证 (v2.4+)
+
+L4 结构性验证内部按"准确率优先"分层降级。上层不可用时自动降级，永不崩溃。
+
+| Tier | 引擎 | 准确率 | 依赖 | 覆盖 claim 类型 | 模块 |
+|---|---|---|---|---|---|
+| **Tier 1** | Joern CPG | ~95% | Joern CLI v4.0+ + JDK 21（可选，Windows 需 WSL2） | `dead_code`, `import_related` | `scripts/joern_cpg.py` |
+| **Tier 2** | Python ast CFG | ~90% | Python 3.8+ 标准库（零依赖） | `dead_code`, `import_related` | `scripts/ast_cfg.py` |
+| **Tier 3** | 正则启发式 | ~42% | 无 | 所有 claim 类型 | `verify_findings.py` 内联 |
+
+**降级策略**: Tier 1 → Tier 2 → Tier 3。任一 Tier 返回 `verified=None`（无法判定）即触发降级；异常被捕获并降级。任何环境下 Tier 3 正则始终可用，保证不崩溃。
+
+**P1-5 验证 API (Joern v4.0.595, 2026-08-05)**:
+- `cpg.method.lineNumber(N)`（非 `location.line(N)`）
+- `target.flatMap(_.caller.l).isEmpty`（非 `reachableBy`）
+- `cpg.imports.l` + `imp.importedEntity`（非 `imp.imported`）
+- `--language pythonsrc`（非 `--language python`）
+
 #### Action Matrix / 动作矩阵
 
 | 验证结果 | 动作 | 严重度变化 | 后续处理 |

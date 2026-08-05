@@ -393,6 +393,192 @@ else:
 # ── Cross-Regression: existing test suites still pass ──
 print("\n-- Cross-Regression: existing tests --")
 
+
+# ── J1-J10: joern_cpg.py Tier 1 (Joern CPG) ──
+print("\n-- J1-J10: joern_cpg.py Tier 1 (Joern CPG) --")
+
+try:
+    import joern_cpg
+    JOERN_CPG_AVAILABLE = True
+except ImportError:
+    JOERN_CPG_AVAILABLE = False
+
+check("J0 joern_cpg.py importable", JOERN_CPG_AVAILABLE)
+
+if JOERN_CPG_AVAILABLE:
+    # J1: is_available returns bool
+    print("\n  -- J1-J2: is_available & schema --")
+    try:
+        avail = joern_cpg.is_available()
+        check("J1 is_available returns bool", isinstance(avail, bool),
+              f"got {type(avail).__name__}")
+    except Exception as e:
+        check("J1 is_available returns bool", False, str(e))
+
+    # J2: is_available respects JOERN_DISABLE env var (force-disable for test isolation)
+    old_env = os.environ.get("JOERN_DISABLE")
+    try:
+        os.environ["JOERN_DISABLE"] = "1"
+        avail_disabled = joern_cpg.is_available()
+        check("J2 is_available respects JOERN_DISABLE=1", avail_disabled is False,
+              f"got {avail_disabled}")
+    finally:
+        if old_env is None:
+            os.environ.pop("JOERN_DISABLE", None)
+        else:
+            os.environ["JOERN_DISABLE"] = old_env
+
+    # J3-J5: verify_dead_code returns unified schema when Joern unavailable
+    print("\n  -- J3-J5: verify_dead_code schema when unavailable --")
+
+    # Force Joern unavailable to get deterministic result without WSL2 dependency
+    old_env = os.environ.get("JOERN_DISABLE")
+    try:
+        os.environ["JOERN_DISABLE"] = "1"
+        result = joern_cpg.verify_dead_code(".", "dummy.py", 1)
+        check("J3 verify_dead_code returns dict", isinstance(result, dict),
+              f"got {type(result).__name__}")
+        check("J3a verify_dead_code has 'verified' field", "verified" in result,
+              f"keys: {list(result.keys())}")
+        check("J3b verify_dead_code verified=None when unavailable",
+              result.get("verified") is None, f"got {result.get('verified')}")
+        check("J3c verify_dead_code tier=0 when unavailable",
+              result.get("tier") == 0, f"got {result.get('tier')}")
+        check("J4 verify_dead_code has latency_ms",
+              "latency_ms" in result, f"keys: {list(result.keys())}")
+
+        result_imp = joern_cpg.verify_imports(".", "circular dependency")
+        check("J5 verify_imports returns dict with verified=None when unavailable",
+              isinstance(result_imp, dict) and result_imp.get("verified") is None,
+              f"got {result_imp}")
+    finally:
+        if old_env is None:
+            os.environ.pop("JOERN_DISABLE", None)
+        else:
+            os.environ["JOERN_DISABLE"] = old_env
+
+    # J6: _get_cache_key deterministic (same repo → same key)
+    print("\n  -- J6-J7: cache key & script generation --")
+    key1 = joern_cpg._get_cache_key(".")
+    key2 = joern_cpg._get_cache_key(".")
+    check("J6 _get_cache_key deterministic for same path", key1 == key2,
+          f"{key1} != {key2}")
+    check("J6a _get_cache_key returns str", isinstance(key1, str),
+          f"got {type(key1).__name__}")
+
+    # J7: Scala script generation contains correct P1-5 API
+    dead_script = joern_cpg._gen_dead_code_script(42)
+    check("J7a dead_code script uses lineNumber (not location.line)",
+          "lineNumber" in dead_script and "location.line" not in dead_script,
+          "wrong API")
+    check("J7b dead_code script uses caller.l",
+          "caller.l" in dead_script, "no caller.l")
+    check("J7c dead_code script line param injected", "42" in dead_script)
+
+    import_script = joern_cpg._gen_import_script()
+    check("J7d import script uses cpg.imports", "cpg.imports" in import_script)
+    check("J7e import script uses importedEntity (not imported)",
+          "importedEntity" in import_script and "imp.imported" not in
+          import_script.replace("imp.importedEntity", ""),
+          "wrong field")
+
+    # J8: _detect_wsl returns bool (Windows detection helper)
+    print("\n  -- J8-J10: WSL detection & subprocess wrapping --")
+    try:
+        is_wsl = joern_cpg._detect_wsl()
+        check("J8 _detect_wsl returns bool", isinstance(is_wsl, bool))
+    except Exception as e:
+        check("J8 _detect_wsl returns bool", False, str(e))
+
+    # J9: _build_joern_parse_command returns list (cmd array)
+    try:
+        cmd = joern_cpg._build_joern_parse_command(
+            "/tmp/repo", "/tmp/cpg.bin", language="pythonsrc")
+        check("J9 _build_joern_parse_command returns list",
+              isinstance(cmd, list) and len(cmd) > 0, f"got {cmd}")
+        check("J9a cmd uses --language pythonsrc (not python)",
+              "--language" in cmd and "pythonsrc" in cmd, f"got {cmd}")
+    except Exception as e:
+        check("J9 _build_joern_parse_command returns list", False, str(e))
+
+    # J10: _parse_joern_output parses key=value lines
+    sample = "dead=true\nsize=0\nhas_cycle=false\n"
+    parsed = joern_cpg._parse_joern_output(sample)
+    check("J10 _parse_joern_output parses dead=true",
+          parsed.get("dead") == "true", f"got {parsed}")
+    check("J10a _parse_joern_output parses has_cycle=false",
+          parsed.get("has_cycle") == "false", f"got {parsed}")
+else:
+    print("  SKIP J1-J10: joern_cpg.py not importable")
+
+
+# ── V7-V9: verify_findings.py Tier 1/2/3 三层降级 ──
+print("\n-- V7-V9: verify_findings.py Tier 1/2/3 三层降级 --")
+
+if VF_AVAILABLE:
+    # V7: verify_l4_structural calls joern_cpg before ast_cfg (Tier 1 → 2 → 3)
+    print("\n  -- V7: Tier 1 integration --")
+    lines = ["def foo():", "    return 1", "    x = 2"]
+
+    # Force Joern unavailable → should fall to Tier 2/3
+    old_env = os.environ.get("JOERN_DISABLE")
+    try:
+        os.environ["JOERN_DISABLE"] = "1"
+        result = verify_findings.verify_l4_structural(
+            lines, 3, "dead code after return", ["dead_code"],
+            repo_root=".", file_path="dummy.py"
+        )
+        check("V7 Tier 1 disabled falls through to Tier 2/3",
+              result.get("verified") is not None or result.get("confirmed") is not None,
+              f"got {result}")
+    finally:
+        if old_env is None:
+            os.environ.pop("JOERN_DISABLE", None)
+        else:
+            os.environ["JOERN_DISABLE"] = old_env
+
+    # V8: import_related also tries Tier 1
+    print("\n  -- V8: Tier 1 import_related --")
+    old_env = os.environ.get("JOERN_DISABLE")
+    try:
+        os.environ["JOERN_DISABLE"] = "1"
+        result = verify_findings.verify_l4_structural(
+            lines, 1, "circular dependency import",
+            ["violates", "import_related"],
+            repo_root="."
+        )
+        check("V8 Tier 1 import_related falls through cleanly",
+              "verified" in result or "confirmed" in result, f"got {result}")
+    finally:
+        if old_env is None:
+            os.environ.pop("JOERN_DISABLE", None)
+        else:
+            os.environ["JOERN_DISABLE"] = old_env
+
+    # V9: Tier 1 exceptions don't crash (Tier 2/3 fallback)
+    print("\n  -- V9: Tier 1 exception safety --")
+    old_env = os.environ.get("JOERN_FORCE_RAISE")
+    try:
+        os.environ["JOERN_FORCE_RAISE"] = "1"  # joern_cpg should catch & degrade
+        os.environ["JOERN_DISABLE"] = ""  # Joern enabled but will raise
+        result = verify_findings.verify_l4_structural(
+            lines, 3, "dead code after return", ["dead_code"],
+            repo_root=".", file_path="dummy.py"
+        )
+        check("V9 Tier 1 exception doesn't crash (falls through)",
+              result is not None, f"got {result}")
+    finally:
+        os.environ.pop("JOERN_DISABLE", None)
+        os.environ.pop("JOERN_FORCE_RAISE", None)
+        if old_env is not None:
+            os.environ["JOERN_FORCE_RAISE"] = old_env
+else:
+    print("  SKIP V7-V9: verify_findings.py not importable")
+
+
+# ── Cross-Regression: existing test suites still pass ──
+print("\n-- Cross-Regression: existing tests --")
+
 regression_tests = [
     "test_v03_consistency.py",
     "test_v04_consistency.py",
