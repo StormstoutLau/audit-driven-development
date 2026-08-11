@@ -695,9 +695,29 @@ def main():
                         help="Path to repository root for source verification")
     parser.add_argument("--output", default=None,
                         help="Path to write verified findings JSON (default: stdout)")
-    parser.add_argument("--hallucination-log", default=None,
-                        help="Path to write hallucination log JSON")
+    parser.add_argument("--hallucination-log",
+                        default="docs/audit/hallucination_log.json",
+                        help="Path to write hallucination log JSON "
+                             "(default: docs/audit/hallucination_log.json)")
+    parser.add_argument("--history-threshold", default=None, type=float,
+                        help="RL-adjusted threshold from fix_history "
+                             "(auto-loaded from docs/audit/augmented_issues.json if omitted)")
     args = parser.parse_args()
+
+    # v2.5: 从 fix_history 输出加载 RL-adjusted threshold (RL loop 闭环)
+    # fix_history 根据 scores.json trend 动态调整匹配阈值:
+    #   improving (▲) → 宽松 (0.55), degrading (▼) → 严格 (0.85)
+    # 该 threshold 反馈给后续验证, 使 RL loop 不再空转.
+    effective_threshold = args.history_threshold
+    if effective_threshold is None:
+        augmented_path = Path("docs/audit/augmented_issues.json")
+        if augmented_path.exists():
+            try:
+                aug_data = json.loads(augmented_path.read_text(encoding="utf-8"))
+                meta = aug_data.get("fix_history_meta", {})
+                effective_threshold = meta.get("effective_threshold")
+            except (json.JSONDecodeError, ValueError, OSError):
+                pass
 
     findings_data = json.loads(Path(args.findings).read_text(encoding="utf-8"))
 
@@ -730,6 +750,7 @@ def main():
             "hallucinations_p1": sum(1 for h in hallucinations if h.get("severity") == "P1"),
             "skipped": sum(1 for f in verified if f.get("_phase35_action") == "skipped"),
         },
+        "effective_threshold": effective_threshold,
         "downgraded": downgraded,
         "hallucinations": hallucinations,
         "verified_findings": verified,
@@ -744,7 +765,9 @@ def main():
     if args.hallucination_log:
         log = {"hallucinations": hallucinations, "count": len(hallucinations),
                "timestamp": __import__("datetime").datetime.now().isoformat()}
-        Path(args.hallucination_log).write_text(
+        hlog_path = Path(args.hallucination_log)
+        hlog_path.parent.mkdir(parents=True, exist_ok=True)
+        hlog_path.write_text(
             json.dumps(log, indent=2, ensure_ascii=False), encoding="utf-8")
 
     print(output_json)

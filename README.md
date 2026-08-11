@@ -15,7 +15,7 @@
 <br>
 
 <a href="https://github.com/StormstoutLau/audit-driven-development">
-  <img alt="version" src="https://img.shields.io/badge/version-2.4-6366f1?style=for-the-badge&logo=github&logoColor=white" />
+  <img alt="version" src="https://img.shields.io/badge/version-2.6-6366f1?style=for-the-badge&logo=github&logoColor=white" />
 </a>
 &nbsp;
 <a href="https://opensource.org/licenses/MIT">
@@ -23,7 +23,7 @@
 </a>
 &nbsp;
 <a href="https://github.com/StormstoutLau/audit-driven-development">
-  <img alt="tdd" src="https://img.shields.io/badge/TDD-204%2F204%20PASS-brightgreen?style=for-the-badge&logo=python&logoColor=white" />
+  <img alt="tdd" src="https://img.shields.io/badge/TDD-372%2F372%20PASS-brightgreen?style=for-the-badge&logo=python&logoColor=white" />
 </a>
 &nbsp;
 <a href="https://github.com/StormstoutLau/audit-driven-development">
@@ -86,9 +86,11 @@ Tests verify behavior within a single module. They cannot verify that Module A k
 
 ## Proof
 
-Three repos benchmarked for hallucination detection — the verification system that prevents false findings from entering the repair baseline. Phase 8 fix eliminated all false positives (zero real bugs deleted).
+Six benchmarks across three languages (Python / Java / C++) — the verification system that prevents false findings from entering the repair baseline.
 
 <div align="center">
+
+### Python Benchmarks (L1–L4 verification)
 
 | | ADD self-audit | Python stdlib | itsdangerous 2.2.0 |
 |---|---|---|---|
@@ -98,15 +100,37 @@ Three repos benchmarked for hallucination detection — the verification system 
 | **Recall** | ![](https://img.shields.io/badge/57%25-yellow?style=flat-square) | ![](https://img.shields.io/badge/75%25-yellow?style=flat-square) | ![](https://img.shields.io/badge/83%25-yellowgreen?style=flat-square) |
 | **F₁** | 72.7% | 85.7% | 90.9% |
 
+### Java Benchmark (L1–L3 verification, Defects4J real repos)
+
+| | Defects4J (Apache Commons) |
+|---|---|
+| **Findings** | 50 (real Java bugs from CLI / Codec / CSV) |
+| **TN / FP** | 49 / 1 |
+| **Real bugs correctly kept** | ![](https://img.shields.io/badge/98%25-success?style=flat-square) |
+
+### C/C++ Datasets (Conversion pipeline, no repo verification)
+
+| | Big-Vul | CVEfixes |
+|---|---|---|
+| **Findings converted** | 584 (C/C++ vulnerabilities) | 26 (CVEs from real-world projects) |
+| **Verification scope** | L1–L3 (repo not available) | L1–L3 (repo not available) |
+| **Coverage** | CWE-189 / CWE-119 / CWE-20 | CWE-79 / CWE-89 / CWE-352 |
+
 <br>
 
-| | Recall | Precision | F₁ |
-|---|---|---|---|
-| **Aggregate (27 findings)** | **71.4%** | **100.0%** | **83.3%** |
+| | Recall | Precision | F₁ | Total Findings |
+|---|---|---|---|---|
+| **v2.6 Aggregate (verified: 77 findings)** | **81.0%** | **89.5%** | **85.0%** | 687 across 6 benchmarks |
+| **v2.5 Baseline (27 findings, 3 repos)** | 71.4% | 100.0% | 83.3% | 27 across 3 repos |
+| **Delta** | **+9.6pp** | -10.5pp | **+1.7pp** | **+660 new findings** |
 
 </div>
 
 > **Honest disclosure**: Earlier README versions cited 94.3% recall from preliminary Flask/FastAPI/Requests runs. Those numbers were inflated by ground-truth mislabeling and a `classify_claim` bug that misrouted "import exists" claims to circular-dependency verification. Phase 8 (2026-08-06) fixed both issues — precision held at 100%, recall settled at its true value. See [v2.4-phase8-performance-report.md](docs/benchmark/v2.4-phase8-performance-report.md).
+>
+> **v2.5 learning-pipeline closure (2026-08-06)**: An audit of the v2.0–v2.3 "3-tier learning pipeline" found that all six learning scripts (`rule_suggester`, `rule_validator`, `fix_history`, `llm_generalize`, `fix_recipes`, `live_knowledge`) were present but disconnected — `hallucination_log.json` was never generated, the RL threshold had no downstream consumer, and `rule_suggester` was never invoked. v2.5 closes the loop in three stages: (1) `live_knowledge` now calls `diff_miner` + `fix_history` + `rule_suggester`; (2) `rule_suggester` consumes `hallucination_log` to generate false-pattern rules feeding back to `classify_claim()`; (3) `run_phase8_benchmark --baseline` auto-checks recall regression post-audit. Benchmark confirms zero regression (recall 71.4% / precision 100% / F1 83.3% unchanged). See [v2.5 spec](docs/superpowers/specs/2026-08-06-v2.5-learning-pipeline-closure.md) and [acceptance audit](docs/audit-log/2026-08-06-v2.5-spec-acceptance-audit.md).
+>
+> **v2.6 dataset integration (2026-08-11)**: Extended benchmark from 3 Python repos (27 findings) to 6 datasets across 3 languages (687 findings). Three conversion scripts (`swebench_to_findings.py`, `defects4j_to_findings.py`, `bigvul_to_findings.py`, `cvefixes_to_findings.py`) transform external datasets into ADD-compatible format. A hallucination synthesizer (`synthesize_hallucinations.py`) generates L1–L3 test samples via three transforms (line_offset / file_replace / method_fabricate). Defects4J Java benchmark runs against real Apache Commons repos (CLI/Codec/CSV cloned and merged, 49/50 real bugs correctly kept). Big-Vul (584 C/C++ vulnerabilities) and CVEfixes (26 CVEs) are converted but marked `real_bug_no_repo` because GitHub network issues prevented downloading Linux kernel and WordPress source repos — these 610 findings are excluded from precision/recall metrics (classified as UNKNOWN). The 1 FP in Defects4J (D4J-0002) is a stub file for a removed class (`cli2/GroupImpl`) whose line range didn't cover the bug location. See [v2.6 spec](docs/superpowers/specs/2026-08-07-v2.6-dataset-integration-design.md) and [v2.6 full benchmark data](docs/benchmark/v2.6-full-benchmark.json).
 
 ---
 
@@ -254,11 +278,14 @@ All 7 adapters auto-synced from `SKILL.md` via `scripts/sync_adapters.py`. Drop-
 
 | | |
 |---|---|
-| **Scripts** | 28 production · 8 test suites |
-| **TDD** | **204/204** all passing (v2.4 153 + v3.5 51) |
-| **Benchmark** | Recall 71.4% · Precision 100% · F1 83.3% (27 findings, 3 repos) |
+| **Scripts** | 32 production · 13 test suites |
+| **TDD** | **372/372** all passing (v2.4 153 + v3.5 51 + v2.5 38 + v2.6 130) |
+| **Benchmark** | Recall 81.0% · Precision 89.5% · F1 85.0% (77 verified findings across 6 datasets / 3 languages) |
+| **Datasets** | SWE-bench (Python) · Defects4J (Java) · Big-Vul + CVEfixes (C/C++) — 687 total findings |
 | **Self-Audit** | **97/100 A+** — steady state after v2.0.1 fixes |
 | **Knowledge** | 3-tier ∿ Internal Learning → AI Generalization → External Injection |
+| **Learning Loop** | v2.5 closed-loop: hallucination→detection feedback + RL threshold + self-calibration |
+| **Hallucination Synthesis** | v2.6 auto-synthesizer: 3 transforms (line_offset / file_replace / method_fabricate) |
 | **Recipes** | 5 built-in human-authored + LLM-generated |
 | **Dependencies** | Zero — pure Python stdlib + PyYAML |
 | **Adapters** | 7 IDEs drop-in compatible |

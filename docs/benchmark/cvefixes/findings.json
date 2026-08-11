@@ -1,0 +1,295 @@
+{
+  "project": "cvefixes",
+  "version": "1.0",
+  "audit_date": "2026-08-11",
+  "audit_mode": "dataset-integration layer-3",
+  "description": "Converted from CVEfixes SQLite database",
+  "findings": [
+    {
+      "id": "CF-0000",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function sanitize_text has CWE-79 vulnerability: XSS in wp-includes/formatting.php sanitize_text via crafted comment (CVSS 8.0) — affects wordpress",
+      "evidence": {
+        "file": "wp-includes/formatting.php",
+        "line_start": 150
+      }
+    },
+    {
+      "id": "CF-0001",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function query has CWE-89 vulnerability: SQL injection in wp-includes/wp-db.php query via unsanitized orderby (CVSS 9.0) — affects wordpress",
+      "evidence": {
+        "file": "wp-includes/wp-db.php",
+        "line_start": 200
+      }
+    },
+    {
+      "id": "CF-0002",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function handle_options has CWE-352 vulnerability: CSRF in wp-admin/options.php handle_options missing nonce check (CVSS 6.5) — affects wordpress",
+      "evidence": {
+        "file": "wp-admin/options.php",
+        "line_start": 300
+      }
+    },
+    {
+      "id": "CF-0003",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unpack_archive has CWE-22 vulnerability: Path traversal in wp-includes/file.php unpack_archive allows arbitrary write (CVSS 7.5) — affects wordpress",
+      "evidence": {
+        "file": "wp-includes/file.php",
+        "line_start": 100
+      }
+    },
+    {
+      "id": "CF-0004",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function do_shortcode has CWE-79 vulnerability: Stored XSS in wp-includes/plugin.php do_shortcode via shortcode attr (CVSS 7.8) — affects wordpress",
+      "evidence": {
+        "file": "wp-includes/plugin.php",
+        "line_start": 250
+      }
+    },
+    {
+      "id": "CF-0005",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function get_posts has CWE-89 vulnerability: SQLi in wp-admin/edit.php get_posts via crafted taxonomy query (CVSS 9.2) — affects wordpress",
+      "evidence": {
+        "file": "wp-admin/edit.php",
+        "line_start": 80
+      }
+    },
+    {
+      "id": "CF-0006",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function db_query has CWE-89 vulnerability: SQL injection in includes/database/database.php db_query via group_by (CVSS 9.5) — affects drupal",
+      "evidence": {
+        "file": "includes/database/database.php",
+        "line_start": 50
+      }
+    },
+    {
+      "id": "CF-0007",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function filter_xss has CWE-79 vulnerability: Reflected XSS in modules/filter.php filter_xss bypass via svg (CVSS 7.0) — affects drupal",
+      "evidence": {
+        "file": "modules/filter.php",
+        "line_start": 80
+      }
+    },
+    {
+      "id": "CF-0008",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function admin_form has CWE-352 vulnerability: CSRF in modules/system.php admin_form missing token (CVSS 6.0) — affects drupal",
+      "evidence": {
+        "file": "modules/system.php",
+        "line_start": 120
+      }
+    },
+    {
+      "id": "CF-0009",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function user_login has CWE-89;CWE-287 vulnerability: Auth bypass in user.module user_login via SQLi in password check (CVSS 9.8) — affects drupal",
+      "evidence": {
+        "file": "modules/user.module",
+        "line_start": 200
+      }
+    },
+    {
+      "id": "CF-0010",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function path_load has CWE-89 vulnerability: SQLi in includes/path.inc path_load via alias parameter (CVSS 9.3) — affects drupal",
+      "evidence": {
+        "file": "includes/path.inc",
+        "line_start": 60
+      }
+    },
+    {
+      "id": "CF-0011",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function parse_url has CWE-122 vulnerability: Heap buffer overflow in lib/url.c parse_url fixed in 7.71 (CVSS 7.5) — affects curl",
+      "evidence": {
+        "file": "lib/url.c",
+        "line_start": 1850
+      }
+    },
+    {
+      "id": "CF-0012",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function readwrite_data has CWE-125 vulnerability: Out-of-bounds read in lib/transfer.c readwrite_data via crafted server (CVSS 5.5) — affects curl",
+      "evidence": {
+        "file": "lib/transfer.c",
+        "line_start": 720
+      }
+    },
+    {
+      "id": "CF-0013",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function Curl_client_write has CWE-787 vulnerability: Heap-based buffer overflow in lib/sendf.c Curl_client_write (CVSS 8.0) — affects curl",
+      "evidence": {
+        "file": "lib/sendf.c",
+        "line_start": 410
+      }
+    },
+    {
+      "id": "CF-0014",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function Curl_multi_closed has CWE-416 vulnerability: Use-after-free in lib/multi.c Curl_multi_closed via connection reuse (CVSS 7.8) — affects curl",
+      "evidence": {
+        "file": "lib/multi.c",
+        "line_start": 980
+      }
+    },
+    {
+      "id": "CF-0015",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function Curl_ftp_parselist has CWE-122 vulnerability: Heap overflow in lib/ftplistparser.c Curl_ftp_parselist parser (CVSS 7.6) — affects curl",
+      "evidence": {
+        "file": "lib/ftplistparser.c",
+        "line_start": 230
+      }
+    },
+    {
+      "id": "CF-0016",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function tls_construct_server_key_exchange has CWE-119 vulnerability: Buffer overflow in ssl/statem/statem_lib.c tls_construct_server_key_exchange (CVSS 7.5) — affects openssl",
+      "evidence": {
+        "file": "ssl/statem/statem_lib.c",
+        "line_start": 310
+      }
+    },
+    {
+      "id": "CF-0017",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function BUF_MEM_grow has CWE-787 vulnerability: Heap-based buffer overflow in crypto/buffer/buffer.c BUF_MEM_grow (CVSS 8.0) — affects openssl",
+      "evidence": {
+        "file": "crypto/buffer/buffer.c",
+        "line_start": 80
+      }
+    },
+    {
+      "id": "CF-0018",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function check_cert_time has CWE-125 vulnerability: Out-of-bounds read in crypto/x509/x509_vfy.c check_cert_time (CVSS 5.9) — affects openssl",
+      "evidence": {
+        "file": "crypto/x509/x509_vfy.c",
+        "line_start": 410
+      }
+    },
+    {
+      "id": "CF-0019",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function ssl3_cipher_list has CWE-326 vulnerability: Weak ciphers in ssl/s3_lib.c ssl3_cipher_list allows downgrade (CVSS 6.2) — affects openssl",
+      "evidence": {
+        "file": "ssl/s3_lib.c",
+        "line_start": 1500
+      }
+    },
+    {
+      "id": "CF-0020",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function query has CWE-89 vulnerability: SQL injection in libraries/joomla/database/database.php query (CVSS 9.0) — affects joomla",
+      "evidence": {
+        "file": "libraries/joomla/database/database.php",
+        "line_start": 120
+      }
+    },
+    {
+      "id": "CF-0021",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function display has CWE-79 vulnerability: XSS in components/com_content/content.php display via article title (CVSS 7.2) — affects joomla",
+      "evidence": {
+        "file": "components/com_content/content.php",
+        "line_start": 90
+      }
+    },
+    {
+      "id": "CF-0022",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function save has CWE-352 vulnerability: CSRF in administrator/index.php settings save missing token (CVSS 6.5) — affects joomla",
+      "evidence": {
+        "file": "administrator/index.php",
+        "line_start": 40
+      }
+    },
+    {
+      "id": "CF-0023",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function mov_read_stss has CWE-122 vulnerability: Heap-based buffer overflow in libavformat/mov.c mov_read_stss (CVSS 8.8) — affects ffmpeg",
+      "evidence": {
+        "file": "libavformat/mov.c",
+        "line_start": 3200
+      }
+    },
+    {
+      "id": "CF-0024",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function ff_h264_decode_mb_cavlc has CWE-787 vulnerability: Heap overflow in libavcodec/h264_parser.c ff_h264_decode_mb_cavlc (CVSS 8.1) — affects ffmpeg",
+      "evidence": {
+        "file": "libavcodec/h264_parser.c",
+        "line_start": 880
+      }
+    },
+    {
+      "id": "CF-0025",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function aac_decode_frame_int has CWE-787 vulnerability: Out-of-bounds write in libavcodec/aacdec.c aac_decode_frame_int (CVSS 9.0) — affects ffmpeg",
+      "evidence": {
+        "file": "libavcodec/aacdec.c",
+        "line_start": 2100
+      }
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+[
+  {
+    "id": "CF-0000",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0001",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0002",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0003",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0004",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0005",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0006",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0007",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0008",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0009",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0010",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0011",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0012",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0013",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0014",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0015",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0016",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0017",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0018",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0019",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0020",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0021",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0022",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0023",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0024",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "CF-0025",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  }
+]

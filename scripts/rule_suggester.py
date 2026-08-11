@@ -3,6 +3,7 @@
 Usage: python scripts/rule_suggester.py
          --audit-log-dir <docs/audit-log/>
          --output <rule_suggestions.json>
+         [--hallucination-log <docs/audit/hallucination_log.json>]
          [--min-frequency 3]
 
 Algorithm:
@@ -14,7 +15,9 @@ Algorithm:
      - FP type = "scope-error": scope definition too broad → suggest scope narrowing guard
   4. For each FN category occurring >= min-frequency:
      - Missing detection → suggest new guard with that category
-  5. Output rule_suggestions.json
+  5. v2.5: Read hallucination_log.json — for each reason occurring >= min-frequency,
+     generate a false-pattern rule (反例规则) feeding back to classify_claim().
+  6. Output rule_suggestions.json
 
 Performance cap: 30s.
 """
@@ -54,10 +57,40 @@ def _infer_fn_category(desc):
     low = desc.lower()
     return next((c for c in CATEGORIES if c in low), "unknown")
 
+
+def load_hallucinations(log_path):
+    """v2.5: 从 hallucination_log 加载幻觉模式, 按 reason 聚类生成反例规则建议.
+
+    触发条件: 同类 reason 出现 >= min_frequency 次 → 生成反例规则.
+    反例规则反馈给 classify_claim() / verify_findings.py 的检测逻辑,
+    告诉检测器"这类 claim 容易幻觉", 从而精细化 pattern 匹配.
+
+    Returns:
+        (list, Counter): (hallucinations 列表, reason -> count 映射)
+    """
+    p = Path(log_path)
+    if not p.exists():
+        return [], collections.Counter()
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, ValueError, OSError):
+        return [], collections.Counter()
+
+    hallucinations = data.get("hallucinations", [])
+    # reason 截断到 80 字符, 防止超长 reason 干扰聚类
+    reason_counts = collections.Counter(
+        (h.get("reason", "unknown") or "unknown")[:80] for h in hallucinations
+    )
+    return hallucinations, reason_counts
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--audit-log-dir", default="docs/audit-log")
     parser.add_argument("--output", default="docs/audit/rule_suggestions.json")
+    parser.add_argument("--hallucination-log",
+                        default="docs/audit/hallucination_log.json",
+                        help="Path to hallucination_log.json for false-pattern mining")
     parser.add_argument("--min-frequency", type=int, default=3)
     args = parser.parse_args()
 
@@ -118,6 +151,23 @@ def main():
         if count >= args.min_frequency
     ]
 
+    # v2.5: hallucination_log → 反例规则 (false-pattern rules)
+    # 同类 reason 出现 >= min_frequency 次 → 检测器对这类 claim 模式需精细化
+    hallucinations, reason_counts = load_hallucinations(args.hallucination_log)
+    suggestions += [
+        {
+            "trigger": f"{count} hallucinations with reason: {reason}",
+            "suggestion": f"Add guard: reject findings matching pattern '{reason[:60]}'",
+            "action": "Review classify_claim() patterns for this failure mode",
+            "source": "hallucination_log",
+            "severity": "critical",
+            "reason": reason,
+            "count": count
+        }
+        for reason, count in reason_counts.most_common()
+        if count >= args.min_frequency
+    ]
+
     output = {
         "audit_logs_analyzed": len(log_files),
         "total_fps": len(all_fps),
@@ -125,12 +175,15 @@ def main():
         "total_tps": len(all_tps),
         "fp_type_distribution": dict(fp_type_counts),
         "fn_category_distribution": dict(fn_category_counts),
+        "hallucinations_analyzed": len(hallucinations),
+        "hallucination_reason_distribution": dict(reason_counts),
         "suggestions": suggestions
     }
 
     Path(args.output).write_text(json.dumps(output, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"rule_suggester: {len(suggestions)} suggestions from "
-          f"{len(all_fps)} FPs + {len(all_fns)} FNs + {len(all_tps)} TPs")
+          f"{len(all_fps)} FPs + {len(all_fns)} FNs + {len(all_tps)} TPs "
+          f"+ {len(hallucinations)} hallucinations")
     return 0
 
 if __name__ == "__main__":

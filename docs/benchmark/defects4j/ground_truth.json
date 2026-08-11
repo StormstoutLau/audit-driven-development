@@ -1,0 +1,302 @@
+[
+  {
+    "id": "D4J-0000",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Cli/4"
+  },
+  {
+    "id": "D4J-0001",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Cli/12"
+  },
+  {
+    "id": "D4J-0002",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Cli/14"
+  },
+  {
+    "id": "D4J-0003",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Cli/18"
+  },
+  {
+    "id": "D4J-0004",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Cli/19"
+  },
+  {
+    "id": "D4J-0005",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Cli/23"
+  },
+  {
+    "id": "D4J-0006",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Cli/27"
+  },
+  {
+    "id": "D4J-0007",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Cli/28"
+  },
+  {
+    "id": "D4J-0008",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Cli/29"
+  },
+  {
+    "id": "D4J-0009",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Cli/30"
+  },
+  {
+    "id": "D4J-0010",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Cli/31"
+  },
+  {
+    "id": "D4J-0011",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Cli/32"
+  },
+  {
+    "id": "D4J-0012",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Cli/33"
+  },
+  {
+    "id": "D4J-0013",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Cli/34"
+  },
+  {
+    "id": "D4J-0014",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Cli/35"
+  },
+  {
+    "id": "D4J-0015",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Cli/36"
+  },
+  {
+    "id": "D4J-0016",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Cli/37"
+  },
+  {
+    "id": "D4J-0017",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Cli/38"
+  },
+  {
+    "id": "D4J-0018",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Cli/39"
+  },
+  {
+    "id": "D4J-0019",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Cli/40"
+  },
+  {
+    "id": "D4J-0020",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Codec/1"
+  },
+  {
+    "id": "D4J-0021",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Codec/2"
+  },
+  {
+    "id": "D4J-0022",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Codec/3"
+  },
+  {
+    "id": "D4J-0023",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Codec/4"
+  },
+  {
+    "id": "D4J-0024",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Codec/5"
+  },
+  {
+    "id": "D4J-0025",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Codec/6"
+  },
+  {
+    "id": "D4J-0026",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Codec/7"
+  },
+  {
+    "id": "D4J-0027",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Codec/8"
+  },
+  {
+    "id": "D4J-0028",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Codec/9"
+  },
+  {
+    "id": "D4J-0029",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Codec/10"
+  },
+  {
+    "id": "D4J-0030",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Codec/11"
+  },
+  {
+    "id": "D4J-0031",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Codec/12"
+  },
+  {
+    "id": "D4J-0032",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Codec/13"
+  },
+  {
+    "id": "D4J-0033",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Codec/14"
+  },
+  {
+    "id": "D4J-0034",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Codec/15"
+  },
+  {
+    "id": "D4J-0035",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Codec/16"
+  },
+  {
+    "id": "D4J-0036",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Codec/17"
+  },
+  {
+    "id": "D4J-0037",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Codec/18"
+  },
+  {
+    "id": "D4J-0038",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Csv/1"
+  },
+  {
+    "id": "D4J-0039",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Csv/2"
+  },
+  {
+    "id": "D4J-0040",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Csv/3"
+  },
+  {
+    "id": "D4J-0041",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Csv/4"
+  },
+  {
+    "id": "D4J-0042",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Csv/5"
+  },
+  {
+    "id": "D4J-0043",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Csv/6"
+  },
+  {
+    "id": "D4J-0044",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Csv/7"
+  },
+  {
+    "id": "D4J-0045",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Csv/8"
+  },
+  {
+    "id": "D4J-0046",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Csv/9"
+  },
+  {
+    "id": "D4J-0047",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Csv/10"
+  },
+  {
+    "id": "D4J-0048",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Csv/11"
+  },
+  {
+    "id": "D4J-0049",
+    "ground_truth": "real_bug",
+    "expected_action": "keep",
+    "note": "Defects4J Csv/12"
+  }
+]

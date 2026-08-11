@@ -1,0 +1,3506 @@
+[
+  {
+    "id": "BV-0000",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0001",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0002",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0003",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0004",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0005",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0006",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0007",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0008",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0009",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0010",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0011",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0012",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0013",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0014",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0015",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0016",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0017",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0018",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0019",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0020",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0021",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0022",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0023",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0024",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0025",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0026",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0027",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0028",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0029",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0030",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0031",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0032",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0033",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0034",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0035",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0036",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0037",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0038",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0039",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0040",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0041",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0042",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0043",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0044",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0045",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0046",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0047",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0048",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0049",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0050",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0051",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0052",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0053",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0054",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0055",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0056",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0057",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0058",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0059",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0060",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0061",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0062",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0063",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0064",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0065",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0066",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0067",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0068",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0069",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0070",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0071",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0072",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0073",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0074",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0075",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0076",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0077",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0078",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0079",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0080",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0081",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0082",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0083",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0084",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0085",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0086",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0087",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0088",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0089",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0090",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0091",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0092",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0093",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0094",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0095",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0096",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0097",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0098",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0099",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0100",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0101",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0102",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0103",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0104",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0105",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0106",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0107",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0108",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0109",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0110",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0111",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0112",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0113",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0114",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0115",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0116",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0117",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0118",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0119",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0120",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0121",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0122",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0123",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0124",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0125",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0126",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0127",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0128",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0129",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0130",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0131",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0132",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0133",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0134",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0135",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0136",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0137",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0138",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0139",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0140",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0141",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0142",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0143",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0144",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0145",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0146",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0147",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0148",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0149",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0150",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0151",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0152",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0153",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0154",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0155",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0156",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0157",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0158",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0159",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0160",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0161",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0162",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0163",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0164",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0165",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0166",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0167",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0168",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0169",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0170",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0171",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0172",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0173",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0174",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0175",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0176",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0177",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0178",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0179",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0180",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0181",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0182",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0183",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0184",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0185",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0186",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0187",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0188",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0189",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0190",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0191",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0192",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0193",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0194",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0195",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0196",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0197",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0198",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0199",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0200",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0201",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0202",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0203",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0204",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0205",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0206",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0207",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0208",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0209",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0210",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0211",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0212",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0213",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0214",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0215",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0216",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0217",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0218",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0219",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0220",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0221",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0222",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0223",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0224",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0225",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0226",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0227",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0228",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0229",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0230",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0231",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0232",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0233",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0234",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0235",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0236",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0237",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0238",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0239",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0240",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0241",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0242",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0243",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0244",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0245",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0246",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0247",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0248",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0249",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0250",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0251",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0252",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0253",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0254",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0255",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0256",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0257",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0258",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0259",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0260",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0261",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0262",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0263",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0264",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0265",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0266",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0267",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0268",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0269",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0270",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0271",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0272",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0273",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0274",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0275",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0276",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0277",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0278",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0279",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0280",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0281",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0282",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0283",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0284",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0285",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0286",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0287",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0288",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0289",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0290",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0291",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0292",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0293",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0294",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0295",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0296",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0297",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0298",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0299",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0300",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0301",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0302",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0303",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0304",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0305",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0306",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0307",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0308",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0309",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0310",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0311",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0312",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0313",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0314",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0315",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0316",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0317",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0318",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0319",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0320",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0321",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0322",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0323",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0324",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0325",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0326",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0327",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0328",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0329",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0330",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0331",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0332",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0333",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0334",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0335",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0336",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0337",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0338",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0339",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0340",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0341",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0342",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0343",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0344",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0345",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0346",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0347",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0348",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0349",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0350",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0351",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0352",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0353",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0354",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0355",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0356",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0357",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0358",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0359",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0360",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0361",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0362",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0363",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0364",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0365",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0366",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0367",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0368",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0369",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0370",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0371",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0372",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0373",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0374",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0375",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0376",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0377",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0378",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0379",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0380",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0381",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0382",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0383",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0384",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0385",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0386",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0387",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0388",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0389",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0390",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0391",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0392",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0393",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0394",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0395",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0396",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0397",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0398",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0399",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0400",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0401",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0402",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0403",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0404",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0405",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0406",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0407",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0408",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0409",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0410",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0411",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0412",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0413",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0414",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0415",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0416",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0417",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0418",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0419",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0420",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0421",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0422",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0423",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0424",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0425",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0426",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0427",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0428",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0429",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0430",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0431",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0432",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0433",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0434",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0435",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0436",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0437",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0438",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0439",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0440",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0441",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0442",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0443",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0444",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0445",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0446",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0447",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0448",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0449",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0450",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0451",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0452",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0453",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0454",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0455",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0456",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0457",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0458",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0459",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0460",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0461",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0462",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0463",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0464",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0465",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0466",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0467",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0468",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0469",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0470",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0471",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0472",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0473",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0474",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0475",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0476",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0477",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0478",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0479",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0480",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0481",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0482",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0483",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0484",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0485",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0486",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0487",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0488",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0489",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0490",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0491",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0492",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0493",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0494",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0495",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0496",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0497",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0498",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0499",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0500",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0501",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0502",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0503",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0504",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0505",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0506",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0507",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0508",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0509",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0510",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0511",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0512",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0513",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0514",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0515",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0516",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0517",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0518",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0519",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0520",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0521",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0522",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0523",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0524",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0525",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0526",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0527",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0528",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0529",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0530",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0531",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0532",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0533",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0534",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0535",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0536",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0537",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0538",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0539",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0540",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0541",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0542",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0543",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0544",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0545",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0546",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0547",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0548",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0549",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0550",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0551",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0552",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0553",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0554",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0555",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0556",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0557",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0558",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0559",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0560",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0561",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0562",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0563",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0564",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0565",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0566",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0567",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0568",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0569",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0570",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0571",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0572",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0573",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0574",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0575",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0576",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0577",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0578",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0579",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0580",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0581",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0582",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  },
+  {
+    "id": "BV-0583",
+    "ground_truth": "real_bug_no_repo",
+    "expected_action": "keep",
+    "note": "Source repo not available due to network issues (GitHub unreachable)"
+  }
+]

@@ -1,0 +1,290 @@
+{
+  "phase": "Phase 8 Performance Evaluation",
+  "timestamp": "2026-08-06 10:30:29",
+  "framework_version": "v2.4-phase8",
+  "joern_available": true,
+  "per_test": [
+    {
+      "name": "ADD self-audit",
+      "total_findings": 8,
+      "tp": 4,
+      "fp": 0,
+      "fn": 3,
+      "tn": 1,
+      "unknown": 0,
+      "precision": 100.0,
+      "recall": 57.1,
+      "f1": 72.7,
+      "total_latency_ms": 15872.6,
+      "avg_latency_per_finding_ms": 1984.1,
+      "tier_distribution": {
+        "tier1": 0,
+        "tier2": 2,
+        "tier3": 2,
+        "no_l4": 4
+      },
+      "hallucinations_removed": 4,
+      "downgraded": 0,
+      "per_finding": [
+        {
+          "id": "SA-1",
+          "action": "unverified",
+          "ground_truth": "hallucination_no_return_in_function",
+          "outcome": "TP"
+        },
+        {
+          "id": "SA-2",
+          "action": "verified",
+          "ground_truth": "hallucination_subprocess_has_try_except",
+          "outcome": "FN"
+        },
+        {
+          "id": "SA-3",
+          "action": "unverified",
+          "ground_truth": "hallucination_no_circular_dep",
+          "outcome": "TP"
+        },
+        {
+          "id": "SA-4",
+          "action": "unverified",
+          "ground_truth": "hallucination_alias_not_dead_code",
+          "outcome": "TP"
+        },
+        {
+          "id": "SA-5",
+          "action": "verified_l1l2",
+          "ground_truth": "hallucination_empty_output_handled",
+          "outcome": "FN"
+        },
+        {
+          "id": "SA-6",
+          "action": "unverified",
+          "ground_truth": "hallucination_spec_comment",
+          "outcome": "TP"
+        },
+        {
+          "id": "SA-7",
+          "action": "verified",
+          "ground_truth": "hallucination_has_try_except",
+          "outcome": "FN"
+        },
+        {
+          "id": "SA-8",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        }
+      ]
+    },
+    {
+      "name": "Python stdlib (json/csv)",
+      "total_findings": 9,
+      "tp": 6,
+      "fp": 0,
+      "fn": 2,
+      "tn": 1,
+      "unknown": 0,
+      "precision": 100.0,
+      "recall": 75.0,
+      "f1": 85.7,
+      "total_latency_ms": 97226.4,
+      "avg_latency_per_finding_ms": 10802.9,
+      "tier_distribution": {
+        "tier1": 0,
+        "tier2": 3,
+        "tier3": 1,
+        "no_l4": 5
+      },
+      "hallucinations_removed": 6,
+      "downgraded": 1,
+      "per_finding": [
+        {
+          "id": "OSS-H1",
+          "action": "unverified",
+          "ground_truth": "hallucination_file_not_found",
+          "outcome": "TP"
+        },
+        {
+          "id": "OSS-H2",
+          "action": "unverified",
+          "ground_truth": "hallucination_line_out_of_range",
+          "outcome": "TP"
+        },
+        {
+          "id": "OSS-H3",
+          "action": "unverified",
+          "ground_truth": "hallucination_reachable_code_claimed_dead",
+          "outcome": "TP"
+        },
+        {
+          "id": "OSS-H4",
+          "action": "unverified",
+          "ground_truth": "hallucination_reachable_code_claimed_dead",
+          "outcome": "TP"
+        },
+        {
+          "id": "OSS-H5",
+          "action": "unverified",
+          "ground_truth": "hallucination_no_cycle",
+          "outcome": "TP"
+        },
+        {
+          "id": "OSS-H6",
+          "action": "downgraded",
+          "ground_truth": "hallucination_error_handling_present",
+          "outcome": "FN"
+        },
+        {
+          "id": "OSS-H7",
+          "action": "verified_l1l2",
+          "ground_truth": "hallucination_reachable_p1",
+          "outcome": "FN"
+        },
+        {
+          "id": "OSS-H8",
+          "action": "unverified",
+          "ground_truth": "hallucination_wrong_api",
+          "outcome": "TP"
+        },
+        {
+          "id": "OSS-R1",
+          "action": "verified",
+          "ground_truth": "real_import_exists",
+          "outcome": "TN"
+        }
+      ]
+    },
+    {
+      "name": "itsdangerous 2.2.0",
+      "total_findings": 10,
+      "tp": 5,
+      "fp": 0,
+      "fn": 1,
+      "tn": 4,
+      "unknown": 0,
+      "precision": 100.0,
+      "recall": 83.3,
+      "f1": 90.9,
+      "total_latency_ms": 6571.0,
+      "avg_latency_per_finding_ms": 657.1,
+      "tier_distribution": {
+        "tier1": 0,
+        "tier2": 1,
+        "tier3": 3,
+        "no_l4": 6
+      },
+      "hallucinations_removed": 5,
+      "downgraded": 1,
+      "per_finding": [
+        {
+          "id": "ITD-H1",
+          "action": "unverified",
+          "ground_truth": "hallucination_file_not_found",
+          "outcome": "TP"
+        },
+        {
+          "id": "ITD-H2",
+          "action": "unverified",
+          "ground_truth": "hallucination_line_out_of_range",
+          "outcome": "TP"
+        },
+        {
+          "id": "ITD-H3",
+          "action": "unverified",
+          "ground_truth": "hallucination_reachable_code_claimed_dead",
+          "outcome": "TP"
+        },
+        {
+          "id": "ITD-H4",
+          "action": "unverified",
+          "ground_truth": "hallucination_no_cycle",
+          "outcome": "TP"
+        },
+        {
+          "id": "ITD-H5",
+          "action": "downgraded",
+          "ground_truth": "hallucination_error_handling_present",
+          "outcome": "FN"
+        },
+        {
+          "id": "ITD-H6",
+          "action": "unverified",
+          "ground_truth": "hallucination_wrong_api",
+          "outcome": "TP"
+        },
+        {
+          "id": "ITD-R1",
+          "action": "verified",
+          "ground_truth": "real_import_exists",
+          "outcome": "TN"
+        },
+        {
+          "id": "ITD-R2",
+          "action": "verified",
+          "ground_truth": "real_raise_statement",
+          "outcome": "TN"
+        },
+        {
+          "id": "ITD-R3",
+          "action": "verified",
+          "ground_truth": "real_error_handling_present",
+          "outcome": "TN"
+        },
+        {
+          "id": "ITD-R4",
+          "action": "verified_l1l2",
+          "ground_truth": "real_class_definition",
+          "outcome": "TN"
+        }
+      ]
+    }
+  ],
+  "aggregate": {
+    "total_findings": 27,
+    "tp": 15,
+    "fp": 0,
+    "fn": 6,
+    "tn": 6,
+    "precision": 100.0,
+    "recall": 71.4,
+    "f1": 83.3,
+    "total_latency_ms": 119670.0,
+    "tier_distribution": {
+      "tier1": 0,
+      "tier2": 6,
+      "tier3": 6,
+      "no_l4": 15
+    }
+  },
+  "baseline_v24_20260805": {
+    "precision": 100.0,
+    "recall": 42.1,
+    "f1": 59.3,
+    "tp": 8,
+    "fp": 0,
+    "fn": 11,
+    "tn": 8,
+    "tier1": 0,
+    "tier2": 8,
+    "tier3": 11
+  },
+  "delta_from_baseline": {
+    "precision": 0.0,
+    "recall": 29.3,
+    "f1": 24.0,
+    "tp": 7,
+    "fp": 0,
+    "fn": -5,
+    "tn": -2,
+    "tier1": 0,
+    "tier2": -2,
+    "tier3": -5
+  },
+  "regression_check": {
+    "status": "OK",
+    "recall_delta": 0.0,
+    "precision_delta": 0.0,
+    "f1_delta": 0.0,
+    "action": "No action needed"
+  }
+}

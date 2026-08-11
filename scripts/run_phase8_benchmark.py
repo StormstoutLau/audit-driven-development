@@ -51,6 +51,16 @@ TEST_MATRIX = [
     },
 ]
 
+# v2.6 改动 2.2: 默认额外探测的 benchmark 目录 (存在则自动加入, 不存在则跳过)
+# v2.6 阶段 3: 追加 Defects4J / Big-Vul / CVEfixes 多语言数据集
+DEFAULT_EXTRA_DIRS = [
+    "docs/benchmark/swebench-verified",
+    "docs/benchmark/swebench-verified-hallucinations",
+    "docs/benchmark/defects4j",
+    "docs/benchmark/bigvul",
+    "docs/benchmark/cvefixes",
+]
+
 
 def load_findings(path):
     """Load findings JSON, return list of finding dicts."""
@@ -80,9 +90,16 @@ def classify_outcome(finding_id, action, ground_truth):
     For real bugs (ground_truth starts with 'real_'):
       - action in ("verified", "partial", "verified_l1l2") → TN (correctly kept real bug)
       - action == "unverified" (removed) → FP (wrongly removed real bug)
+
+    v2.6: For real bugs without source repo (ground_truth == 'real_bug_no_repo'):
+      - Any action → UNKNOWN (cannot verify without repo, excluded from metrics)
     """
     gt = ground_truth.get(finding_id, {})
     gt_label = gt.get("ground_truth", "unknown")
+
+    # v2.6: real_bug_no_repo → UNKNOWN (no source repo to verify against)
+    if gt_label == "real_bug_no_repo":
+        return "UNKNOWN"  # no repo available, exclude from metrics
 
     is_hallucination = gt_label.startswith("hallucination_")
     is_real = gt_label.startswith("real_")
@@ -247,7 +264,115 @@ def run_benchmark(test_config):
     return metrics
 
 
+def check_regression(latest_data, baseline_data):
+    """v2.5: 对比 latest 与 baseline, recall 退化 >5pp → REGRESSION 告警.
+
+    用于 live_knowledge post-audit 自校准: 如果新规则导致 recall 退化,
+    触发告警, 提示回滚最近规则变更.
+
+    Args:
+        latest_data: 最新 benchmark 输出 (含 aggregate.recall/precision/f1)
+        baseline_data: 基线 benchmark 数据
+
+    Returns:
+        dict: {"status": "OK"|"REGRESSION", "recall_delta", "precision_delta",
+               "f1_delta", "action"}
+    """
+    latest_agg = latest_data.get("aggregate", {})
+    baseline_agg = baseline_data.get("aggregate", {})
+
+    recall_delta = latest_agg.get("recall", 0) - baseline_agg.get("recall", 0)
+    precision_delta = latest_agg.get("precision", 0) - baseline_agg.get("precision", 0)
+    f1_delta = latest_agg.get("f1", 0) - baseline_agg.get("f1", 0)
+
+    if recall_delta < -5.0:
+        return {
+            "status": "REGRESSION",
+            "recall_delta": round(recall_delta, 1),
+            "precision_delta": round(precision_delta, 1),
+            "f1_delta": round(f1_delta, 1),
+            "action": "Roll back recent rule changes; review rule_suggestions.json"
+        }
+    return {
+        "status": "OK",
+        "recall_delta": round(recall_delta, 1),
+        "precision_delta": round(precision_delta, 1),
+        "f1_delta": round(f1_delta, 1),
+        "action": "No action needed"
+    }
+
+
+def build_test_matrix(benchmark_dirs=None):
+    """v2.6: 根据 benchmark 目录列表动态构建测试矩阵.
+
+    Args:
+        benchmark_dirs: list[str] benchmark 目录路径列表 (相对 ROOT).
+                        None → 返回默认 TEST_MATRIX (3 个原 benchmark)
+                        + DEFAULT_EXTRA_DIRS 中已存在的目录 (v2.6 改动 2.2).
+
+    Returns:
+        list[dict]: 测试配置列表, 每项含 name/findings_path/repo_path/ground_truth_path.
+        不存在的目录或缺少 findings.json 的目录被跳过.
+    """
+    if benchmark_dirs is None:
+        # v2.6 改动 2.2: 默认 = TEST_MATRIX (保留特殊 repo_path) + 已存在的 extra dirs
+        matrix = list(TEST_MATRIX)
+        for bd in DEFAULT_EXTRA_DIRS:
+            bd_path = ROOT / bd
+            findings_path = bd_path / "findings.json"
+            if not findings_path.exists():
+                continue
+            gt_path = bd_path / "ground_truth.json"
+            repo_hint = bd_path / "repo_path.txt"
+            if repo_hint.exists():
+                repo_path = Path(repo_hint.read_text(encoding="utf-8").strip())
+            else:
+                repo_path = ROOT
+            matrix.append({
+                "name": bd_path.name,
+                "findings_path": findings_path,
+                "repo_path": repo_path,
+                "ground_truth_path": gt_path if gt_path.exists() else None,
+            })
+        return matrix
+
+    matrix = []
+    for bd in benchmark_dirs:
+        bd_path = ROOT / bd if not Path(bd).is_absolute() else Path(bd)
+        findings_path = bd_path / "findings.json"
+        if not findings_path.exists():
+            print(f"  SKIP {bd}: findings.json not found")
+            continue
+        gt_path = bd_path / "ground_truth.json"
+        # repo_path 策略: 优先读目录下 repo_path.txt, 否则用 ROOT
+        repo_hint = bd_path / "repo_path.txt"
+        if repo_hint.exists():
+            repo_path = Path(repo_hint.read_text(encoding="utf-8").strip())
+        else:
+            repo_path = ROOT
+        name = bd_path.name
+        matrix.append({
+            "name": name,
+            "findings_path": findings_path,
+            "repo_path": repo_path,
+            "ground_truth_path": gt_path if gt_path.exists() else None,
+        })
+    return matrix
+
+
 def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="Phase 8 benchmark with v2.5 regression check")
+    parser.add_argument("--output", default=None,
+                        help="Output JSON path (default: docs/benchmark/v2.4-phase8-performance-data.json)")
+    parser.add_argument("--baseline", default=None,
+                        help="Baseline performance JSON for regression comparison")
+    parser.add_argument("--benchmark-dirs", nargs="+", default=None,
+                        help="List of benchmark directories to include "
+                             "(default: 3 original benchmarks + swebench-verified "
+                             "+ swebench-verified-hallucinations if they exist)")
+    args = parser.parse_args()
+
     print("=" * 70)
     print("Phase 8 全量修复后性能评估")
     print("=" * 70)
@@ -264,7 +389,8 @@ def main():
     print(f"Joern Tier 1 available: {joern_avail}")
 
     all_metrics = []
-    for test_config in TEST_MATRIX:
+    matrix = build_test_matrix(args.benchmark_dirs)
+    for test_config in matrix:
         try:
             metrics = run_benchmark(test_config)
             all_metrics.append(metrics)
@@ -355,7 +481,24 @@ def main():
         },
     }
 
-    output_path = BENCH_DIR / "v2.4-phase8-performance-data.json"
+    # v2.5: regression check — 对比 --baseline 指定的基线
+    if args.baseline:
+        try:
+            baseline_data = json.loads(Path(args.baseline).read_text(encoding="utf-8"))
+            regression = check_regression(output, baseline_data)
+            output["regression_check"] = regression
+            print(f"\n=== Regression Check ===")
+            print(f"  Status: {regression['status']}")
+            print(f"  Recall delta: {regression['recall_delta']}pp")
+            print(f"  Precision delta: {regression['precision_delta']}pp")
+            print(f"  F1 delta: {regression['f1_delta']}pp")
+            if regression["status"] == "REGRESSION":
+                print(f"  ⚠ ACTION: {regression['action']}")
+        except (json.JSONDecodeError, ValueError, OSError) as e:
+            print(f"  ⚠ Baseline load failed: {e}")
+
+    output_path = Path(args.output) if args.output else (BENCH_DIR / "v2.4-phase8-performance-data.json")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(json.dumps(output, indent=2, ensure_ascii=False), encoding="utf-8")
     print(f"\n  Data saved to: {output_path}")
 

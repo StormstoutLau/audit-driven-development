@@ -1,0 +1,559 @@
+{
+  "project": "defects4j",
+  "version": "1.0",
+  "audit_date": "2026-08-11",
+  "audit_mode": "dataset-integration layer-1",
+  "description": "Converted from Defects4J active-bugs CSV",
+  "findings": [
+    {
+      "id": "D4J-0000",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Cli src/java/org/apache/commons/cli/Parser.java:295 — fix commit f78959477b207bf710049aa35730ef7659f0a1b9: cli-1 https://issues.apache.org/jira/browse/CLI-1",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/cli/Parser.java",
+        "line_start": 295
+      }
+    },
+    {
+      "id": "D4J-0001",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Cli src/java/org/apache/commons/cli/GnuParser.java:70 — fix commit aa050a69b2395f496f953f4f9c4f63a475dcf430: cli-1 https://issues.apache.org/jira/browse/CLI-1",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/cli/GnuParser.java",
+        "line_start": 70
+      }
+    },
+    {
+      "id": "D4J-0002",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Cli src/java/org/apache/commons/cli2/option/GroupImpl.java:245 — fix commit c338c8aca40d43efda580057f6d41ba228e26ec1: CLI-144 https://issues.apache.org/jira/browse/CLI-144",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/cli2/option/GroupImpl.java",
+        "line_start": 245
+      }
+    },
+    {
+      "id": "D4J-0003",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Cli src/java/org/apache/commons/cli/PosixParser.java:125 — fix commit c8606251c904dfaf5303f71b788e12f7fff15fab: CLI-164 https://issues.apache.org/jira/browse/CLI-164",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/cli/PosixParser.java",
+        "line_start": 125
+      }
+    },
+    {
+      "id": "D4J-0004",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Cli src/java/org/apache/commons/cli/PosixParser.java:229 — fix commit b1331806960001da95424315b6103d755107b519: CLI-164 https://issues.apache.org/jira/browse/CLI-164",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/cli/PosixParser.java",
+        "line_start": 229
+      }
+    },
+    {
+      "id": "D4J-0005",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Cli src/java/org/apache/commons/cli/HelpFormatter.java:821 — fix commit 2ddaae14dd23643a4b5f71f8274534b0b34556a4: CLI-162 https://issues.apache.org/jira/browse/CLI-162",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/cli/HelpFormatter.java",
+        "line_start": 821
+      }
+    },
+    {
+      "id": "D4J-0006",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Cli src/java/org/apache/commons/cli/OptionGroup.java:85 — fix commit 4c971f08861e8cefb8ca9ac20799bfdad4e973a4: CLI-182 https://issues.apache.org/jira/browse/CLI-182",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/cli/OptionGroup.java",
+        "line_start": 85
+      }
+    },
+    {
+      "id": "D4J-0007",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Cli src/java/org/apache/commons/cli/Parser.java:287 — fix commit 3433f467554985a6bd9bf530a4810376be6fe250: CLI-201 https://issues.apache.org/jira/browse/CLI-201",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/cli/Parser.java",
+        "line_start": 287
+      }
+    },
+    {
+      "id": "D4J-0008",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Cli src/java/org/apache/commons/cli/Util.java:62 — fix commit 20002f7f4e971349a1c95dd3b05846c5b824b65c: CLI-185 https://issues.apache.org/jira/browse/CLI-185",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/cli/Util.java",
+        "line_start": 62
+      }
+    },
+    {
+      "id": "D4J-0009",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Cli src/main/java/org/apache/commons/cli/DefaultParser.java:147 — fix commit 324b7f901b91614927926a5bab1d9e0e2325f018: CLI-203 https://issues.apache.org/jira/browse/CLI-203",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/cli/DefaultParser.java",
+        "line_start": 147
+      }
+    },
+    {
+      "id": "D4J-0010",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Cli src/main/java/org/apache/commons/cli/HelpFormatter.java:648 — fix commit 4d2c8a22d1e1831858029b8ef225a07f4445a221: CLI-205 https://issues.apache.org/jira/browse/CLI-205",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/cli/HelpFormatter.java",
+        "line_start": 648
+      }
+    },
+    {
+      "id": "D4J-0011",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Cli src/main/java/org/apache/commons/cli/HelpFormatter.java:889 — fix commit 777cb81088d47472df21a452edd5ba568d4b3fdf: CLI-193 https://issues.apache.org/jira/browse/CLI-193",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/cli/HelpFormatter.java",
+        "line_start": 889
+      }
+    },
+    {
+      "id": "D4J-0012",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Cli src/main/java/org/apache/commons/cli/HelpFormatter.java:17 — fix commit 483f811dfefdc6bee162481425f261d983f15e4a: CLI-207 https://issues.apache.org/jira/browse/CLI-207",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/cli/HelpFormatter.java",
+        "line_start": 17
+      }
+    },
+    {
+      "id": "D4J-0013",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Cli src/main/java/org/apache/commons/cli/CommandLine.java:113 — fix commit 62a3b36efc78e53c233c2fb49cc8199c5eabec1d: CLI-215 https://issues.apache.org/jira/browse/CLI-215",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/cli/CommandLine.java",
+        "line_start": 113
+      }
+    },
+    {
+      "id": "D4J-0014",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Cli src/changes/changes.xml:23 — fix commit 085a1538fa20d8e48faad49eaffd697f024bf1af: CLI-252 https://issues.apache.org/jira/browse/CLI-252",
+      "evidence": {
+        "file": "src/changes/changes.xml",
+        "line_start": 23
+      }
+    },
+    {
+      "id": "D4J-0015",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Cli src/changes/changes.xml:23 — fix commit afc13c445a4c80432e52d735685b272fadfeeddf: CLI-266 https://issues.apache.org/jira/browse/CLI-266",
+      "evidence": {
+        "file": "src/changes/changes.xml",
+        "line_start": 23
+      }
+    },
+    {
+      "id": "D4J-0016",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Cli src/changes/changes.xml:23 — fix commit 1bf9e6c551b6a2e7d37291673a1ff77c338ce131: CLI-265 https://issues.apache.org/jira/browse/CLI-265",
+      "evidence": {
+        "file": "src/changes/changes.xml",
+        "line_start": 23
+      }
+    },
+    {
+      "id": "D4J-0017",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Cli src/changes/changes.xml:23 — fix commit ac2a1c85616f0140418de9190389fe7b80296c39: CLI-265 https://issues.apache.org/jira/browse/CLI-265",
+      "evidence": {
+        "file": "src/changes/changes.xml",
+        "line_start": 23
+      }
+    },
+    {
+      "id": "D4J-0018",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Cli src/changes/changes.xml:23 — fix commit 0b453953fa5f55cf2e8fd034d4d55972deb7647a: CLI-274 https://issues.apache.org/jira/browse/CLI-274",
+      "evidence": {
+        "file": "src/changes/changes.xml",
+        "line_start": 23
+      }
+    },
+    {
+      "id": "D4J-0019",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Cli src/changes/changes.xml:38 — fix commit b0024d482050a08efc36c3cabee37c0af0e57a10: CLI-282 https://issues.apache.org/jira/browse/CLI-282",
+      "evidence": {
+        "file": "src/changes/changes.xml",
+        "line_start": 38
+      }
+    },
+    {
+      "id": "D4J-0020",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Codec src/java/org/apache/commons/codec/language/Caverphone.java:56 — fix commit 52d82d1dfff8c2b2ded9d843e0b03017af6d747c: CODEC-65 https://issues.apache.org/jira/browse/CODEC-65",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/codec/language/Caverphone.java",
+        "line_start": 56
+      }
+    },
+    {
+      "id": "D4J-0021",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Codec src/java/org/apache/commons/codec/binary/Base64.java:443 — fix commit b8c2d9d9dc9aab45f83cf49ac93cfa8546e4c08e: CODEC-77 https://issues.apache.org/jira/browse/CODEC-77",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/codec/binary/Base64.java",
+        "line_start": 443
+      }
+    },
+    {
+      "id": "D4J-0022",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Codec src/java/org/apache/commons/codec/language/DoubleMetaphone.java:452 — fix commit a5dfe5cbc95d7f3ce0b4829756690c2cb8439f4c: CODEC-84 https://issues.apache.org/jira/browse/CODEC-84",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/codec/language/DoubleMetaphone.java",
+        "line_start": 452
+      }
+    },
+    {
+      "id": "D4J-0023",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Codec src/java/org/apache/commons/codec/binary/Base64.java:214 — fix commit bcfef8906931a7929a6db14b9d82d387fd3f17f6: CODEC-89 https://issues.apache.org/jira/browse/CODEC-89",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/codec/binary/Base64.java",
+        "line_start": 214
+      }
+    },
+    {
+      "id": "D4J-0024",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Codec src/java/org/apache/commons/codec/binary/Base64.java:583 — fix commit 800f0531068ebaf2f2d257bb1bd805781ddd4760: CODEC-98 https://issues.apache.org/jira/browse/CODEC-98",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/codec/binary/Base64.java",
+        "line_start": 583
+      }
+    },
+    {
+      "id": "D4J-0025",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Codec src/java/org/apache/commons/codec/binary/Base64InputStream.java:145 — fix commit d74fc31604c805a47c44d7853f63a3b06ad6c016: CODEC-101 https://issues.apache.org/jira/browse/CODEC-101",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/codec/binary/Base64InputStream.java",
+        "line_start": 145
+      }
+    },
+    {
+      "id": "D4J-0026",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Codec src/java/org/apache/commons/codec/binary/Base64.java:667 — fix commit 954d995c5603b616c3c4a9ffb1823f36dd7ebcb0: CODEC-99 https://issues.apache.org/jira/browse/CODEC-99",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/codec/binary/Base64.java",
+        "line_start": 667
+      }
+    },
+    {
+      "id": "D4J-0027",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Codec src/java/org/apache/commons/codec/binary/Base64.java:406 — fix commit 2c13032a16e37b7bc9e0272d25fc185b5c82b42e: CODEC-105 https://issues.apache.org/jira/browse/CODEC-105",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/codec/binary/Base64.java",
+        "line_start": 406
+      }
+    },
+    {
+      "id": "D4J-0028",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Codec src/java/org/apache/commons/codec/binary/Base64.java:824 — fix commit c5291ab1ca4d4d7a041874a66b1c05b7d5c02ccb: CODEC-112 https://issues.apache.org/jira/browse/CODEC-112",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/codec/binary/Base64.java",
+        "line_start": 824
+      }
+    },
+    {
+      "id": "D4J-0029",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Codec src/java/org/apache/commons/codec/language/Caverphone.java:71 — fix commit 41c68e9ef470696009d72133c7f05a20e2728e34: CODEC-117 https://issues.apache.org/jira/browse/CODEC-117",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/codec/language/Caverphone.java",
+        "line_start": 71
+      }
+    },
+    {
+      "id": "D4J-0030",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Codec src/changes/changes.xml:25 — fix commit 7e8c20bd1b0593c3496a168be573aed40609a433: CODEC-121 https://issues.apache.org/jira/browse/CODEC-121",
+      "evidence": {
+        "file": "src/changes/changes.xml",
+        "line_start": 25
+      }
+    },
+    {
+      "id": "D4J-0031",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Codec src/main/java/org/apache/commons/codec/binary/BaseNCodecInputStream.java:134 — fix commit 1fc451c79779bdbf788e8bfbec6dc031a47495d8: CODEC-130 https://issues.apache.org/jira/browse/CODEC-130",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/codec/binary/BaseNCodecInputStream.java",
+        "line_start": 134
+      }
+    },
+    {
+      "id": "D4J-0032",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Codec src/changes/changes.xml:43 — fix commit 37ba197e62d6b60037d18afc33801e6221f1b8c6: CODEC-184 https://issues.apache.org/jira/browse/CODEC-184",
+      "evidence": {
+        "file": "src/changes/changes.xml",
+        "line_start": 43
+      }
+    },
+    {
+      "id": "D4J-0033",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Codec src/main/java/org/apache/commons/codec/language/bm/BeiderMorseEncoder.java:64 — fix commit 39d5df29fb768fd257f9d328b99f00bc69ec864a: CODEC-187 https://issues.apache.org/jira/browse/CODEC-187",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/codec/language/bm/BeiderMorseEncoder.java",
+        "line_start": 64
+      }
+    },
+    {
+      "id": "D4J-0034",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Codec src/changes/changes.xml:43 — fix commit 28b7b958d39730fc278fd1919bf335c52133a1a2: CODEC-199 https://issues.apache.org/jira/browse/CODEC-199",
+      "evidence": {
+        "file": "src/changes/changes.xml",
+        "line_start": 43
+      }
+    },
+    {
+      "id": "D4J-0035",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Codec src/changes/changes.xml:1 — fix commit c82fe35c48bd0082c16644d16d82d1be79d6b9d1: CODEC-200 https://issues.apache.org/jira/browse/CODEC-200",
+      "evidence": {
+        "file": "src/changes/changes.xml",
+        "line_start": 1
+      }
+    },
+    {
+      "id": "D4J-0036",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Codec src/changes/changes.xml:42 — fix commit d2f27093d7d95a07da901902f894d88b4ecc3e95: CODEC-229 https://issues.apache.org/jira/browse/CODEC-229",
+      "evidence": {
+        "file": "src/changes/changes.xml",
+        "line_start": 42
+      }
+    },
+    {
+      "id": "D4J-0037",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Codec src/changes/changes.xml:45 — fix commit 5ef5bd199a4e3df74479b4b363fa29b0b3092547: CODEC-231 https://issues.apache.org/jira/browse/CODEC-231",
+      "evidence": {
+        "file": "src/changes/changes.xml",
+        "line_start": 45
+      }
+    },
+    {
+      "id": "D4J-0038",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Csv src/main/java/org/apache/commons/csv/ExtendedBufferedReader.java:54 — fix commit de1838ea067f3fbc4c7c21b9eeae077c739ecb73: CSV-75 https://issues.apache.org/jira/browse/CSV-75",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/csv/ExtendedBufferedReader.java",
+        "line_start": 54
+      }
+    },
+    {
+      "id": "D4J-0039",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Csv src/main/java/org/apache/commons/csv/CSVRecord.java:55 — fix commit a0d975933d6fe9eb5f359088de43508c1d3109bf: CSV-96 https://issues.apache.org/jira/browse/CSV-96",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/csv/CSVRecord.java",
+        "line_start": 55
+      }
+    },
+    {
+      "id": "D4J-0040",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Csv src/main/java/org/apache/commons/csv/CSVLexer.java:160 — fix commit 2c6120826245f89fedf2f936ab4a0c3edd8717f3: CSV-58 https://issues.apache.org/jira/browse/CSV-58",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/csv/CSVLexer.java",
+        "line_start": 160
+      }
+    },
+    {
+      "id": "D4J-0041",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Csv src/main/java/org/apache/commons/csv/CSVParser.java:281 — fix commit 22601f647f2ce9a05fa4ce20ea356492c670940c: CSV-100 https://issues.apache.org/jira/browse/CSV-100",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/csv/CSVParser.java",
+        "line_start": 281
+      }
+    },
+    {
+      "id": "D4J-0042",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Csv src/main/java/org/apache/commons/csv/CSVPrinter.java:321 — fix commit 73cc5246cf789db8f459e2f539831b6e91bedd26: CSV-106 https://issues.apache.org/jira/browse/CSV-106",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/csv/CSVPrinter.java",
+        "line_start": 321
+      }
+    },
+    {
+      "id": "D4J-0043",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Csv src/main/java/org/apache/commons/csv/CSVRecord.java:178 — fix commit 9f03b06a1ec8cb2cb64aec6068d2a6c1f663fbc9: CSV-111 https://issues.apache.org/jira/browse/CSV-111",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/csv/CSVRecord.java",
+        "line_start": 178
+      }
+    },
+    {
+      "id": "D4J-0044",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Csv src/main/java/org/apache/commons/csv/CSVParser.java:29 — fix commit ce4e72701b1ad4caabc3bd668bd058fff082f2b6: CSV-112 https://issues.apache.org/jira/browse/CSV-112",
+      "evidence": {
+        "file": "src/main/java/org/apache/commons/csv/CSVParser.java",
+        "line_start": 29
+      }
+    },
+    {
+      "id": "D4J-0045",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Csv src/changes/changes.xml:40 — fix commit 35d101c2adecd51730f88e43941d85d16034886f: CSV-114 https://issues.apache.org/jira/browse/CSV-114",
+      "evidence": {
+        "file": "src/changes/changes.xml",
+        "line_start": 40
+      }
+    },
+    {
+      "id": "D4J-0046",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Csv src/changes/changes.xml:40 — fix commit 2480dffa6d8343b189c6fb57b88b325c45f0b83f: CSV-118 https://issues.apache.org/jira/browse/CSV-118",
+      "evidence": {
+        "file": "src/changes/changes.xml",
+        "line_start": 40
+      }
+    },
+    {
+      "id": "D4J-0047",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Csv src/changes/changes.xml:39 — fix commit 1282503fb97d621b4225bd031757adbfada66181: CSV-120 https://issues.apache.org/jira/browse/CSV-120",
+      "evidence": {
+        "file": "src/changes/changes.xml",
+        "line_start": 39
+      }
+    },
+    {
+      "id": "D4J-0048",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Csv src/changes/changes.xml:40 — fix commit b67524da7fd146634c7112b23e95d1d45c398b82: CSV-122 https://issues.apache.org/jira/browse/CSV-122",
+      "evidence": {
+        "file": "src/changes/changes.xml",
+        "line_start": 40
+      }
+    },
+    {
+      "id": "D4J-0049",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "functional",
+      "claim": "bug in Csv src/changes/changes.xml:38 — fix commit c81ad0328eefb438cc875b9c9f081be93f9fdcc2: CSV-128 https://issues.apache.org/jira/browse/CSV-128",
+      "evidence": {
+        "file": "src/changes/changes.xml",
+        "line_start": 38
+      }
+    }
+  ]
+}
