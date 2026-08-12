@@ -1,0 +1,70 @@
+{
+  "project": "bigvul-test",
+  "findings": [
+    {
+      "id": "BV-0000",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function pango_glyph_string_set_size has CWE-189 vulnerability: Integer overflow in the pango_glyph_string_set_size function in pango/glyphstring.c in Pango before 1.24 allows context-dependent attackers to cause a denial of service (application crash) or possibly execute arbitrary code via a long glyph string that triggers a heap-based buffer overflow, as demonstrated by a long document.location value in Firefox. (CVSS 6.8) — fix modifies lines 61",
+      "evidence": {
+        "file": "pango/glyphstring.c",
+        "line_start": 61,
+        "commit_hash": "4de30e5500eaeb49f4bf0b7a07f718e149a2ed5e",
+        "project": "pango"
+      }
+    },
+    {
+      "id": "BV-0001",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function set has CWE-94 vulnerability: The default configuration of the <Button2> binding in Uzbl before 2010.08.05 does not properly use the @SELECTED_URI feature, which allows user-assisted remote attackers to execute arbitrary commands via a crafted HREF attribute of an A element in an HTML document. (CVSS 6.8) — fix modifies lines 173",
+      "evidence": {
+        "file": "examples/config/config",
+        "line_start": 173,
+        "commit_hash": "9cc39cb5c9396be013b5dc2ba7e4b3eaa647e975",
+        "project": "uzbl"
+      }
+    },
+    {
+      "id": "BV-0002",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has  vulnerability: The put command functionality in beanstalkd 1.4.5 and earlier allows remote attackers to execute arbitrary Beanstalk commands via the body in a job that is too big, which is not properly handled by the dispatch_cmd function in prot.c. (CVSS 7.5) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "2e8e8c6387ecdf5923dfc4d7718d18eba1b0873d",
+        "project": "beanstalkd"
+      }
+    },
+    {
+      "id": "BV-0003",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-20 vulnerability: Irssi before 0.8.15, when SSL is used, does not verify that the server hostname matches a domain name in the subject's Common Name (CN) field or a Subject Alternative Name field of the X.509 certificate, which allows man-in-the-middle attackers to spoof IRC servers via an arbitrary certificate. (CVSS 6.8) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "85bbc05b21678e80423815d2ef1dfe26208491ab",
+        "project": "irssi-proxy"
+      }
+    },
+    {
+      "id": "BV-0004",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-20 vulnerability: memcached.c in memcached before 1.4.3 allows remote attackers to cause a denial of service (daemon hang or crash) via a long line that triggers excessive memory allocation.  NOTE: some of these details are obtained from third party information. (CVSS 5.0) — fix modifies lines 3148",
+      "evidence": {
+        "file": "memcached.c",
+        "line_start": 3148,
+        "commit_hash": "d9cd01ede97f4145af9781d448c62a3318952719",
+        "project": "memcached"
+      }
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "audit_logs_analyzed": 8,
+  "audit_logs_analyzed": 11,
   "total_fps": 0,
   "total_fns": 1,
   "total_tps": 0,
@@ -7,5 +7,41 @@
   "fn_category_distribution": {
     "unknown": 1
   },
-  "suggestions": []
+  "hallucinations_analyzed": 629,
+  "hallucination_reason_distribution": {
+    "unknown": 3,
+    "no keyword match within ±20 lines": 4,
+    "file_not_found": 620,
+    "line 9999 out of range (1-267)": 1,
+    "line 245 out of range (1-10)": 1
+  },
+  "suggestions": [
+    {
+      "trigger": "620 hallucinations with reason: file_not_found",
+      "suggestion": "Add guard: reject findings matching pattern 'file_not_found'",
+      "action": "Review classify_claim() patterns for this failure mode",
+      "source": "hallucination_log",
+      "severity": "critical",
+      "reason": "file_not_found",
+      "count": 620
+    },
+    {
+      "trigger": "4 hallucinations with reason: no keyword match within ±20 lines",
+      "suggestion": "Add guard: reject findings matching pattern 'no keyword match within ±20 lines'",
+      "action": "Review classify_claim() patterns for this failure mode",
+      "source": "hallucination_log",
+      "severity": "critical",
+      "reason": "no keyword match within ±20 lines",
+      "count": 4
+    },
+    {
+      "trigger": "3 hallucinations with reason: unknown",
+      "suggestion": "Add guard: reject findings matching pattern 'unknown'",
+      "action": "Review classify_claim() patterns for this failure mode",
+      "source": "hallucination_log",
+      "severity": "critical",
+      "reason": "unknown",
+      "count": 3
+    }
+  ]
 }

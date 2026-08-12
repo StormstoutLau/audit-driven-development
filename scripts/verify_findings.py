@@ -69,8 +69,44 @@ IMPORT_PATTERNS = [
 ]
 
 
+# ── v2.7.1: Multi-language Support ──
+
+# Joern frontend mapping: internal language name → Joern --language flag
+_JOERN_LANGUAGE_MAP = {
+    "python": "pythonsrc",
+    "java": "javasrc2cpg",
+    "cpp": "c2cpg",
+}
+
+
+def _detect_language(file_path):
+    """v2.7.1: 根据文件扩展名检测语言.
+
+    Args:
+        file_path: str 文件路径 (相对或绝对).
+
+    Returns:
+        str: "python" | "java" | "cpp" | "unknown"
+    """
+    if not file_path:
+        return "unknown"
+    lower = file_path.lower()
+    if lower.endswith(".py"):
+        return "python"
+    if lower.endswith(".java"):
+        return "java"
+    if lower.endswith((".c", ".cpp", ".cc", ".cxx", ".h", ".hpp", ".hh", ".hxx")):
+        return "cpp"
+    return "unknown"
+
+
 def classify_claim(claim):
-    """Classify the finding claim into a structural verification type."""
+    """Classify the finding claim into a structural verification type.
+
+    v2.7.3 断点③修复: 加载 rule_suggestions.json 中的反例规则,
+    匹配到反例规则的 claim 会被标记为 "hallucination_pattern", 供调用方降级 severity.
+    匹配逻辑: rule 的 reason 字段 (截断到 60 字符) 出现在 claim 中 → 匹配.
+    """
     types = []
     if any(p.search(claim) for p in MISSING_PATTERNS):
         types.append("missing")
@@ -82,10 +118,72 @@ def classify_claim(claim):
         types.append("dead_code")
     if any(p.search(claim) for p in IMPORT_PATTERNS):
         types.append("import_related")
+
+    # v2.7.3 断点③: 检查反例规则 — 匹配到 → 添加 "hallucination_pattern" 标记
+    # 调用方 (verify_single_finding) 可据此降级 severity 或加强审查
+    learned_rules = _load_learned_rules()
+    for rule in learned_rules:
+        reason = rule.get("reason", "")
+        if reason and reason[:60] in claim:
+            if "hallucination_pattern" not in types:
+                types.append("hallucination_pattern")
+            break  # 匹配到一条即可, 避免重复标记
+
     return types if types else ["generic"]
 
 
+# v2.7.3 断点③: 反例规则加载 (带模块级缓存)
+_LEARNED_RULES_CACHE = None
+
+
+def _load_learned_rules(rules_path="docs/audit/rule_suggestions.json"):
+    """v2.7.3: 加载 rule_suggestions.json 中的反例规则 (带缓存).
+
+    Args:
+        rules_path: rule_suggestions.json 路径
+
+    Returns:
+        list[dict]: 反例规则列表, 每项含 reason/suggestion/severity 等字段.
+        文件不存在时返回空列表.
+    """
+    global _LEARNED_RULES_CACHE
+    if _LEARNED_RULES_CACHE is not None:
+        return _LEARNED_RULES_CACHE
+    path = Path(rules_path)
+    if not path.exists():
+        _LEARNED_RULES_CACHE = []
+        return _LEARNED_RULES_CACHE
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        _LEARNED_RULES_CACHE = data.get("suggestions", [])
+    except (json.JSONDecodeError, ValueError, OSError):
+        _LEARNED_RULES_CACHE = []
+    return _LEARNED_RULES_CACHE
+
+
 # ── Keyword Extraction (shared with verify_lines.py) ──
+
+
+def _threshold_to_min_keywords(threshold):
+    """v2.8: 将 RL-adjusted threshold 映射到 L3 最小 keyword 匹配数.
+
+    Args:
+        threshold: float ∈ [0.55, 0.85] 或 None
+
+    Returns:
+        int: min_keywords (1 或 2)
+
+    Mapping:
+        None          → 1 (默认, 向后兼容)
+        [0.55, 0.75)  → 1 (宽松, improving trend)
+        [0.75, 0.85]  → 2 (严格, declining trend)
+    """
+    if threshold is None:
+        return 1
+    if threshold >= 0.75:
+        return 2
+    return 1
+
 
 def extract_keywords(claim):
     """Extract search keywords from a finding claim."""
@@ -119,30 +217,70 @@ def verify_l1_l2(repo_root, file_path, line_num):
             "total_lines": len(lines), "lines": lines, "line_num": line_num}
 
 
-def verify_l3(lines, line_num, keywords):
-    """Level 3: Keyword/pattern match in source context (±20 lines)."""
+def verify_l3(lines, line_num, keywords, min_keywords=1):
+    """Level 3: Keyword/pattern match in source context (±20 lines).
+
+    v2.8: 新增 min_keywords 参数, 控制 confirmed 所需的最小匹配 keyword 数.
+        min_keywords=1 (默认): 至少 1 个 keyword 匹配 (v2.7 行为)
+        min_keywords=2: 至少 2 个不同 keyword 匹配 (严格模式)
+
+    Args:
+        lines: list of source code lines (from L2).
+        line_num: 1-indexed line number to verify.
+        keywords: list of keyword strings to search.
+        min_keywords: minimum number of distinct keywords that must match.
+
+    Returns:
+        dict. confirmed=True 时含 matched_keywords (list) + matched_keyword (单数兼容字段).
+    """
     if not keywords:
         return {"level": 2, "confirmed": False, "reason": "no_keywords_to_match"}
 
-    target_line = lines[line_num - 1]
-    target_lower = target_line.lower()
+    matched_keywords = []
+    matched_lines = []
 
-    # Exact match on target line
-    if match := next((kw for kw in keywords if kw.lower() in target_lower), None):
-        return {"level": 3, "confirmed": True, "matched_keyword": match,
-                "matched_line": line_num, "offset": 0}
+    # 收集 target_line 上的所有匹配 (不是找到第一个就返回)
+    target_lower = lines[line_num - 1].lower()
+    for kw in keywords:
+        if kw.lower() in target_lower and kw not in matched_keywords:
+            matched_keywords.append(kw)
+            matched_lines.append(line_num)
 
-    # Proximity match ±20 lines
+    # 若 target_line 已满足 min_keywords, 提前返回 (短路优化)
+    if len(matched_keywords) >= min_keywords:
+        return {"level": 3, "confirmed": True,
+                "matched_keywords": matched_keywords[:min_keywords],
+                "matched_lines": matched_lines[:min_keywords],
+                # ⚠️ 兼容字段 (v2.7 下游读取 matched_keyword/matched_line 单数)
+                "matched_keyword": matched_keywords[0],
+                "matched_line": matched_lines[0]}
+
+    # 邻近窗口 ±20 行扫描
     for offset in range(1, 21):
         for direction in (-1, 1):
             check_line = line_num + direction * offset
             if 1 <= check_line <= len(lines):
                 check_lower = lines[check_line - 1].lower()
-                if match := next((kw for kw in keywords if kw.lower() in check_lower), None):
-                    return {"level": 3, "confirmed": True, "matched_keyword": match,
-                            "matched_line": check_line, "offset": direction * offset}
+                for kw in keywords:
+                    if kw.lower() in check_lower and kw not in matched_keywords:
+                        matched_keywords.append(kw)
+                        matched_lines.append(check_line)
+                        # 满足 min_keywords 时立即返回 (短路)
+                        if len(matched_keywords) >= min_keywords:
+                            return {"level": 3, "confirmed": True,
+                                    "matched_keywords": matched_keywords,
+                                    "matched_lines": matched_lines,
+                                    "matched_keyword": matched_keywords[0],
+                                    "matched_line": matched_lines[0]}
 
-    return {"level": 2, "confirmed": False, "reason": "no keyword match within ±20 lines",
+    # 未达到 min_keywords
+    if matched_keywords:  # 有匹配但不足
+        return {"level": 3, "confirmed": False,
+                "reason": f"only {len(matched_keywords)} keywords matched, need {min_keywords}",
+                "matched_keywords": matched_keywords,
+                "matched_lines": matched_lines}
+    return {"level": 2, "confirmed": False,
+            "reason": "no keyword match within ±20 lines",
             "keywords_searched": keywords}
 
 
@@ -176,7 +314,7 @@ def _get_function_context(lines, line_num):
 
 
 def verify_l4_structural(lines, line_num, claim, claim_types,
-                         repo_root=None, file_path=None):
+                         repo_root=None, file_path=None, language="python"):
     """Level 4: Structural claim verification with Tier 2 fallback.
 
     Tier 2 (ast CFG) for dead_code/import_related — higher accuracy (~90%).
@@ -185,10 +323,16 @@ def verify_l4_structural(lines, line_num, claim, claim_types,
     P0-2 unified schema: all Tier results include "verified" field (True|False|None).
     Tier 3 (regex) originally returns "confirmed", mapped to "verified" for consistency.
     "verified=None" means this Tier cannot decide → trigger fallback to next Tier.
+
+    v2.7.1: language 参数控制 Tier 1 Joern 前端 (pythonsrc/javasrc2cpg/c2cpg)
+    和 Tier 2 ast CFG 是否启用 (仅 python 启用, java/cpp 跳过 Tier 2).
     """
     # Phase 3: 扩展 context 到 enclosing function 全范围 (解决 ±25 窗口局限).
     # 如果 line 在函数内, 用函数全范围; 否则回退到 ±50 行 (原 ±25 的 2 倍).
     context_text = _get_function_context(lines, line_num)
+
+    # v2.7.1: 将内部 language 名映射为 Joern --language flag
+    joern_lang = _JOERN_LANGUAGE_MAP.get(language, "pythonsrc")
 
     checks = {}
 
@@ -197,23 +341,26 @@ def verify_l4_structural(lines, line_num, claim, claim_types,
         # Tier 1: Joern CPG (highest accuracy ~95%, optional dependency)
         # P1-5: joern_cpg never raises in normal operation, but V9 test hook
         # (JOERN_FORCE_RAISE=1) simulates runtime failure -> must catch & degrade
+        # v2.7.1: 传递 language 给 joern_cpg, 选择对应前端
         if repo_root and file_path:
             try:
                 import joern_cpg
-                result = joern_cpg.verify_dead_code(repo_root, file_path, line_num)
+                result = joern_cpg.verify_dead_code(repo_root, file_path, line_num,
+                                                     language=language)
             except Exception:
                 result = None
         # Tier 2: Python ast CFG (higher accuracy ~90%, zero deps)
+        # v2.7.1: Tier 2 仅支持 Python; Java/C++ 跳过 Tier 2 直接降级到 Tier 3
         # Phase 8: Joern dead_code is method-level (no callers); claims are
         #   usually statement-level (unreachable after return). Method-level
         #   dead (Joern True) does NOT pinpoint the specific statement, and
         #   method reachable (Joern False) does NOT imply statement reachable.
-        #   Strategy: always run Tier 2 for double-check.
+        #   Strategy: always run Tier 2 for double-check (Python only).
         #     - Joern True + Tier 2 True → keep Joern (tier=1, both agree)
         #     - Joern True + Tier 2 False → use Tier 2 (statement-level precise)
         #     - Joern False/None + Tier 2 any → use Tier 2
         #     - Joern True + Tier 2 None → keep Joern (Tier 2 cannot decide)
-        if repo_root and file_path:
+        if language == "python" and repo_root and file_path:
             try:
                 import ast_cfg
                 result_t2 = ast_cfg.verify_dead_code(repo_root, file_path, line_num)
@@ -240,18 +387,20 @@ def verify_l4_structural(lines, line_num, claim, claim_types,
     if "import_related" in claim_types:
         result = None
         # Tier 1: Joern CPG (highest accuracy, optional)
+        # v2.7.1: 传递 language 给 joern_cpg
         if repo_root:
             try:
                 import joern_cpg
-                result = joern_cpg.verify_imports(repo_root, claim)
+                result = joern_cpg.verify_imports(repo_root, claim, language=language)
             except Exception:
                 result = None
         # Tier 2: Python ast import graph
+        # v2.7.1: Tier 2 仅支持 Python; Java/C++ 跳过
         # Phase 8: Joern verified=False → degrade to Tier 2 (conservative).
         #   Joern Python support (pysrc2cpg) may be incomplete; Tier 2 uses
         #   Python stdlib ast for reliable import graph construction.
         #   Only verified=True (confirmed cycle) prevents degradation.
-        if (not result or result.get("verified") is not True) and repo_root:
+        if language == "python" and (not result or result.get("verified") is not True) and repo_root:
             try:
                 import ast_cfg
                 result_t2 = ast_cfg.verify_imports(repo_root, claim)
@@ -519,6 +668,9 @@ def verify_single_finding(finding, repo_root):
 
     Returns: (verification_result, action)
       action ∈ {"verified", "partial", "unverified"}
+
+    v2.7.1: 支持 l4_eligible 字段 — l4_eligible=False 时跳过 L4, 仅跑 L1-L3.
+    v2.7.1: 自动检测 language 并传递给 verify_l4_structural.
     """
     fid = finding.get("id", "unknown")
     claim = finding.get("claim", "")
@@ -540,21 +692,48 @@ def verify_single_finding(finding, repo_root):
 
     # L3: Keyword match
     keywords = extract_keywords(claim)
-    l3 = verify_l3(l1l2["lines"], line_num, keywords)
+
+    # v2.8: 从 finding context 读取 threshold, 映射到 min_keywords
+    history_threshold = finding.get("_history_threshold")
+    min_keywords = _threshold_to_min_keywords(history_threshold)
+
+    l3 = verify_l3(l1l2["lines"], line_num, keywords, min_keywords=min_keywords)
     result["l3"] = l3
     result["keywords"] = keywords
+    result["min_keywords_used"] = min_keywords  # 审计追踪字段
 
     if not l3["confirmed"]:
         result["verification_level"] = 2
         result["action"] = "unverified"
+        # v2.8: 在 result 中标注 threshold 影响 (审计追踪字段)
+        # 消费方: verify_all_findings() 将 unverified findings 写入 hallucination_log,
+        # 该字段保留到 hallucination_log 条目, 供 benchmark_calibrate 分析
+        if min_keywords > 1:
+            result["hallucination_reason"] = f"keyword_insufficient (min={min_keywords})"
         return result, "unverified"
+
+    # v2.7.1: 检查 l4_eligible — 默认 True (向后兼容)
+    # l4_eligible=False 的 finding 跳过 L4, 仅保留 L1-L3 结果
+    # L3 已通过 → 返回 "partial" (降级 P0→P1, 保留在 baseline 中)
+    l4_eligible = finding.get("l4_eligible", True)
+    if not l4_eligible:
+        result["verification_level"] = 3
+        result["action"] = "partial"
+        result["l4_skipped"] = True
+        result["l4_skip_reason"] = "l4_eligible=False"
+        return result, "partial"
+
+    # v2.7.1: 检测语言并传递给 L4
+    language = _detect_language(file_path)
 
     # L4: Structural verification (Tier 2 fallback needs repo_root + file_path)
     claim_types = classify_claim(claim)
     l4 = verify_l4_structural(l1l2["lines"], line_num, claim, claim_types,
-                              repo_root=repo_root, file_path=file_path)
+                              repo_root=repo_root, file_path=file_path,
+                              language=language)
     result["l4"] = l4
     result["verification_level"] = l4["level"]
+    result["language"] = language
 
     if l4["confirmed"]:
         result["action"] = "verified"
@@ -577,7 +756,8 @@ def verify_single_finding(finding, repo_root):
     return result, "partial"
 
 
-def verify_all_findings(findings, repo_root, verify_p1_l4=False):
+def verify_all_findings(findings, repo_root, verify_p1_l4=False,
+                        history_threshold=None):
     """Run verification on all P0 (full L1-L4) and P1 (lightweight L1+L2) findings.
     P2-P3 are skipped.
 
@@ -587,12 +767,22 @@ def verify_all_findings(findings, repo_root, verify_p1_l4=False):
         verify_p1_l4: if True, also run L4 structural verification on P1 findings
             (default False for backward compatibility; set True when finding count
             is low and higher recall is needed).
+        history_threshold: v2.7.3 断点④修复 + v2.8 T1 闭环 — 来自 fix_history
+            的 RL-adjusted threshold. v2.8 通过 `_threshold_to_min_keywords()` 映射
+            驱动 L3 验证的 `min_keywords` 参数 (0.85→2 严格, 0.55→1 宽松, None→1 兼容).
+            同时写入每个 finding 的 `_history_threshold` 字段供审计追踪.
 
     Returns verified findings with actions and a hallucination log.
     """
     verified = []
     hallucinations = []
     downgraded = []
+
+    # v2.7.3 断点④: 将 history_threshold 写入每个 finding 的 context 中
+    # 供下游调用方 (如 fix_history 的下一轮 RL 调整) 使用
+    if history_threshold is not None:
+        for f in findings:
+            f["_history_threshold"] = history_threshold
 
     for f in findings:
         sev = f.get("severity")
@@ -604,9 +794,13 @@ def verify_all_findings(findings, repo_root, verify_p1_l4=False):
             verified.append(f)
             continue
 
+        # v2.7.2: 支持 per-finding repo path (Big-Vul/CVEfixes 多 repo 场景)
+        # 若 finding 的 evidence 含 repo_local_path, 用它替代全局 repo_root
+        finding_repo = f.get("evidence", {}).get("repo_local_path", "") or repo_root
+
         if sev == "P1":
             # P1: L1+L2 only by default; optional L4 when verify_p1_l4=True
-            result, action = verify_single_finding_l1l2(f, repo_root)
+            result, action = verify_single_finding_l1l2(f, finding_repo)
             if action != "verified_l1l2":
                 # L1/L2 failed → hallucination (file/line not found)
                 hallucinations.append({"id": result["id"], "claim": result["claim"],
@@ -617,7 +811,7 @@ def verify_all_findings(findings, repo_root, verify_p1_l4=False):
 
             # L1+L2 passed. If verify_p1_l4, also run L4 structural verification
             if verify_p1_l4:
-                result_p1, action_p1 = verify_single_finding(f, repo_root)
+                result_p1, action_p1 = verify_single_finding(f, finding_repo)
                 if action_p1 == "verified":
                     f["_phase35_verified"] = True
                     f["_phase35_action"] = "verified_l1l2_l4"
@@ -648,7 +842,7 @@ def verify_all_findings(findings, repo_root, verify_p1_l4=False):
             continue
 
         # P0: full L1-L4 verification
-        result, action = verify_single_finding(f, repo_root)
+        result, action = verify_single_finding(f, finding_repo)
 
         if action == "verified":
             result["_phase35_verified"] = True
@@ -708,6 +902,7 @@ def main():
     # fix_history 根据 scores.json trend 动态调整匹配阈值:
     #   improving (▲) → 宽松 (0.55), degrading (▼) → 严格 (0.85)
     # 该 threshold 反馈给后续验证, 使 RL loop 不再空转.
+    # v2.7.3 断点④修复: 字段名对齐 fix_history 输出的 "threshold_used"
     effective_threshold = args.history_threshold
     if effective_threshold is None:
         augmented_path = Path("docs/audit/augmented_issues.json")
@@ -715,7 +910,8 @@ def main():
             try:
                 aug_data = json.loads(augmented_path.read_text(encoding="utf-8"))
                 meta = aug_data.get("fix_history_meta", {})
-                effective_threshold = meta.get("effective_threshold")
+                # v2.7.3: fix_history 输出字段名是 "threshold_used"
+                effective_threshold = meta.get("threshold_used")
             except (json.JSONDecodeError, ValueError, OSError):
                 pass
 
@@ -736,7 +932,9 @@ def main():
         print(json.dumps({"error": "Invalid findings JSON structure"}))
         sys.exit(2)
 
-    verified, hallucinations, downgraded = verify_all_findings(items, args.repo)
+    verified, hallucinations, downgraded = verify_all_findings(
+        items, args.repo, history_threshold=effective_threshold
+    )
 
     output = {
         "phase": "3.5 Finding Verification",

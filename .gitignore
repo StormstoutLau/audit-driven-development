@@ -20,6 +20,7 @@ docs/benchmark/oss-cache/*.zip
 # Cloned source repos (large; re-clone via defects4j_to_findings.py if needed)
 docs/benchmark/oss-cache/defects4j-repos/
 docs/benchmark/oss-cache/cvefixes-repos/
+docs/benchmark/oss-cache/bigvul-repos/
 
 # Workspace / temp
 workspace/

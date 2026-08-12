@@ -85,10 +85,17 @@ def main():
     parser.add_argument("--history-dir", default="docs/audit")
     parser.add_argument("--output", default="docs/audit/augmented_issues.json")
     parser.add_argument("--default-threshold", type=float, default=0.65)
+    # v2.7.3 断点⑤修复: 支持 benchmark findings.json 格式 (findings 数组)
+    # 默认 audit 格式读取 issues 字段; benchmark 格式直接读 findings 字段
+    parser.add_argument("--findings-format", choices=["audit", "benchmark"],
+                        default="audit",
+                        help="Format of findings JSON (audit=issues, benchmark=findings)")
     args = parser.parse_args()
 
     data = json.loads(Path(args.findings).read_text(encoding="utf-8"))
-    new_issues = data.get("issues", [])
+    # v2.7.3 断点⑤: 根据格式选择字段名 (benchmark 用 findings, audit 用 issues)
+    findings_key = "findings" if args.findings_format == "benchmark" else "issues"
+    new_issues = data.get(findings_key, [])
 
     scores_path = Path(args.history_dir) / "scores.json"
     trend, consecutive = read_trend(scores_path)
@@ -125,6 +132,7 @@ def main():
                     issue["source_audit"] = best.get("source_audit", "")
                     augmented_count += 1
 
+    # v2.7.3 断点⑤: benchmark 格式输出用 findings 字段, audit 格式用 issues
     output = {
         "audit_id": data.get("audit_id", ""),
         "fix_history_meta": {
@@ -134,8 +142,9 @@ def main():
             "findings_augmented": augmented_count,
             "findings_with_any_match_above_50": total_matches,
             "confident_mode": consecutive >= 3,
+            "findings_format": args.findings_format,
         },
-        "issues": new_issues
+        findings_key: new_issues
     }
 
     Path(args.output).write_text(json.dumps(output, indent=2, ensure_ascii=False), encoding="utf-8")

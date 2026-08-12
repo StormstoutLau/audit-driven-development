@@ -223,7 +223,13 @@ def convert_bigvul_row(row, idx):
         "l4_eligible": False,  # C/C++, 无 L4
         "dimension": "security",
         "claim": claim,
-        "evidence": {"file": file_path, "line_start": line_start},
+        "evidence": {
+            "file": file_path,
+            "line_start": line_start,
+            # v2.7.2: 保留 repo 回溯字段, 供 download_repos.py 使用
+            "commit_hash": row.get("commit_id", ""),
+            "project": row.get("project", ""),
+        },
     }
 
 

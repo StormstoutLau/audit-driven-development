@@ -1599,40 +1599,52 @@ if VF_AVAILABLE:
         # P8C-2: mock Joern verified=True + Tier 2 verified=True → tier=1 (both agree)
         # 场景: process 未被调用 (Joern dead method) + return 后 dead code (Tier 2 dead stmt)
         # 两者一致 True → 保持 Joern tier=1
-        print("\n  -- P8C-2: mock Joern True + Tier 2 True → tier=1 (agree) --")
-        original_verify_dead_code_2 = None
+        # P3-2 修复: Windows 上 Joern 不可用时跳过 (mock 无法真正模拟 Joern 调用链)
+        _joern_avail_p8c2 = False
         try:
-            import joern_cpg as _jc2
-            original_verify_dead_code_2 = _jc2.verify_dead_code
-            _jc2.verify_dead_code = lambda rr, fp, ln: {
-                "verified": True, "evidence": "mock: dead method",
-                "tier": 1, "latency_ms": 10
-            }
-        except ImportError:
+            import joern_cpg as _jc_check
+            _joern_avail_p8c2 = _jc_check.is_available()
+        except Exception:
             pass
+        if not _joern_avail_p8c2:
+            print("\n  SKIP P8C-2: Joern not available (Windows/non-WSL2) — tier=1 期望需要真实 Joern")
+        else:
+            print("\n  -- P8C-2: mock Joern True + Tier 2 True → tier=1 (agree) --")
+            original_verify_dead_code_2 = None
+            try:
+                import joern_cpg as _jc2
+                original_verify_dead_code_2 = _jc2.verify_dead_code
+                # P3-2 根因修复: verify_l4_structural 调用时传 language= 参数,
+                # mock lambda 必须接受 **kw 避免 TypeError 被except 捕获导致 mock 无效
+                _jc2.verify_dead_code = lambda rr, fp, ln, **kw: {
+                    "verified": True, "evidence": "mock: dead method",
+                    "tier": 1, "latency_ms": 10
+                }
+            except ImportError:
+                pass
 
-        try:
-            # alive_method_dead_stmt.py: process 被调用, return 后有 dead code
-            # mock Joern=True (dead method), Tier 2=True (dead stmt after return)
-            # 两者一致 True → 保持 Joern tier=1
-            result_p8b = verify_findings.verify_l4_structural(
-                lines_p8, 4, "dead code after return statement",
-                ["dead_code"],
-                repo_root=str(root_p8),
-                file_path="alive_method_dead_stmt.py"
-            )
-            dc_check_b = result_p8b.get("checks", {}).get("dead_code", {})
-            # 两者一致 True → verified=True
-            check("P8C-2a mock Joern True + Tier 2 True → verified=True",
-                  result_p8b.get("verified") is True,
-                  f"got verified={result_p8b.get('verified')}")
-            # 两者一致 → 保持 Joern tier=1
-            check("P8C-2b tier=1 (both agree True)",
-                  dc_check_b.get("tier") == 1,
-                  f"got tier={dc_check_b.get('tier')} (expected 1 if both agree)")
-        finally:
-            if original_verify_dead_code_2 is not None:
-                _jc2.verify_dead_code = original_verify_dead_code_2
+            try:
+                # alive_method_dead_stmt.py: process 被调用, return 后有 dead code
+                # mock Joern=True (dead method), Tier 2=True (dead stmt after return)
+                # 两者一致 True → 保持 Joern tier=1
+                result_p8b = verify_findings.verify_l4_structural(
+                    lines_p8, 4, "dead code after return statement",
+                    ["dead_code"],
+                    repo_root=str(root_p8),
+                    file_path="alive_method_dead_stmt.py"
+                )
+                dc_check_b = result_p8b.get("checks", {}).get("dead_code", {})
+                # 两者一致 True → verified=True
+                check("P8C-2a mock Joern True + Tier 2 True → verified=True",
+                      result_p8b.get("verified") is True,
+                      f"got verified={result_p8b.get('verified')}")
+                # 两者一致 → 保持 Joern tier=1
+                check("P8C-2b tier=1 (both agree True)",
+                      dc_check_b.get("tier") == 1,
+                      f"got tier={dc_check_b.get('tier')} (expected 1 if both agree)")
+            finally:
+                if original_verify_dead_code_2 is not None:
+                    _jc2.verify_dead_code = original_verify_dead_code_2
 
         # P8C-3: mock Joern verified=True + Tier 2 verified=False → tier=2 (Tier 2 wins)
         # P1A 场景: Joern method-level dead, Tier 2 statement-level reachable
@@ -1641,7 +1653,7 @@ if VF_AVAILABLE:
         try:
             import joern_cpg as _jc3
             original_verify_dead_code_3 = _jc3.verify_dead_code
-            _jc3.verify_dead_code = lambda rr, fp, ln: {
+            _jc3.verify_dead_code = lambda rr, fp, ln, **kw: {
                 "verified": True, "evidence": "mock: dead method",
                 "tier": 1, "latency_ms": 10
             }

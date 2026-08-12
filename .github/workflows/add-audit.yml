@@ -1,0 +1,63 @@
+name: ADD Audit (Semgrep → ADD Verification)
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  add-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15  # 防止挂起
+    steps:
+      # 1. Checkout (v4, 非 deprecated v3)
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1  # v2.8 基本 CI 集成只需浅克隆; 差分扫描场景改为 0
+
+      # 2. Setup Python (确保 Python ≥ 3.9)
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # 3. Run Semgrep (CE, free) — 官方 semgrep/semgrep action
+      #    迁移自 returntocorp/semgrep-action@v1 (frozen, 不再推荐)
+      - name: Semgrep Scan
+        uses: semgrep/semgrep@v1
+        with:
+          config: >-
+            p/python
+            p/owasp-top-ten
+            p/cwe-top-25
+          output: semgrep-results.json
+          # ⚠️ 可选: 生成 SARIF 用于 GitHub Security tab
+          # 实施前验证 semgrep/semgrep@v1 是否支持 sarif: 输出参数
+          # 若不支持, 移除此行, 改用 semgrep scan --sarif > semgrep-results.sarif
+          # sarif: semgrep-results.sarif  # 暂时注释, 实施时确认后启用
+
+      # 4. Convert Semgrep → ADD findings
+      - name: Convert Semgrep to ADD findings
+        run: |
+          python scripts/semgrep_to_findings.py semgrep-results.json \
+              --output docs/benchmark/semgrep-ci \
+              --repo-local-path .
+
+      # 5. Run ADD Verification (L1-L4)
+      - name: ADD Phase 3.5 Verification
+        run: |
+          python scripts/verify_findings.py \
+              --findings docs/benchmark/semgrep-ci/findings.json \
+              --repo . \
+              --output docs/audit/verified.json \
+              --hallucination-log docs/audit/hallucination_log.json
+
+      # 6. Upload results (v4, 非 deprecated v3)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: add-audit-results
+          path: |
+            docs/audit/verified.json
+            docs/audit/hallucination_log.json
+            semgrep-results.json
+          retention-days: 30  # 避免占用存储配额

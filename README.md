@@ -15,7 +15,7 @@
 <br>
 
 <a href="https://github.com/StormstoutLau/audit-driven-development">
-  <img alt="version" src="https://img.shields.io/badge/version-2.6-6366f1?style=for-the-badge&logo=github&logoColor=white" />
+  <img alt="version" src="https://img.shields.io/badge/version-2.8-6366f1?style=for-the-badge&logo=github&logoColor=white" />
 </a>
 &nbsp;
 <a href="https://opensource.org/licenses/MIT">
@@ -23,7 +23,7 @@
 </a>
 &nbsp;
 <a href="https://github.com/StormstoutLau/audit-driven-development">
-  <img alt="tdd" src="https://img.shields.io/badge/TDD-372%2F372%20PASS-brightgreen?style=for-the-badge&logo=python&logoColor=white" />
+  <img alt="tdd" src="https://img.shields.io/badge/TDD-490%2F490%20PASS-brightgreen?style=for-the-badge&logo=python&logoColor=white" />
 </a>
 &nbsp;
 <a href="https://github.com/StormstoutLau/audit-driven-development">
@@ -131,6 +131,8 @@ Six benchmarks across three languages (Python / Java / C++) — the verification
 > **v2.5 learning-pipeline closure (2026-08-06)**: An audit of the v2.0–v2.3 "3-tier learning pipeline" found that all six learning scripts (`rule_suggester`, `rule_validator`, `fix_history`, `llm_generalize`, `fix_recipes`, `live_knowledge`) were present but disconnected — `hallucination_log.json` was never generated, the RL threshold had no downstream consumer, and `rule_suggester` was never invoked. v2.5 closes the loop in three stages: (1) `live_knowledge` now calls `diff_miner` + `fix_history` + `rule_suggester`; (2) `rule_suggester` consumes `hallucination_log` to generate false-pattern rules feeding back to `classify_claim()`; (3) `run_phase8_benchmark --baseline` auto-checks recall regression post-audit. Benchmark confirms zero regression (recall 71.4% / precision 100% / F1 83.3% unchanged). See [v2.5 spec](docs/superpowers/specs/2026-08-06-v2.5-learning-pipeline-closure.md) and [acceptance audit](docs/audit-log/2026-08-06-v2.5-spec-acceptance-audit.md).
 >
 > **v2.6 dataset integration (2026-08-11)**: Extended benchmark from 3 Python repos (27 findings) to 6 datasets across 3 languages (687 findings). Three conversion scripts (`swebench_to_findings.py`, `defects4j_to_findings.py`, `bigvul_to_findings.py`, `cvefixes_to_findings.py`) transform external datasets into ADD-compatible format. A hallucination synthesizer (`synthesize_hallucinations.py`) generates L1–L3 test samples via three transforms (line_offset / file_replace / method_fabricate). Defects4J Java benchmark runs against real Apache Commons repos (CLI/Codec/CSV cloned and merged, 49/50 real bugs correctly kept). Big-Vul (584 C/C++ vulnerabilities) and CVEfixes (26 CVEs) are converted but marked `real_bug_no_repo` because GitHub network issues prevented downloading Linux kernel and WordPress source repos — these 610 findings are excluded from precision/recall metrics (classified as UNKNOWN). The 1 FP in Defects4J (D4J-0002) is a stub file for a removed class (`cli2/GroupImpl`) whose line range didn't cover the bug location. See [v2.6 spec](docs/superpowers/specs/2026-08-07-v2.6-dataset-integration-design.md) and [v2.6 full benchmark data](docs/benchmark/v2.6-full-benchmark.json).
+>
+> **v2.7 learning-pipeline closure + data completion + L4 multi-language (2026-08-12)**: Three-stage upgrade. **v2.7.3** repaired 5 closed-loop breakpoints: `run_phase8_benchmark` now persists hallucinations to `hallucination_log.json` (629 entries → 3 counterexample rules), `classify_claim` consumes `rule_suggestions.json` via `_load_learned_rules()`, `history_threshold` flows through to each finding's `_history_threshold` field, and `fix_history` accepts `--findings-format benchmark`. **v2.7.2** added `download_repos.py` (GitHub URL inference + clone+checkout + idempotency, dry-run validated 583/584 Big-Vul repos) and preserved `commit_hash`/`project`/`repo_url` in finding evidence. **v2.7.1** extended L4 structural verification to Java/C/C++: `_detect_language()` routes by file extension, `joern_cpg.py` accepts `language` parameter for `javasrc2cpg`/`c2cpg` frontends, cache keys are language-prefixed to prevent cross-language CPG contamination, `l4_eligible=False` skips L4 gracefully, and Scala scripts strip language-specific suffixes (`.java`/`.cpp`/`.h`). Subagent audit: 13/13 claims VERIFIED, 0 hallucination. See [v2.7 spec](docs/superpowers/specs/2026-08-11-v2.7-learning-pipeline-closure-dataset-completion-l4-multilang.md) and [release notes](docs/RELEASE_NOTES_v2.7.md).
 
 ---
 
@@ -198,18 +200,18 @@ This is a **real RL loop** running on real audit data. No simulation.
 
 ---
 
-## Version Journey · 7 Days · 8 Versions
+## Version Journey · 7 Days · 9 Versions
 
 ```
-  7/6   7/7-9   7/9-10   7/10-11   7/11    7/11    7/12    7/12    7/12
-   │      │       │        │        │       │       │       │       │
-  v0.1 → v0.2 → v0.3 →  v0.4  →  v1.0 → v2.0 → v2.1 → v2.2 → v2.3
-   │      │       │        │        │       │       │       │       │
-  Iron   Struct  Detec   Repair   Eco-   Know-   Dual-   LLM    External
-  Law    Foundation tion  Baseline system  ledge   Track   Gen    Injection
-  ─────────────────────────────────────────────────────────────────────
-  1 行   4 个     12 个   15 个    15 个   16 个   20 个   24 个   28 个
-  SKILL 脚本     脚本    脚本     脚本    脚本    脚本    脚本    scripts
+  7/6   7/7-9   7/9-10   7/10-11   7/11    7/11    7/12    7/12    7/12   8/12
+   │      │       │        │        │       │       │       │       │      │
+  v0.1 → v0.2 → v0.3 →  v0.4  →  v1.0 → v2.0 → v2.1 → v2.2 → v2.3 → v2.7
+   │      │       │        │        │       │       │       │       │      │
+  Iron   Struct  Detec   Repair   Eco-   Know-   Dual-   LLM    External Closure
+  Law    Foundation tion  Baseline system  ledge   Track   Gen    Injection +L4 ML
+  ──────────────────────────────────────────────────────────────────────────────
+  1 行   4 个     12 个   15 个    15 个   16 个   20 个   24 个   28 个   33 个
+  SKILL 脚本     脚本    脚本     脚本    脚本    脚本    脚本    scripts scripts
 ```
 
 <br>
@@ -278,13 +280,14 @@ All 7 adapters auto-synced from `SKILL.md` via `scripts/sync_adapters.py`. Drop-
 
 | | |
 |---|---|
-| **Scripts** | 32 production · 13 test suites |
-| **TDD** | **372/372** all passing (v2.4 153 + v3.5 51 + v2.5 38 + v2.6 130) |
+| **Scripts** | 33 production · 15 test suites |
+| **TDD** | **465/465** all passing (v2.4 153 + v3.5 51 + v2.5 38 + v2.6 130 + v2.7 93) |
 | **Benchmark** | Recall 81.0% · Precision 89.5% · F1 85.0% (77 verified findings across 6 datasets / 3 languages) |
 | **Datasets** | SWE-bench (Python) · Defects4J (Java) · Big-Vul + CVEfixes (C/C++) — 687 total findings |
 | **Self-Audit** | **97/100 A+** — steady state after v2.0.1 fixes |
 | **Knowledge** | 3-tier ∿ Internal Learning → AI Generalization → External Injection |
-| **Learning Loop** | v2.5 closed-loop: hallucination→detection feedback + RL threshold + self-calibration |
+| **Learning Loop** | v2.7 closed-loop: hallucination_log→rule_suggestions→classify_claim + RL threshold + self-calibration |
+| **L4 Multi-Language** | v2.7.1: Java (javasrc2cpg) + C/C++ (c2cpg) structural verification via Joern |
 | **Hallucination Synthesis** | v2.6 auto-synthesizer: 3 transforms (line_offset / file_replace / method_fabricate) |
 | **Recipes** | 5 built-in human-authored + LLM-generated |
 | **Dependencies** | Zero — pure Python stdlib + PyYAML |

@@ -117,7 +117,8 @@ def convert_cvefixes_record(record, idx):
 
     Args:
         record: dict, 包含 cve_id, cwe_id, cvss_score, cve_summary,
-                project_name, file_path, line_start, func_name
+                project_name, file_path, line_start, func_name,
+                repo_url (v2.7.2 新增), commit_hash (v2.7.2 新增)
         idx: 序号 (从 0 开始)
 
     Returns:
@@ -147,7 +148,13 @@ def convert_cvefixes_record(record, idx):
         "l4_eligible": False,
         "dimension": "security",
         "claim": claim,
-        "evidence": {"file": file_path, "line_start": line_start},
+        "evidence": {
+            "file": file_path,
+            "line_start": line_start,
+            # v2.7.2: 保留 repo 回溯字段, 供 download_repos.py 使用
+            "repo_url": record.get("repo_url") or "",
+            "commit_hash": record.get("commit_hash") or "",
+        },
     }
 
 
@@ -197,6 +204,7 @@ def main(argv=None):
                 # cwe_id 通过子查询聚合 (一个 CVE 可对应多个 CWE, 用 ';' 分隔)
                 # cvss_score 优先取 cve.cvss_score, 缺失则回退到 severity
                 # func_name/line_start 取 before_change=1 的 method_change
+                # v2.7.2: 额外选取 fixes.repo_url 和 fixes.hash 作为 repo 回溯字段
                 cur.execute(
                     "SELECT cve.cve_id AS cve_id, "
                     "  (SELECT GROUP_CONCAT(cwe_id, ';') FROM cwe_classification "
@@ -206,7 +214,9 @@ def main(argv=None):
                     "  repository.repo_name AS project_name, "
                     "  file_change.filename AS file_path, "
                     "  COALESCE(method_change.start_line, 0) AS line_start, "
-                    "  COALESCE(method_change.name, '') AS func_name "
+                    "  COALESCE(method_change.name, '') AS func_name, "
+                    "  fixes.repo_url AS repo_url, "
+                    "  fixes.hash AS commit_hash "
                     "FROM cve "
                     "JOIN fixes ON fixes.cve_id = cve.cve_id "
                     "JOIN commits ON commits.hash = fixes.hash "
@@ -222,11 +232,14 @@ def main(argv=None):
                 )
             else:
                 # test/简化 schema: cves + fixes 直接 JOIN
+                # v2.7.2: 简化 schema 的 fixes 表无 repo_url/commit_hash,
+                # 用 NULL AS 占位, convert_cvefixes_record 会转成 ""
                 cur.execute(
                     "SELECT cves.cve_id AS cve_id, cves.cwe_id AS cwe_id, "
                     "cves.cvss_score AS cvss_score, cves.description AS cve_summary, "
                     "cves.project_name AS project_name, fixes.file_path AS file_path, "
-                    "fixes.line_start AS line_start, fixes.func_name AS func_name "
+                    "fixes.line_start AS line_start, fixes.func_name AS func_name, "
+                    "NULL AS repo_url, NULL AS commit_hash "
                     "FROM cves JOIN fixes ON cves.cve_id = fixes.cve_id "
                     "WHERE cves.project_name = ? "
                     "ORDER BY cves.cve_id LIMIT ?",

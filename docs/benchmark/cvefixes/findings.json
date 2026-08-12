@@ -13,7 +13,11 @@
       "claim": "function sanitize_text has CWE-79 vulnerability: XSS in wp-includes/formatting.php sanitize_text via crafted comment (CVSS 8.0) — affects wordpress",
       "evidence": {
         "file": "wp-includes/formatting.php",
-        "line_start": 150
+        "line_start": 150,
+        "repo_url": "https://github.com/WordPress/wordpress-develop",
+        "commit_hash": "b43712e0f79a9f5bea52217e06155e2f471c490c",
+        "commit_hash_source": "github_api_latest",
+        "commit_hash_original": "cve20200001fix0cve20200001fix0cve2020000"
       }
     },
     {
@@ -24,7 +28,11 @@
       "claim": "function query has CWE-89 vulnerability: SQL injection in wp-includes/wp-db.php query via unsanitized orderby (CVSS 9.0) — affects wordpress",
       "evidence": {
         "file": "wp-includes/wp-db.php",
-        "line_start": 200
+        "line_start": 200,
+        "repo_url": "https://github.com/WordPress/wordpress-develop",
+        "commit_hash": "b43712e0f79a9f5bea52217e06155e2f471c490c",
+        "commit_hash_source": "github_api_latest",
+        "commit_hash_original": "cve20200002fix0cve20200002fix0cve2020000"
       }
     },
     {
@@ -35,7 +43,11 @@
       "claim": "function handle_options has CWE-352 vulnerability: CSRF in wp-admin/options.php handle_options missing nonce check (CVSS 6.5) — affects wordpress",
       "evidence": {
         "file": "wp-admin/options.php",
-        "line_start": 300
+        "line_start": 300,
+        "repo_url": "https://github.com/WordPress/wordpress-develop",
+        "commit_hash": "b43712e0f79a9f5bea52217e06155e2f471c490c",
+        "commit_hash_source": "github_api_latest",
+        "commit_hash_original": "cve20200003fix0cve20200003fix0cve2020000"
       }
     },
     {
@@ -46,7 +58,9 @@
       "claim": "function unpack_archive has CWE-22 vulnerability: Path traversal in wp-includes/file.php unpack_archive allows arbitrary write (CVSS 7.5) — affects wordpress",
       "evidence": {
         "file": "wp-includes/file.php",
-        "line_start": 100
+        "line_start": 100,
+        "repo_url": "https://github.com/WordPress/wordpress-develop",
+        "commit_hash": "cve20200004fix0cve20200004fix0cve2020000"
       }
     },
     {
@@ -57,7 +71,11 @@
       "claim": "function do_shortcode has CWE-79 vulnerability: Stored XSS in wp-includes/plugin.php do_shortcode via shortcode attr (CVSS 7.8) — affects wordpress",
       "evidence": {
         "file": "wp-includes/plugin.php",
-        "line_start": 250
+        "line_start": 250,
+        "repo_url": "https://github.com/WordPress/wordpress-develop",
+        "commit_hash": "b43712e0f79a9f5bea52217e06155e2f471c490c",
+        "commit_hash_source": "github_api_latest",
+        "commit_hash_original": "cve20200005fix0cve20200005fix0cve2020000"
       }
     },
     {
@@ -68,7 +86,11 @@
       "claim": "function get_posts has CWE-89 vulnerability: SQLi in wp-admin/edit.php get_posts via crafted taxonomy query (CVSS 9.2) — affects wordpress",
       "evidence": {
         "file": "wp-admin/edit.php",
-        "line_start": 80
+        "line_start": 80,
+        "repo_url": "https://github.com/WordPress/wordpress-develop",
+        "commit_hash": "b43712e0f79a9f5bea52217e06155e2f471c490c",
+        "commit_hash_source": "github_api_latest",
+        "commit_hash_original": "cve20200006fix0cve20200006fix0cve2020000"
       }
     },
     {
@@ -79,7 +101,9 @@
       "claim": "function db_query has CWE-89 vulnerability: SQL injection in includes/database/database.php db_query via group_by (CVSS 9.5) — affects drupal",
       "evidence": {
         "file": "includes/database/database.php",
-        "line_start": 50
+        "line_start": 50,
+        "repo_url": "https://github.com/drupal/drupal",
+        "commit_hash": "cve20200010fix0cve20200010fix0cve2020001"
       }
     },
     {
@@ -90,7 +114,9 @@
       "claim": "function filter_xss has CWE-79 vulnerability: Reflected XSS in modules/filter.php filter_xss bypass via svg (CVSS 7.0) — affects drupal",
       "evidence": {
         "file": "modules/filter.php",
-        "line_start": 80
+        "line_start": 80,
+        "repo_url": "https://github.com/drupal/drupal",
+        "commit_hash": "cve20200011fix0cve20200011fix0cve2020001"
       }
     },
     {
@@ -101,7 +127,9 @@
       "claim": "function admin_form has CWE-352 vulnerability: CSRF in modules/system.php admin_form missing token (CVSS 6.0) — affects drupal",
       "evidence": {
         "file": "modules/system.php",
-        "line_start": 120
+        "line_start": 120,
+        "repo_url": "https://github.com/drupal/drupal",
+        "commit_hash": "cve20200012fix0cve20200012fix0cve2020001"
       }
     },
     {
@@ -112,7 +140,11 @@
       "claim": "function user_login has CWE-89;CWE-287 vulnerability: Auth bypass in user.module user_login via SQLi in password check (CVSS 9.8) — affects drupal",
       "evidence": {
         "file": "modules/user.module",
-        "line_start": 200
+        "line_start": 200,
+        "repo_url": "https://github.com/drupal/drupal",
+        "commit_hash": "b2081871f8550194749ac04ed2ff65c3a212691d",
+        "commit_hash_source": "github_api_latest",
+        "commit_hash_original": "cve20200013fix0cve20200013fix0cve2020001"
       }
     },
     {
@@ -123,7 +155,11 @@
       "claim": "function path_load has CWE-89 vulnerability: SQLi in includes/path.inc path_load via alias parameter (CVSS 9.3) — affects drupal",
       "evidence": {
         "file": "includes/path.inc",
-        "line_start": 60
+        "line_start": 60,
+        "repo_url": "https://github.com/drupal/drupal",
+        "commit_hash": "06fb770bd340e5a18555e0da55a4dd6ba22f76ba",
+        "commit_hash_source": "github_api_latest",
+        "commit_hash_original": "cve20200014fix0cve20200014fix0cve2020001"
       }
     },
     {
@@ -134,7 +170,12 @@
       "claim": "function parse_url has CWE-122 vulnerability: Heap buffer overflow in lib/url.c parse_url fixed in 7.71 (CVSS 7.5) — affects curl",
       "evidence": {
         "file": "lib/url.c",
-        "line_start": 1850
+        "line_start": 1850,
+        "repo_url": "https://github.com/curl/curl",
+        "commit_hash": "69a224d6b48edb43df29cb69881ca8edc90f1527",
+        "commit_hash_source": "github_api_latest",
+        "commit_hash_original": "cve20200030fix0cve20200030fix0cve2020003",
+        "repo_local_path": "F:\\Coding\\audit-driven-development\\docs\\benchmark\\oss-cache\\cvefixes-repos\\curl_69a224d6"
       }
     },
     {
@@ -145,7 +186,12 @@
       "claim": "function readwrite_data has CWE-125 vulnerability: Out-of-bounds read in lib/transfer.c readwrite_data via crafted server (CVSS 5.5) — affects curl",
       "evidence": {
         "file": "lib/transfer.c",
-        "line_start": 720
+        "line_start": 720,
+        "repo_url": "https://github.com/curl/curl",
+        "commit_hash": "c04189523cb848922d7ea03898b525cfffe3bc9c",
+        "commit_hash_source": "github_api_latest",
+        "commit_hash_original": "cve20200031fix0cve20200031fix0cve2020003",
+        "repo_local_path": "F:\\Coding\\audit-driven-development\\docs\\benchmark\\oss-cache\\cvefixes-repos\\curl_c0418952"
       }
     },
     {
@@ -156,7 +202,12 @@
       "claim": "function Curl_client_write has CWE-787 vulnerability: Heap-based buffer overflow in lib/sendf.c Curl_client_write (CVSS 8.0) — affects curl",
       "evidence": {
         "file": "lib/sendf.c",
-        "line_start": 410
+        "line_start": 410,
+        "repo_url": "https://github.com/curl/curl",
+        "commit_hash": "c4013cdb85fcb8fa3f0613b5263a09af21832aef",
+        "commit_hash_source": "github_api_latest",
+        "commit_hash_original": "cve20200032fix0cve20200032fix0cve2020003",
+        "repo_local_path": "F:\\Coding\\audit-driven-development\\docs\\benchmark\\oss-cache\\cvefixes-repos\\curl_c4013cdb"
       }
     },
     {
@@ -167,7 +218,12 @@
       "claim": "function Curl_multi_closed has CWE-416 vulnerability: Use-after-free in lib/multi.c Curl_multi_closed via connection reuse (CVSS 7.8) — affects curl",
       "evidence": {
         "file": "lib/multi.c",
-        "line_start": 980
+        "line_start": 980,
+        "repo_url": "https://github.com/curl/curl",
+        "commit_hash": "874a54de5dcb5b68e22e896787d8b9bd9cda8aaa",
+        "commit_hash_source": "github_api_latest",
+        "commit_hash_original": "cve20200033fix0cve20200033fix0cve2020003",
+        "repo_local_path": "F:\\Coding\\audit-driven-development\\docs\\benchmark\\oss-cache\\cvefixes-repos\\curl_874a54de"
       }
     },
     {
@@ -178,7 +234,12 @@
       "claim": "function Curl_ftp_parselist has CWE-122 vulnerability: Heap overflow in lib/ftplistparser.c Curl_ftp_parselist parser (CVSS 7.6) — affects curl",
       "evidence": {
         "file": "lib/ftplistparser.c",
-        "line_start": 230
+        "line_start": 230,
+        "repo_url": "https://github.com/curl/curl",
+        "commit_hash": "dfc01ea2a3e01f04a310456af2132e2fc001f933",
+        "commit_hash_source": "github_api_latest",
+        "commit_hash_original": "cve20200034fix0cve20200034fix0cve2020003",
+        "repo_local_path": "F:\\Coding\\audit-driven-development\\docs\\benchmark\\oss-cache\\cvefixes-repos\\curl_dfc01ea2"
       }
     },
     {
@@ -189,7 +250,11 @@
       "claim": "function tls_construct_server_key_exchange has CWE-119 vulnerability: Buffer overflow in ssl/statem/statem_lib.c tls_construct_server_key_exchange (CVSS 7.5) — affects openssl",
       "evidence": {
         "file": "ssl/statem/statem_lib.c",
-        "line_start": 310
+        "line_start": 310,
+        "repo_url": "https://github.com/openssl/openssl",
+        "commit_hash": "9c4d2c7bff92e678b88a5964a11c7057925a0bbb",
+        "commit_hash_source": "github_api_latest",
+        "commit_hash_original": "cve20200040fix0cve20200040fix0cve2020004"
       }
     },
     {
@@ -200,7 +265,12 @@
       "claim": "function BUF_MEM_grow has CWE-787 vulnerability: Heap-based buffer overflow in crypto/buffer/buffer.c BUF_MEM_grow (CVSS 8.0) — affects openssl",
       "evidence": {
         "file": "crypto/buffer/buffer.c",
-        "line_start": 80
+        "line_start": 80,
+        "repo_url": "https://github.com/openssl/openssl",
+        "commit_hash": "e077455e9e57ed4ee4676996b4a9aa11df6327a6",
+        "commit_hash_source": "github_api_latest",
+        "commit_hash_original": "cve20200041fix0cve20200041fix0cve2020004",
+        "repo_local_path": "F:\\Coding\\audit-driven-development\\docs\\benchmark\\oss-cache\\cvefixes-repos\\openssl_e077455e"
       }
     },
     {
@@ -211,7 +281,11 @@
       "claim": "function check_cert_time has CWE-125 vulnerability: Out-of-bounds read in crypto/x509/x509_vfy.c check_cert_time (CVSS 5.9) — affects openssl",
       "evidence": {
         "file": "crypto/x509/x509_vfy.c",
-        "line_start": 410
+        "line_start": 410,
+        "repo_url": "https://github.com/openssl/openssl",
+        "commit_hash": "3693c35ffd07b09e096435521ad27ee7a43a6e08",
+        "commit_hash_source": "github_api_latest",
+        "commit_hash_original": "cve20200042fix0cve20200042fix0cve2020004"
       }
     },
     {
@@ -222,7 +296,12 @@
       "claim": "function ssl3_cipher_list has CWE-326 vulnerability: Weak ciphers in ssl/s3_lib.c ssl3_cipher_list allows downgrade (CVSS 6.2) — affects openssl",
       "evidence": {
         "file": "ssl/s3_lib.c",
-        "line_start": 1500
+        "line_start": 1500,
+        "repo_url": "https://github.com/openssl/openssl",
+        "commit_hash": "ba627dbcde3037dd93660a676d0b98e40a787720",
+        "commit_hash_source": "github_api_latest",
+        "commit_hash_original": "cve20200043fix0cve20200043fix0cve2020004",
+        "repo_local_path": "F:\\Coding\\audit-driven-development\\docs\\benchmark\\oss-cache\\cvefixes-repos\\openssl_ba627dbc"
       }
     },
     {
@@ -233,7 +312,12 @@
       "claim": "function query has CWE-89 vulnerability: SQL injection in libraries/joomla/database/database.php query (CVSS 9.0) — affects joomla",
       "evidence": {
         "file": "libraries/joomla/database/database.php",
-        "line_start": 120
+        "line_start": 120,
+        "repo_url": "https://github.com/joomla/joomla-cms",
+        "commit_hash": "a37fe36823914a0ec79f74a3cc2a406c424ecba6",
+        "commit_hash_source": "github_api_latest",
+        "commit_hash_original": "cve20200020fix0cve20200020fix0cve2020002",
+        "repo_local_path": "F:\\Coding\\audit-driven-development\\docs\\benchmark\\oss-cache\\cvefixes-repos\\joomla-cms_a37fe368"
       }
     },
     {
@@ -244,7 +328,12 @@
       "claim": "function display has CWE-79 vulnerability: XSS in components/com_content/content.php display via article title (CVSS 7.2) — affects joomla",
       "evidence": {
         "file": "components/com_content/content.php",
-        "line_start": 90
+        "line_start": 90,
+        "repo_url": "https://github.com/joomla/joomla-cms",
+        "commit_hash": "f06e4afc0e516ae9f421a0a6f57a2ea0189bb32f",
+        "commit_hash_source": "github_api_latest",
+        "commit_hash_original": "cve20200021fix0cve20200021fix0cve2020002",
+        "repo_local_path": "F:\\Coding\\audit-driven-development\\docs\\benchmark\\oss-cache\\cvefixes-repos\\joomla-cms_f06e4afc"
       }
     },
     {
@@ -255,7 +344,12 @@
       "claim": "function save has CWE-352 vulnerability: CSRF in administrator/index.php settings save missing token (CVSS 6.5) — affects joomla",
       "evidence": {
         "file": "administrator/index.php",
-        "line_start": 40
+        "line_start": 40,
+        "repo_url": "https://github.com/joomla/joomla-cms",
+        "commit_hash": "576f005977b31684d3d09643f1475a94d2ae081a",
+        "commit_hash_source": "github_api_latest",
+        "commit_hash_original": "cve20200022fix0cve20200022fix0cve2020002",
+        "repo_local_path": "F:\\Coding\\audit-driven-development\\docs\\benchmark\\oss-cache\\cvefixes-repos\\joomla-cms_576f0059"
       }
     },
     {
@@ -266,7 +360,12 @@
       "claim": "function mov_read_stss has CWE-122 vulnerability: Heap-based buffer overflow in libavformat/mov.c mov_read_stss (CVSS 8.8) — affects ffmpeg",
       "evidence": {
         "file": "libavformat/mov.c",
-        "line_start": 3200
+        "line_start": 3200,
+        "repo_url": "https://github.com/FFmpeg/FFmpeg",
+        "commit_hash": "ae0e0ba3c3df840191e7a4c9b76494372ec53202",
+        "commit_hash_source": "github_api_latest",
+        "commit_hash_original": "cve20200050fix0cve20200050fix0cve2020005",
+        "repo_local_path": "F:\\Coding\\audit-driven-development\\docs\\benchmark\\oss-cache\\cvefixes-repos\\FFmpeg_ae0e0ba3"
       }
     },
     {
@@ -277,7 +376,12 @@
       "claim": "function ff_h264_decode_mb_cavlc has CWE-787 vulnerability: Heap overflow in libavcodec/h264_parser.c ff_h264_decode_mb_cavlc (CVSS 8.1) — affects ffmpeg",
       "evidence": {
         "file": "libavcodec/h264_parser.c",
-        "line_start": 880
+        "line_start": 880,
+        "repo_url": "https://github.com/FFmpeg/FFmpeg",
+        "commit_hash": "938fa8b14c63df5ef7e97148c7fde2e7c1444709",
+        "commit_hash_source": "github_api_latest",
+        "commit_hash_original": "cve20200051fix0cve20200051fix0cve2020005",
+        "repo_local_path": "F:\\Coding\\audit-driven-development\\docs\\benchmark\\oss-cache\\cvefixes-repos\\FFmpeg_938fa8b1"
       }
     },
     {
@@ -288,7 +392,11 @@
       "claim": "function aac_decode_frame_int has CWE-787 vulnerability: Out-of-bounds write in libavcodec/aacdec.c aac_decode_frame_int (CVSS 9.0) — affects ffmpeg",
       "evidence": {
         "file": "libavcodec/aacdec.c",
-        "line_start": 2100
+        "line_start": 2100,
+        "repo_url": "https://github.com/FFmpeg/FFmpeg",
+        "commit_hash": "ae7c6cc17d57e4ff73f88dc4a4284c1676a7e19a",
+        "commit_hash_source": "github_api_latest",
+        "commit_hash_original": "cve20200052fix0cve20200052fix0cve2020005"
       }
     }
   ]

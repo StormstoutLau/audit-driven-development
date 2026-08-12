@@ -141,8 +141,12 @@ def extract_tier_info(verified_finding):
     return tiers
 
 
-def run_benchmark(test_config):
-    """Run benchmark on a single test config, return metrics dict."""
+def run_benchmark(test_config, hallucination_log_path=None, history_threshold=None):
+    """Run benchmark on a single test config, return metrics dict.
+
+    v2.7.3 断点①修复: hallucination_log_path 参数将 hallucinations 持久化到磁盘,
+    让 rule_suggester 能消费验证结果生成反例规则.
+    """
     name = test_config["name"]
     findings_path = test_config["findings_path"]
     repo_path = test_config["repo_path"]
@@ -162,7 +166,7 @@ def run_benchmark(test_config):
     # Run verification with timing
     t0 = time.perf_counter()
     verified, hallucinations, downgraded = verify_findings.verify_all_findings(
-        findings, str(repo_path)
+        findings, str(repo_path), history_threshold=history_threshold
     )
     total_ms = (time.perf_counter() - t0) * 1000
 
@@ -260,6 +264,27 @@ def run_benchmark(test_config):
     print(f"    Total latency: {metrics['total_latency_ms']}ms ({metrics['avg_latency_per_finding_ms']}ms/finding)")
     print(f"    Tier distribution: {tier_distribution}")
     print(f"    Hallucinations removed: {len(hallucinations)}, Downgraded: {len(downgraded)}")
+
+    # v2.7.3 断点①修复: 将 hallucinations 持久化到磁盘, 让 rule_suggester 能消费
+    if hallucination_log_path and hallucinations:
+        existing = []
+        hlog_path = Path(hallucination_log_path)
+        if hlog_path.exists():
+            try:
+                existing = json.loads(hlog_path.read_text(encoding="utf-8")).get("hallucinations", [])
+            except (json.JSONDecodeError, ValueError, OSError):
+                existing = []
+        all_hallucinations = existing + hallucinations
+        hlog_path.parent.mkdir(parents=True, exist_ok=True)
+        hlog_path.write_text(
+            json.dumps({
+                "hallucinations": all_hallucinations,
+                "count": len(all_hallucinations),
+                "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S"),
+            }, indent=2, ensure_ascii=False),
+            encoding="utf-8",
+        )
+        print(f"    Hallucination log updated: {hlog_path} ({len(all_hallucinations)} total)")
 
     return metrics
 
@@ -371,6 +396,9 @@ def main():
                         help="List of benchmark directories to include "
                              "(default: 3 original benchmarks + swebench-verified "
                              "+ swebench-verified-hallucinations if they exist)")
+    parser.add_argument("--history-threshold", type=float, default=None,
+                        help="v2.8 P3-3: RL-adjusted threshold 透传到 verify_findings "
+                             "(0.85=declining/严格, 0.55=improving/宽松, None=默认/兼容)")
     args = parser.parse_args()
 
     print("=" * 70)
@@ -390,9 +418,23 @@ def main():
 
     all_metrics = []
     matrix = build_test_matrix(args.benchmark_dirs)
+    # v2.7.3 断点①: 每个 benchmark 的 hallucinations 累积写入 hallucination_log.json
+    # 让 rule_suggester 能消费验证结果生成反例规则
+    hlog_path = ROOT / "docs" / "audit" / "hallucination_log.json"
+    # 运行前清空旧数据, 避免累积重复 (spec §2.1.2 风险分析: 按 finding id 去重)
+    if hlog_path.exists():
+        hlog_path.write_text(
+            json.dumps({"hallucinations": [], "count": 0,
+                        "timestamp": time.strftime("%Y-%m-%dT%H:%M:%S")}, indent=2),
+            encoding="utf-8",
+        )
     for test_config in matrix:
         try:
-            metrics = run_benchmark(test_config)
+            metrics = run_benchmark(
+                test_config,
+                hallucination_log_path=str(hlog_path),
+                history_threshold=args.history_threshold,
+            )
             all_metrics.append(metrics)
         except Exception as e:
             print(f"\n  ERROR running {test_config['name']}: {e}")

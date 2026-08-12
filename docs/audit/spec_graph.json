@@ -118,12 +118,12 @@
       "constraints": [],
       "code_locations": [
         {
-          "file": "guards.project.yml",
+          "file": "merge_guards.py",
           "line_start": 1,
           "line_end": 1
         },
         {
-          "file": "docs/audit/guards.learned.yml",
+          "file": "guards.project.yml",
           "line_start": 1,
           "line_end": 1
         },
@@ -138,7 +138,7 @@
           "line_end": 1
         },
         {
-          "file": "merge_guards.py",
+          "file": "docs/audit/guards.learned.yml",
           "line_start": 1,
           "line_end": 1
         }
@@ -156,7 +156,7 @@
       "constraints": [],
       "code_locations": [
         {
-          "file": "pattern_candidates.json",
+          "file": "rule_suggestions.json",
           "line_start": 1,
           "line_end": 1
         },
@@ -166,7 +166,7 @@
           "line_end": 1
         },
         {
-          "file": "rule_suggestions.json",
+          "file": "pattern_candidates.json",
           "line_start": 1,
           "line_end": 1
         }
@@ -214,7 +214,7 @@
       ]
     },
     {
-      "section": "The Audit Framework: 4 Phases",
+      "section": "The Audit Framework: 5 Phases",
       "module": "SKILL.md",
       "constraints": [],
       "code_locations": []
@@ -236,6 +236,41 @@
       "module": "SKILL.md",
       "constraints": [],
       "code_locations": []
+    },
+    {
+      "section": "Phase 3.5: Finding Verification — 幻觉防护 (v3.5+)",
+      "module": "SKILL.md",
+      "constraints": [
+        "MUST pass source-code-level verification.",
+        "never enter the knowledge pipeline or fix baseline."
+      ],
+      "code_locations": [
+        {
+          "file": "hallucination_log.json",
+          "line_start": 1,
+          "line_end": 1
+        },
+        {
+          "file": "scripts/ast_cfg.py",
+          "line_start": 1,
+          "line_end": 1
+        },
+        {
+          "file": "scripts/joern_cpg.py",
+          "line_start": 1,
+          "line_end": 1
+        },
+        {
+          "file": "docs/audit/hallucination_log.json",
+          "line_start": 1,
+          "line_end": 1
+        },
+        {
+          "file": "verify_findings.py",
+          "line_start": 1,
+          "line_end": 1
+        }
+      ]
     },
     {
       "section": "Phase 4: Fix Baseline + Tracking (修复基线 + 跟踪表)",
@@ -530,12 +565,12 @@
       "constraints": [],
       "code_locations": [
         {
-          "file": "docs/audit/YYYY-MM-DD-code-quality-audit.md",
+          "file": "issues.json",
           "line_start": 1,
           "line_end": 1
         },
         {
-          "file": "issues.json",
+          "file": "docs/audit/YYYY-MM-DD-code-quality-audit.md",
           "line_start": 1,
           "line_end": 1
         }
@@ -1011,9 +1046,19 @@
       "decision": "3. Build keyword→rule index",
       "code_evidence": [
         {
-          "file": "scripts/inter_rater.py",
-          "line": 22,
-          "match": "  4. Build 2x2 contingency matrix:"
+          "file": "scripts/ast_cfg.py",
+          "line": 4,
+          "match": "  - CFGBuilder: builds Control Flow Graph from Python source via ast.NodeVisitor"
+        },
+        {
+          "file": "scripts/ast_cfg.py",
+          "line": 6,
+          "match": "  - ImportGraphBuilder + detect_cycle: builds import graph, detects cycles"
+        },
+        {
+          "file": "scripts/ast_cfg.py",
+          "line": 30,
+          "match": "# ── CFG Builder ──────────────────────────────────────────────────────────"
         }
       ]
     },
@@ -1027,6 +1072,16 @@
       "decision": "Create mapping: keyword → [list of rule strings]",
       "code_evidence": [
         {
+          "file": "docs/benchmark/oss-cache/itsdangerous-2.2.0/src/itsdangerous/serializer.py",
+          "line": 281,
+          "match": "        \"\"\"Creates a new instance of the signer to be used. The default"
+        },
+        {
+          "file": "scripts/_e2e_joern_test.py",
+          "line": 46,
+          "match": "# Step 3: Create test repo with method-level dead code"
+        },
+        {
           "file": "scripts/issues_tracker.py",
           "line": 74,
           "match": "    print(f\"Created {ISSUES_FILE} with {len(issues)} issues (all status=open)\")"
@@ -1038,19 +1093,19 @@
       "decision": "4. Output rule_index.json",
       "code_evidence": [
         {
-          "file": "scripts/diff_miner.py",
-          "line": 17,
-          "match": "  4. Output pattern_candidates.json with hotspots, patterns, suggested_guards"
+          "file": "scripts/bigvul_to_findings.py",
+          "line": 242,
+          "match": "                        help=\"Output directory for findings.json + ground_truth."
         },
         {
-          "file": "scripts/fix_history.py",
-          "line": 19,
-          "match": "  6. Output augmented issues JSON"
+          "file": "scripts/bigvul_to_findings.py",
+          "line": 296,
+          "match": "    print(f\"  Output dir: {out_dir}\")"
         },
         {
-          "file": "scripts/inter_rater.py",
-          "line": 25,
-          "match": "  6. Output: kappa value, agreement rate, per-file breakdown, per-dimension kapp"
+          "file": "scripts/cvefixes_to_findings.py",
+          "line": 167,
+          "match": "                        help=\"Output directory for findings.json + ground_truth."
         }
       ]
     },
@@ -1080,19 +1135,19 @@
       "decision": "Output: rule_index.json",
       "code_evidence": [
         {
-          "file": "scripts/diff_miner.py",
-          "line": 17,
-          "match": "  4. Output pattern_candidates.json with hotspots, patterns, suggested_guards"
+          "file": "scripts/bigvul_to_findings.py",
+          "line": 242,
+          "match": "                        help=\"Output directory for findings.json + ground_truth."
         },
         {
-          "file": "scripts/fix_history.py",
-          "line": 19,
-          "match": "  6. Output augmented issues JSON"
+          "file": "scripts/bigvul_to_findings.py",
+          "line": 296,
+          "match": "    print(f\"  Output dir: {out_dir}\")"
         },
         {
-          "file": "scripts/inter_rater.py",
-          "line": 25,
-          "match": "  6. Output: kappa value, agreement rate, per-file breakdown, per-dimension kapp"
+          "file": "scripts/cvefixes_to_findings.py",
+          "line": 167,
+          "match": "                        help=\"Output directory for findings.json + ground_truth."
         }
       ]
     },
@@ -1132,34 +1187,216 @@
       "decision": "**Status / 状态**: ✅ Implemented in v0.2.1 (see `SKILL.md` Template 1 DIMENSION 6 + Template 2 CHECK 5)",
       "code_evidence": [
         {
+          "file": "scripts/run_phase8_benchmark.py",
+          "line": 526,
+          "match": "            print(f\"  Status: {regression['status']}\")"
+        },
+        {
           "file": "scripts/test_v20_consistency.py",
           "line": 143,
           "match": "check(\"C1 ROADMAP P2.7 Status is Done\","
         },
         {
-          "file": "scripts/test_v03_consistency.py",
-          "line": 104,
-          "match": "checks.append((\"C1: ROADMAP P2.8' status updated to Done/Implemented\","
-        },
-        {
-          "file": "scripts/test_v03_consistency.py",
-          "line": 108,
-          "match": "checks.append((\"C2: ROADMAP P2.12 status updated to Done/Implemented\","
+          "file": "docs/benchmark/oss-cache/itsdangerous-2.2.0/src/itsdangerous/signer.py",
+          "line": 22,
+          "match": "        raise NotImplementedError()"
         }
       ]
     }
   ],
-  "guard_mappings": [],
+  "guard_mappings": [
+    {
+      "guard_id": "LEARNED-FASTAPI_0.11-001",
+      "scope_glob": "**/http.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "LEARNED-FASTAPI_0.11-002",
+      "scope_glob": "**/unknown.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "LEARNED-FASTAPI_0.11-003",
+      "scope_glob": "**/dependencies/**/*.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "LEARNED-FASTAPI_0.11-004",
+      "scope_glob": "**/_compat.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "LEARNED-FASTAPI_0.11-005",
+      "scope_glob": "**/unknown.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "LEARNED-FLASK_3.1.2-006",
+      "scope_glob": "**/unknown.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "LEARNED-FLASK_3.1.2-007",
+      "scope_glob": "**/unknown.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "LEARNED-FLASK_3.1.2-008",
+      "scope_glob": "**/unknown.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "LEARNED-REQUESTS_2.3-009",
+      "scope_glob": "**/utils.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "LEARNED-REQUESTS_2.3-010",
+      "scope_glob": "**/sessions.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "LEARNED-REQUESTS_2.3-011",
+      "scope_glob": "**/utils.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "LEARNED-REQUESTS_2.3-012",
+      "scope_glob": "**/models.py",
+      "resolved_files": [],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "REF-PYTHON-P-001",
+      "scope_glob": "**/*.py",
+      "resolved_files": [
+        "docs\\benchmark\\add-v2.4-self-audit\\analyze.py",
+        "docs\\benchmark\\itsdangerous-2.2.0\\analyze.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\docs\\conf.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\src\\itsdangerous\\encoding.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\src\\itsdangerous\\exc.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\src\\itsdangerous\\serializer.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\src\\itsdangerous\\signer.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\src\\itsdangerous\\timed.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\src\\itsdangerous\\url_safe.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\src\\itsdangerous\\_json.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\src\\itsdangerous\\__init__.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\tests\\test_itsdangerous\\test_encoding.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\tests\\test_itsdangerous\\test_serializer.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\tests\\test_itsdangerous\\test_signer.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\tests\\test_itsdangerous\\test_timed.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\tests\\test_itsdangerous\\test_url_safe.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\tests\\test_itsdangerous\\__init__.py",
+        "docs\\benchmark\\stdlib-oss-test\\analyze.py",
+        "docs\\benchmark\\stdlib-oss-test\\craft_findings.py",
+        "scripts\\ast_cfg.py",
+        "scripts\\audit_files.py",
+        "scripts\\benchmark_syncer.py",
+        "scripts\\bigvul_to_findings.py",
+        "scripts\\cvefixes_to_findings.py",
+        "scripts\\defects4j_to_findings.py",
+        "scripts\\diff_miner.py",
+        "scripts\\enrich_defects4j.py",
+        "scripts\\fix_history.py",
+        "scripts\\fix_recipes.py",
+        "scripts\\inter_rater.py",
+        "scripts\\issues_tracker.py",
+        "scripts\\joern_cpg.py",
+        "scripts\\live_knowledge.py",
+        "scripts\\llm_generalize.py",
+        "scripts\\mcp_lookup.py",
+        "scripts\\merge_guards.py",
+        "scripts\\rule_extractor.py",
+        "scripts\\rule_index.py",
+        "scripts\\rule_suggester.py",
+        "scripts\\rule_validator.py",
+        "scripts\\run_phase8_benchmark.py",
+        "scripts\\score_tracker.py",
+        "scripts\\spec_graph.py",
+        "scripts\\swebench_to_findings.py",
+        "scripts\\sync_adapters.py",
+        "scripts\\synthesize_hallucinations.py",
+        "scripts\\test_e2e_v24_integration.py",
+        "scripts\\test_v022_consistency.py",
+        "scripts\\test_v03_consistency.py",
+        "scripts\\test_v04_consistency.py"
+      ],
+      "audit_lens": "behavior"
+    },
+    {
+      "guard_id": "REF-PYTHON-P-002",
+      "scope_glob": "**/*.py",
+      "resolved_files": [
+        "docs\\benchmark\\add-v2.4-self-audit\\analyze.py",
+        "docs\\benchmark\\itsdangerous-2.2.0\\analyze.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\docs\\conf.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\src\\itsdangerous\\encoding.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\src\\itsdangerous\\exc.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\src\\itsdangerous\\serializer.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\src\\itsdangerous\\signer.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\src\\itsdangerous\\timed.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\src\\itsdangerous\\url_safe.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\src\\itsdangerous\\_json.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\src\\itsdangerous\\__init__.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\tests\\test_itsdangerous\\test_encoding.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\tests\\test_itsdangerous\\test_serializer.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\tests\\test_itsdangerous\\test_signer.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\tests\\test_itsdangerous\\test_timed.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\tests\\test_itsdangerous\\test_url_safe.py",
+        "docs\\benchmark\\oss-cache\\itsdangerous-2.2.0\\tests\\test_itsdangerous\\__init__.py",
+        "docs\\benchmark\\stdlib-oss-test\\analyze.py",
+        "docs\\benchmark\\stdlib-oss-test\\craft_findings.py",
+        "scripts\\ast_cfg.py",
+        "scripts\\audit_files.py",
+        "scripts\\benchmark_syncer.py",
+        "scripts\\bigvul_to_findings.py",
+        "scripts\\cvefixes_to_findings.py",
+        "scripts\\defects4j_to_findings.py",
+        "scripts\\diff_miner.py",
+        "scripts\\enrich_defects4j.py",
+        "scripts\\fix_history.py",
+        "scripts\\fix_recipes.py",
+        "scripts\\inter_rater.py",
+        "scripts\\issues_tracker.py",
+        "scripts\\joern_cpg.py",
+        "scripts\\live_knowledge.py",
+        "scripts\\llm_generalize.py",
+        "scripts\\mcp_lookup.py",
+        "scripts\\merge_guards.py",
+        "scripts\\rule_extractor.py",
+        "scripts\\rule_index.py",
+        "scripts\\rule_suggester.py",
+        "scripts\\rule_validator.py",
+        "scripts\\run_phase8_benchmark.py",
+        "scripts\\score_tracker.py",
+        "scripts\\spec_graph.py",
+        "scripts\\swebench_to_findings.py",
+        "scripts\\sync_adapters.py",
+        "scripts\\synthesize_hallucinations.py",
+        "scripts\\test_e2e_v24_integration.py",
+        "scripts\\test_v022_consistency.py",
+        "scripts\\test_v03_consistency.py",
+        "scripts\\test_v04_consistency.py"
+      ],
+      "audit_lens": "behavior"
+    }
+  ],
   "keyword_index": {
-    "the": [
-      "MUST state the tier and its limitation.",
-      "MUST flag that the spec was mined, not authored.",
-      "MUST check ALL spec sections, not just the ones with obvious issues.",
-      "MUST conform to the JSON schema defined in [`schemas/audit-finding."
-    ],
     "must": [
       "MUST state the tier and its limitation.",
       "MUST flag that the spec was mined, not authored.",
+      "MUST pass source-code-level verification.",
       "must have a corresponding code change.",
       "must be modified, with optional line range (e.",
       "MUST include an evidence pointer.",
@@ -1172,21 +1409,28 @@
       "MUST conform to the JSON schema defined in [`schemas/audit-finding.",
       "MUST be valid JSON conforming to `schemas/audit-finding."
     ],
-    "state": [
-      "MUST state the tier and its limitation."
-    ],
-    "tier": [
-      "MUST state the tier and its limitation."
-    ],
-    "its": [
-      "MUST state the tier and its limitation."
-    ],
     "and": [
       "MUST state the tier and its limitation.",
       "thresholds, and invariants in spec are reflected in code.",
       "invariants and cross-module contracts."
     ],
+    "the": [
+      "MUST state the tier and its limitation.",
+      "MUST flag that the spec was mined, not authored.",
+      "never enter the knowledge pipeline or fix baseline.",
+      "MUST check ALL spec sections, not just the ones with obvious issues.",
+      "MUST conform to the JSON schema defined in [`schemas/audit-finding."
+    ],
+    "its": [
+      "MUST state the tier and its limitation."
+    ],
     "limitation": [
+      "MUST state the tier and its limitation."
+    ],
+    "tier": [
+      "MUST state the tier and its limitation."
+    ],
+    "state": [
       "MUST state the tier and its limitation."
     ],
     "spec": [
@@ -1195,12 +1439,12 @@
       "invariants in spec are reflected in code.",
       "MUST check ALL spec sections, not just the ones with obvious issues."
     ],
-    "was": [
-      "MUST flag that the spec was mined, not authored."
-    ],
     "authored": [
       "MUST flag that the spec was mined, not authored.",
       "always weaker than authored specs."
+    ],
+    "was": [
+      "MUST flag that the spec was mined, not authored."
     ],
     "not": [
       "MUST flag that the spec was mined, not authored.",
@@ -1223,15 +1467,25 @@
     "than": [
       "always weaker than authored specs."
     ],
+    "specs": [
+      "always weaker than authored specs."
+    ],
     "always": [
       "always weaker than authored specs.",
       "always active; extension lenses are opt-in via `--lens`."
     ],
-    "specs": [
-      "always weaker than authored specs."
+    "confidence": [
+      "required — flag as low-confidence when ≥2 sources disagree."
+    ],
+    "when": [
+      "required — flag as low-confidence when ≥2 sources disagree."
     ],
     "low": [
       "required — flag as low-confidence when ≥2 sources disagree."
+    ],
+    "required": [
+      "required — flag as low-confidence when ≥2 sources disagree.",
+      "required metadata fields (e."
     ],
     "disagree": [
       "required — flag as low-confidence when ≥2 sources disagree."
@@ -1239,23 +1493,52 @@
     "sources": [
       "required — flag as low-confidence when ≥2 sources disagree."
     ],
-    "when": [
-      "required — flag as low-confidence when ≥2 sources disagree."
+    "verification": [
+      "MUST pass source-code-level verification."
     ],
-    "confidence": [
-      "required — flag as low-confidence when ≥2 sources disagree."
+    "code": [
+      "MUST pass source-code-level verification.",
+      "thresholds, and invariants in spec are reflected in code.",
+      "invariants in spec are reflected in code.",
+      "must have a corresponding code change."
     ],
-    "required": [
-      "required — flag as low-confidence when ≥2 sources disagree.",
-      "required metadata fields (e."
+    "level": [
+      "MUST pass source-code-level verification."
     ],
-    "active": [
+    "pass": [
+      "MUST pass source-code-level verification."
+    ],
+    "source": [
+      "MUST pass source-code-level verification."
+    ],
+    "knowledge": [
+      "never enter the knowledge pipeline or fix baseline."
+    ],
+    "baseline": [
+      "never enter the knowledge pipeline or fix baseline."
+    ],
+    "enter": [
+      "never enter the knowledge pipeline or fix baseline."
+    ],
+    "pipeline": [
+      "never enter the knowledge pipeline or fix baseline."
+    ],
+    "fix": [
+      "never enter the knowledge pipeline or fix baseline."
+    ],
+    "never": [
+      "never enter the knowledge pipeline or fix baseline."
+    ],
+    "via": [
+      "always active; extension lenses are opt-in via `--lens`."
+    ],
+    "lenses": [
       "always active; extension lenses are opt-in via `--lens`."
     ],
     "opt": [
       "always active; extension lenses are opt-in via `--lens`."
     ],
-    "extension": [
+    "lens": [
       "always active; extension lenses are opt-in via `--lens`."
     ],
     "are": [
@@ -1263,37 +1546,23 @@
       "thresholds, and invariants in spec are reflected in code.",
       "invariants in spec are reflected in code."
     ],
-    "via": [
+    "active": [
       "always active; extension lenses are opt-in via `--lens`."
     ],
-    "lens": [
+    "extension": [
       "always active; extension lenses are opt-in via `--lens`."
     ],
-    "lenses": [
-      "always active; extension lenses are opt-in via `--lens`."
-    ],
-    "code": [
+    "reflected": [
       "thresholds, and invariants in spec are reflected in code.",
-      "invariants in spec are reflected in code.",
-      "must have a corresponding code change."
+      "invariants in spec are reflected in code."
     ],
     "invariants": [
       "thresholds, and invariants in spec are reflected in code.",
       "invariants in spec are reflected in code.",
       "invariants and cross-module contracts."
     ],
-    "reflected": [
-      "thresholds, and invariants in spec are reflected in code.",
-      "invariants in spec are reflected in code."
-    ],
     "thresholds": [
       "thresholds, and invariants in spec are reflected in code."
-    ],
-    "corresponding": [
-      "must have a corresponding code change."
-    ],
-    "change": [
-      "must have a corresponding code change."
     ],
     "have": [
       "must have a corresponding code change.",
@@ -1301,32 +1570,38 @@
       "MUST have `spec_ref: <doc> §<section>`.",
       "MUST have actually read that line."
     ],
-    "with": [
-      "must be modified, with optional line range (e.",
-      "MUST check ALL spec sections, not just the ones with obvious issues."
+    "change": [
+      "must have a corresponding code change."
+    ],
+    "corresponding": [
+      "must have a corresponding code change."
+    ],
+    "modified": [
+      "must be modified, with optional line range (e."
     ],
     "range": [
       "must be modified, with optional line range (e."
     ],
-    "modified": [
+    "optional": [
       "must be modified, with optional line range (e."
     ],
     "line": [
       "must be modified, with optional line range (e.",
       "MUST have actually read that line."
     ],
-    "optional": [
-      "must be modified, with optional line range (e."
+    "with": [
+      "must be modified, with optional line range (e.",
+      "MUST check ALL spec sections, not just the ones with obvious issues."
     ],
-    "evidence": [
-      "MUST include an evidence pointer.",
-      "MUST have `evidence: <file>:<line_start>-<line_end>`."
+    "pointer": [
+      "MUST include an evidence pointer."
     ],
     "include": [
       "MUST include an evidence pointer."
     ],
-    "pointer": [
-      "MUST include an evidence pointer."
+    "evidence": [
+      "MUST include an evidence pointer.",
+      "MUST have `evidence: <file>:<line_start>-<line_end>`."
     ],
     "metadata": [
       "required metadata fields (e."
@@ -1343,8 +1618,18 @@
       "MUST conform to the JSON schema defined in [`schemas/audit-finding.",
       "MUST be valid JSON conforming to `schemas/audit-finding."
     ],
+    "json": [
+      "MUST be valid JSON conforming to `schemas/audit-finding.",
+      "MUST conform to the JSON schema defined in [`schemas/audit-finding.",
+      "MUST be valid JSON conforming to `schemas/audit-finding."
+    ],
     "valid": [
       "MUST be valid JSON conforming to `schemas/audit-finding.",
+      "MUST be valid JSON conforming to `schemas/audit-finding."
+    ],
+    "audit": [
+      "MUST be valid JSON conforming to `schemas/audit-finding.",
+      "MUST conform to the JSON schema defined in [`schemas/audit-finding.",
       "MUST be valid JSON conforming to `schemas/audit-finding."
     ],
     "schemas": [
@@ -1352,15 +1637,18 @@
       "MUST conform to the JSON schema defined in [`schemas/audit-finding.",
       "MUST be valid JSON conforming to `schemas/audit-finding."
     ],
-    "json": [
-      "MUST be valid JSON conforming to `schemas/audit-finding.",
-      "MUST conform to the JSON schema defined in [`schemas/audit-finding.",
-      "MUST be valid JSON conforming to `schemas/audit-finding."
+    "check": [
+      "MUST check ALL spec sections, not just the ones with obvious issues.",
+      "MUST check ALL P1 categories exhaustively."
     ],
-    "audit": [
-      "MUST be valid JSON conforming to `schemas/audit-finding.",
-      "MUST conform to the JSON schema defined in [`schemas/audit-finding.",
-      "MUST be valid JSON conforming to `schemas/audit-finding."
+    "issues": [
+      "MUST check ALL spec sections, not just the ones with obvious issues."
+    ],
+    "ones": [
+      "MUST check ALL spec sections, not just the ones with obvious issues."
+    ],
+    "just": [
+      "MUST check ALL spec sections, not just the ones with obvious issues."
     ],
     "all": [
       "MUST check ALL spec sections, not just the ones with obvious issues.",
@@ -1369,36 +1657,26 @@
     "obvious": [
       "MUST check ALL spec sections, not just the ones with obvious issues."
     ],
-    "check": [
-      "MUST check ALL spec sections, not just the ones with obvious issues.",
-      "MUST check ALL P1 categories exhaustively."
-    ],
-    "just": [
-      "MUST check ALL spec sections, not just the ones with obvious issues."
-    ],
     "sections": [
       "MUST check ALL spec sections, not just the ones with obvious issues."
-    ],
-    "ones": [
-      "MUST check ALL spec sections, not just the ones with obvious issues."
-    ],
-    "issues": [
-      "MUST check ALL spec sections, not just the ones with obvious issues."
-    ],
-    "categories": [
-      "MUST check ALL P1 categories exhaustively."
     ],
     "exhaustively": [
       "MUST check ALL P1 categories exhaustively."
     ],
-    "contracts": [
+    "categories": [
+      "MUST check ALL P1 categories exhaustively."
+    ],
+    "module": [
       "invariants and cross-module contracts."
     ],
     "cross": [
       "invariants and cross-module contracts."
     ],
-    "module": [
+    "contracts": [
       "invariants and cross-module contracts."
+    ],
+    "line_start": [
+      "MUST have `evidence: <file>:<line_start>-<line_end>`."
     ],
     "file": [
       "MUST have `evidence: <file>:<line_start>-<line_end>`."
@@ -1406,16 +1684,13 @@
     "line_end": [
       "MUST have `evidence: <file>:<line_start>-<line_end>`."
     ],
-    "line_start": [
-      "MUST have `evidence: <file>:<line_start>-<line_end>`."
-    ],
-    "spec_ref": [
-      "MUST have `spec_ref: <doc> §<section>`."
-    ],
     "doc": [
       "MUST have `spec_ref: <doc> §<section>`."
     ],
     "section": [
+      "MUST have `spec_ref: <doc> §<section>`."
+    ],
+    "spec_ref": [
       "MUST have `spec_ref: <doc> §<section>`."
     ],
     "read": [
@@ -1424,28 +1699,28 @@
     "actually": [
       "MUST have actually read that line."
     ],
+    "schema": [
+      "MUST conform to the JSON schema defined in [`schemas/audit-finding."
+    ],
     "conform": [
       "MUST conform to the JSON schema defined in [`schemas/audit-finding."
     ],
     "defined": [
       "MUST conform to the JSON schema defined in [`schemas/audit-finding."
     ],
-    "schema": [
-      "MUST conform to the JSON schema defined in [`schemas/audit-finding."
-    ],
-    "history": [
+    "constraints": [
       "### Constraints from Git History / 来自 Git 历史的约束"
     ],
-    "from": [
+    "history": [
       "### Constraints from Git History / 来自 Git 历史的约束"
     ],
     "git": [
       "### Constraints from Git History / 来自 Git 历史的约束"
     ],
-    "constraints": [
+    "from": [
       "### Constraints from Git History / 来自 Git 历史的约束"
     ]
   },
-  "total_constraints": 21,
-  "total_keywords": 81
+  "total_constraints": 23,
+  "total_keywords": 91
 }

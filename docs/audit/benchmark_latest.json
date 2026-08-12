@@ -1,0 +1,4322 @@
+{
+  "phase": "Phase 8 Performance Evaluation",
+  "timestamp": "2026-08-11 23:32:15",
+  "framework_version": "v2.4-phase8",
+  "joern_available": true,
+  "per_test": [
+    {
+      "name": "ADD self-audit",
+      "total_findings": 8,
+      "tp": 4,
+      "fp": 0,
+      "fn": 3,
+      "tn": 1,
+      "unknown": 0,
+      "precision": 100.0,
+      "recall": 57.1,
+      "f1": 72.7,
+      "total_latency_ms": 30930.0,
+      "avg_latency_per_finding_ms": 3866.3,
+      "tier_distribution": {
+        "tier1": 0,
+        "tier2": 2,
+        "tier3": 2,
+        "no_l4": 4
+      },
+      "hallucinations_removed": 4,
+      "downgraded": 0,
+      "per_finding": [
+        {
+          "id": "SA-1",
+          "action": "unverified",
+          "ground_truth": "hallucination_no_return_in_function",
+          "outcome": "TP"
+        },
+        {
+          "id": "SA-2",
+          "action": "verified",
+          "ground_truth": "hallucination_subprocess_has_try_except",
+          "outcome": "FN"
+        },
+        {
+          "id": "SA-3",
+          "action": "unverified",
+          "ground_truth": "hallucination_no_circular_dep",
+          "outcome": "TP"
+        },
+        {
+          "id": "SA-4",
+          "action": "unverified",
+          "ground_truth": "hallucination_alias_not_dead_code",
+          "outcome": "TP"
+        },
+        {
+          "id": "SA-5",
+          "action": "verified_l1l2",
+          "ground_truth": "hallucination_empty_output_handled",
+          "outcome": "FN"
+        },
+        {
+          "id": "SA-6",
+          "action": "unverified",
+          "ground_truth": "hallucination_spec_comment",
+          "outcome": "TP"
+        },
+        {
+          "id": "SA-7",
+          "action": "verified",
+          "ground_truth": "hallucination_has_try_except",
+          "outcome": "FN"
+        },
+        {
+          "id": "SA-8",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        }
+      ]
+    },
+    {
+      "name": "Python stdlib (json/csv)",
+      "total_findings": 9,
+      "tp": 8,
+      "fp": 1,
+      "fn": 0,
+      "tn": 0,
+      "unknown": 0,
+      "precision": 88.9,
+      "recall": 100.0,
+      "f1": 94.1,
+      "total_latency_ms": 0.8,
+      "avg_latency_per_finding_ms": 0.1,
+      "tier_distribution": {
+        "tier1": 0,
+        "tier2": 0,
+        "tier3": 0,
+        "no_l4": 9
+      },
+      "hallucinations_removed": 9,
+      "downgraded": 0,
+      "per_finding": [
+        {
+          "id": "OSS-H1",
+          "action": "unverified",
+          "ground_truth": "hallucination_file_not_found",
+          "outcome": "TP"
+        },
+        {
+          "id": "OSS-H2",
+          "action": "unverified",
+          "ground_truth": "hallucination_line_out_of_range",
+          "outcome": "TP"
+        },
+        {
+          "id": "OSS-H3",
+          "action": "unverified",
+          "ground_truth": "hallucination_reachable_code_claimed_dead",
+          "outcome": "TP"
+        },
+        {
+          "id": "OSS-H4",
+          "action": "unverified",
+          "ground_truth": "hallucination_reachable_code_claimed_dead",
+          "outcome": "TP"
+        },
+        {
+          "id": "OSS-H5",
+          "action": "unverified",
+          "ground_truth": "hallucination_no_cycle",
+          "outcome": "TP"
+        },
+        {
+          "id": "OSS-H6",
+          "action": "unverified",
+          "ground_truth": "hallucination_error_handling_present",
+          "outcome": "TP"
+        },
+        {
+          "id": "OSS-H7",
+          "action": "unverified",
+          "ground_truth": "hallucination_reachable_p1",
+          "outcome": "TP"
+        },
+        {
+          "id": "OSS-H8",
+          "action": "unverified",
+          "ground_truth": "hallucination_wrong_api",
+          "outcome": "TP"
+        },
+        {
+          "id": "OSS-R1",
+          "action": "unverified",
+          "ground_truth": "real_import_exists",
+          "outcome": "FP"
+        }
+      ]
+    },
+    {
+      "name": "itsdangerous 2.2.0",
+      "total_findings": 10,
+      "tp": 5,
+      "fp": 0,
+      "fn": 1,
+      "tn": 4,
+      "unknown": 0,
+      "precision": 100.0,
+      "recall": 83.3,
+      "f1": 90.9,
+      "total_latency_ms": 6756.5,
+      "avg_latency_per_finding_ms": 675.7,
+      "tier_distribution": {
+        "tier1": 0,
+        "tier2": 1,
+        "tier3": 3,
+        "no_l4": 6
+      },
+      "hallucinations_removed": 5,
+      "downgraded": 1,
+      "per_finding": [
+        {
+          "id": "ITD-H1",
+          "action": "unverified",
+          "ground_truth": "hallucination_file_not_found",
+          "outcome": "TP"
+        },
+        {
+          "id": "ITD-H2",
+          "action": "unverified",
+          "ground_truth": "hallucination_line_out_of_range",
+          "outcome": "TP"
+        },
+        {
+          "id": "ITD-H3",
+          "action": "unverified",
+          "ground_truth": "hallucination_reachable_code_claimed_dead",
+          "outcome": "TP"
+        },
+        {
+          "id": "ITD-H4",
+          "action": "unverified",
+          "ground_truth": "hallucination_no_cycle",
+          "outcome": "TP"
+        },
+        {
+          "id": "ITD-H5",
+          "action": "downgraded",
+          "ground_truth": "hallucination_error_handling_present",
+          "outcome": "FN"
+        },
+        {
+          "id": "ITD-H6",
+          "action": "unverified",
+          "ground_truth": "hallucination_wrong_api",
+          "outcome": "TP"
+        },
+        {
+          "id": "ITD-R1",
+          "action": "verified",
+          "ground_truth": "real_import_exists",
+          "outcome": "TN"
+        },
+        {
+          "id": "ITD-R2",
+          "action": "verified",
+          "ground_truth": "real_raise_statement",
+          "outcome": "TN"
+        },
+        {
+          "id": "ITD-R3",
+          "action": "verified",
+          "ground_truth": "real_error_handling_present",
+          "outcome": "TN"
+        },
+        {
+          "id": "ITD-R4",
+          "action": "verified_l1l2",
+          "ground_truth": "real_class_definition",
+          "outcome": "TN"
+        }
+      ]
+    },
+    {
+      "name": "defects4j",
+      "total_findings": 50,
+      "tp": 0,
+      "fp": 1,
+      "fn": 0,
+      "tn": 49,
+      "unknown": 0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "total_latency_ms": 18.5,
+      "avg_latency_per_finding_ms": 0.4,
+      "tier_distribution": {
+        "tier1": 0,
+        "tier2": 0,
+        "tier3": 0,
+        "no_l4": 50
+      },
+      "hallucinations_removed": 1,
+      "downgraded": 0,
+      "per_finding": [
+        {
+          "id": "D4J-0000",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0001",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0002",
+          "action": "unverified",
+          "ground_truth": "real_bug",
+          "outcome": "FP"
+        },
+        {
+          "id": "D4J-0003",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0004",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0005",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0006",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0007",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0008",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0009",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0010",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0011",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0012",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0013",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0014",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0015",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0016",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0017",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0018",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0019",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0020",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0021",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0022",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0023",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0024",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0025",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0026",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0027",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0028",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0029",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0030",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0031",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0032",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0033",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0034",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0035",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0036",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0037",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0038",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0039",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0040",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0041",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0042",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0043",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0044",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0045",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0046",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0047",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0048",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        },
+        {
+          "id": "D4J-0049",
+          "action": "verified_l1l2",
+          "ground_truth": "real_bug",
+          "outcome": "TN"
+        }
+      ]
+    },
+    {
+      "name": "bigvul",
+      "total_findings": 584,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 0,
+      "unknown": 584,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "total_latency_ms": 23.3,
+      "avg_latency_per_finding_ms": 0.0,
+      "tier_distribution": {
+        "tier1": 0,
+        "tier2": 0,
+        "tier3": 0,
+        "no_l4": 584
+      },
+      "hallucinations_removed": 584,
+      "downgraded": 0,
+      "per_finding": [
+        {
+          "id": "BV-0000",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0001",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0002",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0003",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0004",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0005",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0006",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0007",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0008",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0009",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0010",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0011",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0012",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0013",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0014",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0015",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0016",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0017",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0018",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0019",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0020",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0021",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0022",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0023",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0024",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0025",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0026",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0027",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0028",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0029",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0030",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0031",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0032",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0033",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0034",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0035",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0036",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0037",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0038",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0039",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0040",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0041",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0042",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0043",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0044",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0045",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0046",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0047",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0048",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0049",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0050",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0051",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0052",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0053",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0054",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0055",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0056",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0057",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0058",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0059",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0060",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0061",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0062",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0063",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0064",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0065",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0066",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0067",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0068",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0069",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0070",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0071",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0072",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0073",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0074",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0075",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0076",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0077",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0078",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0079",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0080",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0081",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0082",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0083",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0084",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0085",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0086",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0087",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0088",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0089",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0090",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0091",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0092",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0093",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0094",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0095",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0096",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0097",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0098",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0099",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0100",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0101",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0102",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0103",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0104",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0105",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0106",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0107",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0108",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0109",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0110",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0111",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0112",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0113",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0114",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0115",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0116",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0117",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0118",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0119",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0120",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0121",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0122",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0123",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0124",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0125",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0126",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0127",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0128",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0129",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0130",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0131",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0132",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0133",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0134",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0135",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0136",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0137",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0138",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0139",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0140",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0141",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0142",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0143",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0144",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0145",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0146",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0147",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0148",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0149",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0150",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0151",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0152",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0153",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0154",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0155",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0156",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0157",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0158",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0159",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0160",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0161",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0162",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0163",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0164",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0165",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0166",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0167",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0168",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0169",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0170",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0171",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0172",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0173",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0174",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0175",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0176",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0177",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0178",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0179",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0180",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0181",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0182",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0183",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0184",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0185",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0186",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0187",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0188",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0189",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0190",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0191",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0192",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0193",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0194",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0195",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0196",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0197",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0198",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0199",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0200",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0201",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0202",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0203",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0204",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0205",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0206",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0207",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0208",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0209",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0210",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0211",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0212",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0213",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0214",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0215",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0216",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0217",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0218",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0219",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0220",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0221",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0222",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0223",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0224",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0225",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0226",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0227",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0228",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0229",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0230",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0231",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0232",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0233",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0234",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0235",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0236",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0237",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0238",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0239",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0240",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0241",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0242",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0243",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0244",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0245",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0246",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0247",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0248",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0249",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0250",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0251",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0252",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0253",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0254",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0255",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0256",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0257",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0258",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0259",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0260",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0261",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0262",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0263",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0264",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0265",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0266",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0267",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0268",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0269",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0270",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0271",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0272",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0273",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0274",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0275",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0276",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0277",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0278",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0279",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0280",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0281",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0282",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0283",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0284",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0285",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0286",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0287",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0288",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0289",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0290",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0291",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0292",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0293",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0294",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0295",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0296",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0297",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0298",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0299",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0300",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0301",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0302",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0303",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0304",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0305",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0306",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0307",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0308",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0309",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0310",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0311",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0312",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0313",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0314",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0315",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0316",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0317",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0318",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0319",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0320",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0321",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0322",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0323",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0324",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0325",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0326",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0327",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0328",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0329",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0330",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0331",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0332",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0333",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0334",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0335",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0336",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0337",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0338",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0339",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0340",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0341",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0342",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0343",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0344",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0345",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0346",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0347",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0348",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0349",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0350",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0351",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0352",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0353",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0354",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0355",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0356",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0357",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0358",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0359",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0360",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0361",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0362",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0363",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0364",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0365",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0366",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0367",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0368",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0369",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0370",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0371",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0372",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0373",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0374",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0375",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0376",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0377",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0378",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0379",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0380",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0381",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0382",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0383",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0384",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0385",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0386",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0387",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0388",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0389",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0390",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0391",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0392",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0393",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0394",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0395",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0396",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0397",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0398",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0399",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0400",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0401",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0402",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0403",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0404",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0405",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0406",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0407",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0408",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0409",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0410",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0411",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0412",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0413",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0414",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0415",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0416",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0417",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0418",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0419",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0420",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0421",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0422",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0423",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0424",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0425",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0426",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0427",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0428",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0429",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0430",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0431",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0432",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0433",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0434",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0435",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0436",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0437",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0438",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0439",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0440",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0441",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0442",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0443",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0444",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0445",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0446",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0447",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0448",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0449",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0450",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0451",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0452",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0453",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0454",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0455",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0456",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0457",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0458",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0459",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0460",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0461",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0462",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0463",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0464",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0465",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0466",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0467",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0468",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0469",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0470",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0471",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0472",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0473",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0474",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0475",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0476",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0477",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0478",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0479",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0480",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0481",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0482",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0483",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0484",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0485",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0486",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0487",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0488",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0489",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0490",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0491",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0492",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0493",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0494",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0495",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0496",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0497",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0498",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0499",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0500",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0501",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0502",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0503",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0504",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0505",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0506",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0507",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0508",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0509",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0510",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0511",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0512",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0513",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0514",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0515",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0516",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0517",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0518",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0519",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0520",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0521",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0522",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0523",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0524",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0525",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0526",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0527",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0528",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0529",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0530",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0531",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0532",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0533",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0534",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0535",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0536",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0537",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0538",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0539",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0540",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0541",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0542",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0543",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0544",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0545",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0546",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0547",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0548",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0549",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0550",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0551",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0552",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0553",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0554",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0555",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0556",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0557",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0558",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0559",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0560",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0561",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0562",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0563",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0564",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0565",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0566",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0567",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0568",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0569",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0570",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0571",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0572",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0573",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0574",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0575",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0576",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0577",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0578",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0579",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0580",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0581",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0582",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "BV-0583",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        }
+      ]
+    },
+    {
+      "name": "cvefixes",
+      "total_findings": 26,
+      "tp": 0,
+      "fp": 0,
+      "fn": 0,
+      "tn": 0,
+      "unknown": 26,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "total_latency_ms": 1.0,
+      "avg_latency_per_finding_ms": 0.0,
+      "tier_distribution": {
+        "tier1": 0,
+        "tier2": 0,
+        "tier3": 0,
+        "no_l4": 26
+      },
+      "hallucinations_removed": 26,
+      "downgraded": 0,
+      "per_finding": [
+        {
+          "id": "CF-0000",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0001",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0002",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0003",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0004",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0005",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0006",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0007",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0008",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0009",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0010",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0011",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0012",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0013",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0014",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0015",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0016",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0017",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0018",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0019",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0020",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0021",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0022",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0023",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0024",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        },
+        {
+          "id": "CF-0025",
+          "action": "unverified",
+          "ground_truth": "real_bug_no_repo",
+          "outcome": "UNKNOWN"
+        }
+      ]
+    }
+  ],
+  "aggregate": {
+    "total_findings": 687,
+    "tp": 17,
+    "fp": 2,
+    "fn": 4,
+    "tn": 54,
+    "precision": 89.5,
+    "recall": 81.0,
+    "f1": 85.0,
+    "total_latency_ms": 37730.1,
+    "tier_distribution": {
+      "tier1": 0,
+      "tier2": 3,
+      "tier3": 5,
+      "no_l4": 679
+    }
+  },
+  "baseline_v24_20260805": {
+    "precision": 100.0,
+    "recall": 42.1,
+    "f1": 59.3,
+    "tp": 8,
+    "fp": 0,
+    "fn": 11,
+    "tn": 8,
+    "tier1": 0,
+    "tier2": 8,
+    "tier3": 11
+  },
+  "delta_from_baseline": {
+    "precision": -10.5,
+    "recall": 38.9,
+    "f1": 25.7,
+    "tp": 9,
+    "fp": 2,
+    "fn": -7,
+    "tn": 46,
+    "tier1": 0,
+    "tier2": -5,
+    "tier3": -6
+  },
+  "regression_check": {
+    "status": "OK",
+    "recall_delta": 9.6,
+    "precision_delta": -10.5,
+    "f1_delta": 1.7,
+    "action": "No action needed"
+  }
+}

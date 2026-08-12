@@ -40,6 +40,13 @@ from _script_utils import run_script
 JOERN_TIMEOUT_SEC = 30  # §6.3: Tier 1 budget; exceeded -> fallback to Tier 2
 JOERN_VERSION_MIN = "4.0"  # v4.0 flatgraph migration; v3.x API incompatible
 
+# v2.7.1: Internal language name → Joern --language flag mapping
+JOERN_LANGUAGE_MAP = {
+    "python": "pythonsrc",
+    "java": "javasrc2cpg",
+    "cpp": "c2cpg",
+}
+
 # Cache directory: Linux/WSL2 uses /tmp; Windows uses %TEMP%
 _CACHE_DIR = None  # lazy-init (see _get_cache_dir())
 
@@ -256,31 +263,50 @@ def is_available():
 # ── Cache Key Generation ────────────────────────────────────────────────
 
 
-def _get_cache_key(repo_root):
-    """Generate deterministic cache key for a repo. O(F) where F=#.py files.
+def _get_cache_key(repo_root, language="python"):
+    """Generate deterministic cache key for a repo. O(F) where F=#source files.
 
     Uses mtime (not content) so non-git projects also benefit from caching.
     The key combines:
       - sha256(repo_root)[:8]   -> distinguishes different repos at same path
-      - sha256(sorted mtimes)[:16] -> invalidates on any .py file edit
+      - sha256(sorted mtimes)[:16] -> invalidates on any source file edit
+      - language prefix -> v2.7.1: isolates Python/Java/C++ CPGs for same repo
+
+    v2.7.1: language 参数控制扫描的文件扩展名:
+      - python → *.py
+      - java → *.java
+      - cpp → *.c, *.cpp, *.h, *.hpp
 
     Args:
         repo_root: str path to repo root.
+        language: str internal language name ("python"|"java"|"cpp").
 
     Returns:
-        str: 25-char cache key like "a1b2c3d4_e5f6a7b8c9d0e1f2"
+        str: cache key like "py_a1b2c3d4_e5f6a7b8c9d0e1f2"
     """
     repo = Path(repo_root)
-    # Lazy generator: only .py files, skip __pycache__ and .venv
+
+    # v2.7.1: 根据语言选择文件扩展名
+    _LANG_EXTENSIONS = {
+        "python": ["*.py"],
+        "java": ["*.java"],
+        "cpp": ["*.c", "*.cpp", "*.h", "*.hpp", "*.cc", "*.cxx"],
+    }
+    exts = _LANG_EXTENSIONS.get(language, _LANG_EXTENSIONS["python"])
+
+    # Lazy generator: scan language-specific files, skip __pycache__ and .venv
+    source_files = []
     try:
-        py_files = [f for f in repo.rglob("*.py")
-                    if "__pycache__" not in f.parts and ".venv" not in f.parts]
+        for ext in exts:
+            for f in repo.rglob(ext):
+                if "__pycache__" not in f.parts and ".venv" not in f.parts:
+                    source_files.append(f)
     except (OSError, ValueError):
         # repo_root doesn't exist or access denied -> stable fallback key
-        py_files = []
+        pass
 
     mtimes = []
-    for f in py_files:
+    for f in source_files:
         try:
             rel = str(f.relative_to(repo))
             mtime = f.stat().st_mtime
@@ -291,18 +317,23 @@ def _get_cache_key(repo_root):
 
     path_hash = hashlib.sha256(str(repo_root).encode("utf-8")).hexdigest()[:8]
     content_hash = hashlib.sha256(str(mtimes).encode("utf-8")).hexdigest()[:16]
-    return f"{path_hash}_{content_hash}"
+    lang_prefix = language[:2] if language else "py"
+    return f"{lang_prefix}_{path_hash}_{content_hash}"
 
 
 # ── Scala Script Generation (P1-5 verified APIs) ───────────────────────
 
 
-def _gen_dead_code_script(line):
+def _gen_dead_code_script(line, language="python"):
     """Generate Scala DSL script for dead_code verification.
 
     Uses P1-5 verified API:
       - cpg.method.lineNumber(N)  (NOT cpg.method.location.line(N))
       - target.flatMap(_.caller.l) (NOT reachableBy)
+
+    v2.7.1: cpg.method.lineNumber(N) 和 target.flatMap(_.caller.l) 是 Joern
+    跨语言通用 API (METHOD 是 universal node type), Python/Java/C++ 共用同一脚本.
+    language 参数仅用于注释标注, 供调试和审计追踪.
 
     Phase 7 fix (two hallucinations, E2E verified 2026-08-05):
       H1: @main annotation does NOT work in Joern v4.0.595 script mode.
@@ -318,11 +349,13 @@ def _gen_dead_code_script(line):
 
     Args:
         line: int target line number.
+        language: v2.7.1 str internal language name ("python"|"java"|"cpp").
 
     Returns:
         str: Scala script (bare statements, no @main) for `joern --script`.
     """
     return f"""// Phase 7: bare script (REPL semantics), cpg auto-available via positional arg
+// v2.7.1: language={language} — cpg.method.lineNumber is universal across frontends
 // P1-5 verified API: cpg.method.lineNumber(N) for call-graph target lookup
 val target = cpg.method.lineNumber({line}).l
 // P1-5 verified API: caller.l (call graph edges), not data-flow APIs
@@ -335,13 +368,19 @@ println(s"callers=" + callers.map(_.name).mkString(","))
 """
 
 
-def _gen_import_script():
+def _gen_import_script(language="python"):
     """Generate Scala DSL script for import cycle detection.
 
     Uses P1-5 verified API:
       - cpg.imports.l               (correct)
       - imp.importedEntity          (NOT imp.imported)
       - imp.file.head.name          (file that contains the import)
+
+    v2.7.1: language 参数控制文件后缀剥离逻辑:
+      - python → strip ".py"
+      - java → strip ".java"
+      - cpp → strip ".c"/".cpp"/".h"/".hpp"
+    cpg.imports.l 和 imp.importedEntity 是 Joern 跨语言通用 API.
 
     Phase 7 fix (H1 hallucination, E2E verified 2026-08-05):
       @main annotation does NOT work in Joern v4.0.595 script mode.
@@ -353,30 +392,46 @@ def _gen_import_script():
       because "mod_b" is not a graph key (only "mod_b.py" is).
       E2E proof: mod_a<->mod_b cycle → has_cycle=false (wrong).
       ast_cfg.py L418 uses with_suffix("") to strip .py correctly.
-      Fix: strip .py suffix from src file name to unify node naming.
+      Fix: strip source file extension from src file name to unify node naming.
 
     Builds a directed import graph and runs DFS cycle detection.
+
+    Args:
+        language: v2.7.1 str internal language name ("python"|"java"|"cpp").
 
     Returns:
         str: Scala script (bare statements, no @main) for `joern --script`.
     """
-    return """// Phase 7: bare script (REPL semantics), cpg auto-available via positional arg
+    # v2.7.1: 根据语言生成后缀剥离逻辑
+    if language == "java":
+        suffix_strip = '// v2.7.1: strip .java suffix\n  val src = if (rawSrc.endsWith(".java")) rawSrc.substring(0, rawSrc.length - 5) else rawSrc'
+    elif language == "cpp":
+        suffix_strip = '''// v2.7.1: strip C/C++ source extensions
+  val extensions = List(".cpp", ".hpp", ".cc", ".cxx", ".hxx", ".c", ".h")
+  var src = rawSrc
+  for (ext <- extensions) {
+    if (src.endsWith(ext)) { src = src.substring(0, src.length - ext.length) }
+  }'''
+    else:
+        # Python (default, Phase 8 behavior)
+        suffix_strip = '// Phase 8: strip .py suffix from file name to unify node naming\n  val src = if (rawSrc.endsWith(".py")) rawSrc.substring(0, rawSrc.length - 3) else rawSrc'
+
+    return f"""// Phase 7: bare script (REPL semantics), cpg auto-available via positional arg
+// v2.7.1: language={language} — cpg.imports.l is universal across frontends
 // P1-5 verified API: cpg.imports.l + imp.importedEntity (Option[String])
 import scala.collection.mutable
 
 val imports = cpg.imports.l
-val edges = imports.flatMap { imp =>
-  // Phase 8: strip .py suffix from file name to unify node naming
-  // src = "mod_a.py" → "mod_a", dst = "mod_b" (already no suffix)
+val edges = imports.flatMap {{ imp =>
   val rawSrc = imp.file.head.name
-  val src = if (rawSrc.endsWith(".py")) rawSrc.substring(0, rawSrc.length - 3) else rawSrc
+  {suffix_strip}
   imp.importedEntity.map(e => (src, e))
-}
+}}
 // Build adjacency map
 val graph = mutable.Map.empty[String, Set[String]].withDefaultValue(Set.empty)
-edges.foreach { case (src, dst) =>
+edges.foreach {{ case (src, dst) =>
   graph(src) = graph(src) + dst
-}
+}}
 // DFS 3-color cycle detection
 val WHITE = 0
 val GRAY = 1
@@ -386,17 +441,17 @@ var hasCycle = false
 def dfs(node: String): Unit =
   if hasCycle then return
   color(node) = GRAY
-  for (next <- graph(node)) {
-    if (color(next) == GRAY) { hasCycle = true; return }
+  for (next <- graph(node)) {{
+    if (color(next) == GRAY) {{ hasCycle = true; return }}
     if (color(next) == WHITE) dfs(next)
     if (hasCycle) return
-  }
+  }}
   color(node) = BLACK
-for (n <- graph.keys) {
-  if (color(n) == WHITE) {
+for (n <- graph.keys) {{
+  if (color(n) == WHITE) {{
     dfs(n)
-  }
-}
+  }}
+}}
 println(s"has_cycle=" + hasCycle)
 println(s"size=" + graph.size)
 """
@@ -584,7 +639,7 @@ def _parse_joern_output(output):
 # ── CPG Generation (with cache) ─────────────────────────────────────────
 
 
-def _generate_cpg(repo_root, cache_key):
+def _generate_cpg(repo_root, cache_key, language="pythonsrc"):
     """Generate or load cached CPG for a repo. Returns CPG path or None.
 
     Cache strategy (§6.2):
@@ -593,9 +648,12 @@ def _generate_cpg(repo_root, cache_key):
       - Miss: run joern-parse, store result, return path
       - Failure: return None (triggers Tier 2 fallback)
 
+    v2.7.1: language 参数选择 Joern 前端 (pythonsrc/javasrc2cpg/c2cpg).
+
     Args:
         repo_root: str path to repo root.
-        cache_key: str cache key from _get_cache_key().
+        cache_key: str cache key from _get_cache_key() (already language-scoped).
+        language: str Joern frontend name (pythonsrc/javasrc2cpg/c2cpg).
 
     Returns:
         str|None: path to CPG binary, or None if generation failed.
@@ -612,7 +670,7 @@ def _generate_cpg(repo_root, cache_key):
     wsl_repo = _translate_path_to_wsl(repo_root)
     wsl_cpg = _translate_path_to_wsl(str(cpg_path))
 
-    cmd = _build_joern_parse_command(wsl_repo, wsl_cpg, language="pythonsrc")
+    cmd = _build_joern_parse_command(wsl_repo, wsl_cpg, language=language)
     env = _build_clean_env()
 
     try:
@@ -693,13 +751,17 @@ def _run_joern_query(cpg_path, script_text, script_name="query"):
 # ── Public API: verify_dead_code, verify_imports ────────────────────────
 
 
-def verify_dead_code(repo_root, file_path, line_num):
+def verify_dead_code(repo_root, file_path, line_num, language="python"):
     """Tier 1: Joern CPG-based dead_code verification.
+
+    v2.7.1: language 参数选择 Joern 前端 (pythonsrc/javasrc2cpg/c2cpg).
+    内部语言名 ("python"/"java"/"cpp") 映射为 Joern --language flag.
 
     Args:
         repo_root: str path to repo root.
         file_path: str relative path to the claim target file.
         line_num: int target line number.
+        language: v2.7.1 str internal language name ("python"|"java"|"cpp").
 
     Returns:
         dict with unified schema (P0-2):
@@ -722,15 +784,18 @@ def verify_dead_code(repo_root, file_path, line_num):
         return {"verified": None, "evidence": "joern_unavailable",
                 "tier": 0, "latency_ms": latency()}
 
-    # Generate / load cached CPG
-    cache_key = _get_cache_key(repo_root)
-    cpg_path = _generate_cpg(repo_root, cache_key)
+    # v2.7.1: 映射内部语言名到 Joern --language flag
+    joern_lang = JOERN_LANGUAGE_MAP.get(language, "pythonsrc")
+
+    # Generate / load cached CPG (cache key is language-scoped)
+    cache_key = _get_cache_key(repo_root, language=language)
+    cpg_path = _generate_cpg(repo_root, cache_key, language=joern_lang)
     if cpg_path is None:
         return {"verified": None, "evidence": "cpg_generation_failed",
                 "tier": 0, "latency_ms": latency()}
 
-    # Run dead_code query
-    script = _gen_dead_code_script(line_num)
+    # Run dead_code query (v2.7.1: pass language for script annotation)
+    script = _gen_dead_code_script(line_num, language=language)
     result = _run_joern_query(cpg_path, script, script_name="dead_code")
     if result is None:
         return {"verified": None, "evidence": "joern_query_failed",
@@ -750,12 +815,16 @@ def verify_dead_code(repo_root, file_path, line_num):
                 "joern_version": JOERN_VERSION_MIN}
 
 
-def verify_imports(repo_root, claim):
+def verify_imports(repo_root, claim, language="python"):
     """Tier 1: Joern CPG-based import cycle detection.
+
+    v2.7.1: language 参数选择 Joern 前端 (pythonsrc/javasrc2cpg/c2cpg)
+    和 Scala 脚本中的文件后缀剥离逻辑.
 
     Args:
         repo_root: str path to repo root.
         claim: str original claim text (used for evidence, not parsing).
+        language: v2.7.1 str internal language name ("python"|"java"|"cpp").
 
     Returns:
         dict with unified schema (P0-2):
@@ -778,15 +847,18 @@ def verify_imports(repo_root, claim):
         return {"verified": None, "evidence": "joern_unavailable",
                 "tier": 0, "latency_ms": latency()}
 
-    # Generate / load cached CPG
-    cache_key = _get_cache_key(repo_root)
-    cpg_path = _generate_cpg(repo_root, cache_key)
+    # v2.7.1: 映射内部语言名到 Joern --language flag
+    joern_lang = JOERN_LANGUAGE_MAP.get(language, "pythonsrc")
+
+    # Generate / load cached CPG (cache key is language-scoped)
+    cache_key = _get_cache_key(repo_root, language=language)
+    cpg_path = _generate_cpg(repo_root, cache_key, language=joern_lang)
     if cpg_path is None:
         return {"verified": None, "evidence": "cpg_generation_failed",
                 "tier": 0, "latency_ms": latency()}
 
-    # Run import cycle query
-    script = _gen_import_script()
+    # Run import cycle query (v2.7.1: pass language for suffix stripping)
+    script = _gen_import_script(language=language)
     result = _run_joern_query(cpg_path, script, script_name="import_cycle")
     if result is None:
         return {"verified": None, "evidence": "joern_query_failed",
@@ -819,6 +891,9 @@ def main():
     parser.add_argument("--claim-type", choices=["dead_code", "import_related"],
                         required=True)
     parser.add_argument("--claim", required=True, help="original claim text")
+    parser.add_argument("--language", default="python",
+                        choices=["python", "java", "cpp"],
+                        help="v2.7.1: source language (default: python)")
     parser.add_argument("--output", help="output JSON file (default: stdout)")
     args = parser.parse_args()
 
@@ -826,9 +901,10 @@ def main():
         if not args.file or not args.line:
             print(json.dumps({"error": "--file and --line required for dead_code"}))
             return 2
-        result = verify_dead_code(args.repo, args.file, args.line)
+        result = verify_dead_code(args.repo, args.file, args.line,
+                                   language=args.language)
     else:
-        result = verify_imports(args.repo, args.claim)
+        result = verify_imports(args.repo, args.claim, language=args.language)
 
     out = json.dumps(result, indent=2)
     if args.output:

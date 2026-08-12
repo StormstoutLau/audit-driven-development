@@ -1,0 +1,2475 @@
+{
+  "project": "bigvul-nonlinux",
+  "findings": [
+    {
+      "id": "BV-0000",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function pango_glyph_string_set_size has CWE-189 vulnerability: Integer overflow in the pango_glyph_string_set_size function in pango/glyphstring.c in Pango before 1.24 allows context-dependent attackers to cause a denial of service (application crash) or possibly execute arbitrary code via a long glyph string that triggers a heap-based buffer overflow, as demonstrated by a long document.location value in Firefox. (CVSS 6.8) — fix modifies lines 61",
+      "evidence": {
+        "file": "pango/glyphstring.c",
+        "line_start": 61,
+        "commit_hash": "4de30e5500eaeb49f4bf0b7a07f718e149a2ed5e",
+        "project": "pango"
+      }
+    },
+    {
+      "id": "BV-0001",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function set has CWE-94 vulnerability: The default configuration of the <Button2> binding in Uzbl before 2010.08.05 does not properly use the @SELECTED_URI feature, which allows user-assisted remote attackers to execute arbitrary commands via a crafted HREF attribute of an A element in an HTML document. (CVSS 6.8) — fix modifies lines 173",
+      "evidence": {
+        "file": "examples/config/config",
+        "line_start": 173,
+        "commit_hash": "9cc39cb5c9396be013b5dc2ba7e4b3eaa647e975",
+        "project": "uzbl"
+      }
+    },
+    {
+      "id": "BV-0002",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has  vulnerability: The put command functionality in beanstalkd 1.4.5 and earlier allows remote attackers to execute arbitrary Beanstalk commands via the body in a job that is too big, which is not properly handled by the dispatch_cmd function in prot.c. (CVSS 7.5) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "2e8e8c6387ecdf5923dfc4d7718d18eba1b0873d",
+        "project": "beanstalkd"
+      }
+    },
+    {
+      "id": "BV-0003",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-20 vulnerability: Irssi before 0.8.15, when SSL is used, does not verify that the server hostname matches a domain name in the subject's Common Name (CN) field or a Subject Alternative Name field of the X.509 certificate, which allows man-in-the-middle attackers to spoof IRC servers via an arbitrary certificate. (CVSS 6.8) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "85bbc05b21678e80423815d2ef1dfe26208491ab",
+        "project": "irssi-proxy"
+      }
+    },
+    {
+      "id": "BV-0004",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-20 vulnerability: memcached.c in memcached before 1.4.3 allows remote attackers to cause a denial of service (daemon hang or crash) via a long line that triggers excessive memory allocation.  NOTE: some of these details are obtained from third party information. (CVSS 5.0) — fix modifies lines 3148",
+      "evidence": {
+        "file": "memcached.c",
+        "line_start": 3148,
+        "commit_hash": "d9cd01ede97f4145af9781d448c62a3318952719",
+        "project": "memcached"
+      }
+    },
+    {
+      "id": "BV-0005",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-264 vulnerability: The eval_js function in uzbl-core.c in Uzbl before 2010.01.05 exposes the run method of the Uzbl object, which allows remote attackers to execute arbitrary commands via JavaScript code. (CVSS 7.5) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "1958b52d41cba96956dc1995660de49525ed1047",
+        "project": "uzbl"
+      }
+    },
+    {
+      "id": "BV-0006",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-399 vulnerability: The ape_read_header function in ape.c in libavformat in FFmpeg before 0.5.4, as used in MPlayer, VideoLAN VLC media player, and other products, allows remote attackers to cause a denial of service (application crash) via an APE (aka Monkey's Audio) file that contains a header but no frames. (CVSS 4.3) — fix modifies lines 242",
+      "evidence": {
+        "file": "libavformat/ape.c",
+        "line_start": 242,
+        "commit_hash": "8312e3fc9041027a33c8bc667bb99740fdf41dd5",
+        "project": "FFmpeg"
+      }
+    },
+    {
+      "id": "BV-0007",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-399 vulnerability: The STARTTLS implementation in ftp_parser.c in Pure-FTPd before 1.0.30 does not properly restrict I/O buffering, which allows man-in-the-middle attackers to insert commands into encrypted FTP sessions by sending a cleartext command that is processed after TLS is in place, related to a *plaintext command injection* attack, a similar issue to CVE-2011-0411. (CVSS 5.8) — fix modifies lines 57",
+      "evidence": {
+        "file": "src/ftp_parser.c",
+        "line_start": 57,
+        "commit_hash": "65c4d4ad331e94661de763e9b5304d28698999c4",
+        "project": "pure-ftpd"
+      }
+    },
+    {
+      "id": "BV-0008",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function gboolean has CWE-119 vulnerability: Buffer overflow in the mainloop function in nbd-server.c in the server in Network Block Device (nbd) before 2.9.20 might allow remote attackers to execute arbitrary code via a long request.  NOTE: this issue exists because of a CVE-2005-3534 regression. (CVSS 7.5) — fix modifies lines 150",
+      "evidence": {
+        "file": "nbd-server.c",
+        "line_start": 150,
+        "commit_hash": "3ef52043861ab16352d49af89e048ba6339d6df8",
+        "project": "nbd"
+      }
+    },
+    {
+      "id": "BV-0016",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-20 vulnerability: s2s/out.c in jabberd2 2.2.16 and earlier does not verify that a request was made for an XMPP Server Dialback response, which allows remote XMPP servers to spoof domains via a (1) Verify Response or (2) Authorization Response. (CVSS 5.8) — fix modifies lines 1661",
+      "evidence": {
+        "file": "s2s/out.c",
+        "line_start": 1661,
+        "commit_hash": "aabcffae560d5fd00cd1d2ffce5d760353cf0a4d",
+        "project": "jabberd2"
+      }
+    },
+    {
+      "id": "BV-0026",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-189 vulnerability: Multiple integer overflows in the (1) CallMalloc (malloc) and (2) nedpcalloc (calloc) functions in nedmalloc (nedmalloc.c) before 1.10 beta2 make it easier for context-dependent attackers to perform memory-related attacks such as buffer overflows via a large size value, which causes less memory to be allocated than expected. (CVSS 4.3) — fix modifies lines 328",
+      "evidence": {
+        "file": "nedmalloc.c",
+        "line_start": 328,
+        "commit_hash": "1a759756639ab7543b650a10c2d77a0ffc7a2000",
+        "project": "nedmalloc"
+      }
+    },
+    {
+      "id": "BV-0027",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function void has CWE-189 vulnerability: Multiple integer overflows in the (1) GC_generic_malloc and (2) calloc functions in malloc.c, and the (3) GC_generic_malloc_ignore_off_page function in mallocx.c in Boehm-Demers-Weiser GC (libgc) before 7.2 make it easier for context-dependent attackers to perform memory-related attacks such as buffer overflows via a large size value, which causes less memory to be allocated than expected. (CVSS 5.0) — fix modifies lines 372",
+      "evidence": {
+        "file": "malloc.c",
+        "line_start": 372,
+        "commit_hash": "e10c1eb9908c2774c16b3148b30d2f3823d66a9a",
+        "project": "bdwgc"
+      }
+    },
+    {
+      "id": "BV-0030",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-399 vulnerability: The terminal dispatcher in mosh before 1.2.1 allows remote authenticated users to cause a denial of service (long loop and CPU consumption) via an escape sequence with a large repeat count value. (CVSS 4.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "9791768705528e911bfca6c4d8aa88139035060e",
+        "project": "mosh"
+      }
+    },
+    {
+      "id": "BV-0043",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has  vulnerability: Bitcoin-Qt 0.5.0.x before 0.5.0.5; 0.5.1.x, 0.5.2.x, and 0.5.3.x before 0.5.3.1; and 0.6.x before 0.6.0rc4 on Windows does not use MinGW multithread-safe exception handling, which allows remote attackers to cause a denial of service (application crash) or possibly execute arbitrary code via crafted Bitcoin protocol messages. (CVSS 7.5) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "8864019f6d88b13d3442843d9e6ebeb8dd938831",
+        "project": "bitcoin"
+      }
+    },
+    {
+      "id": "BV-0044",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function looks has CWE-119 vulnerability: Heap-based buffer overflow in dns.cpp in InspIRCd 2.0.5 might allow remote attackers to execute arbitrary code via a crafted DNS query that uses compression. (CVSS 7.5) — fix modifies lines 38",
+      "evidence": {
+        "file": "src/dns.cpp",
+        "line_start": 38,
+        "commit_hash": "fe7dbd2c104c37f6f3af7d9f1646a3c332aea4a4",
+        "project": "inspircd"
+      }
+    },
+    {
+      "id": "BV-0046",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function ByteVector has CWE-189 vulnerability: Integer overflow in the mid function in toolkit/tbytevector.cpp in TagLib 1.7 and earlier allows context-dependent attackers to cause a denial of service (application crash) via a crafted file header field in a media file, which triggers a large memory allocation. (CVSS 4.3) — fix modifies lines 363",
+      "evidence": {
+        "file": "taglib/toolkit/tbytevector.cpp",
+        "line_start": 363,
+        "commit_hash": "dcdf4fd954e3213c355746fa15b7480461972308",
+        "project": "taglib"
+      }
+    },
+    {
+      "id": "BV-0048",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-119 vulnerability: file before 5.11 and libmagic allow remote attackers to cause a denial of service (crash) via a crafted Composite Document File (CDF) file that triggers (1) an out-of-bounds read or (2) an invalid pointer dereference. (CVSS 4.3) — fix modifies lines 35",
+      "evidence": {
+        "file": "src/cdf.c",
+        "line_start": 35,
+        "commit_hash": "1aec04dbf8a24b8a6ba64c4f74efa0628e36db0b",
+        "project": "file"
+      }
+    },
+    {
+      "id": "BV-0050",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function function has CWE-119 vulnerability: Buffer overflow in the fribidi_utf8_to_unicode function in PyFriBidi before 0.11.0 allows remote attackers to cause a denial of service (application crash) via a 4-byte utf-8 sequence. (CVSS 5.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "function.c",
+        "line_start": 1,
+        "commit_hash": "d2860c655357975e7b32d84e6b45e98f0dcecd7a",
+        "project": "pyfribidi"
+      }
+    },
+    {
+      "id": "BV-0052",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function void has CWE-20 vulnerability: The parse function in ogg/xiphcomment.cpp in TagLib 1.7 and earlier allows remote attackers to cause a denial of service (crash) via a crafted vendorLength field in an ogg file. (CVSS 4.3) — fix modifies lines 295",
+      "evidence": {
+        "file": "taglib/ogg/xiphcomment.cpp",
+        "line_start": 295,
+        "commit_hash": "b3646a07348ffa276ea41a9dae03ddc63ea6c532",
+        "project": "taglib"
+      }
+    },
+    {
+      "id": "BV-0053",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function void has  vulnerability: The analyzeCurrent function in ape/apeproperties.cpp in TagLib 1.7 and earlier allows context-dependent attackers to cause a denial of service (application crash) via a crafted sampleRate in an ape file, which triggers a divide-by-zero error. (CVSS 4.3) — fix modifies lines 193",
+      "evidence": {
+        "file": "taglib/ape/apeproperties.cpp",
+        "line_start": 193,
+        "commit_hash": "77d61c6eca4d08b9b025738acf6b926cc750db23",
+        "project": "taglib"
+      }
+    },
+    {
+      "id": "BV-0056",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function check_1_6_dummy has  vulnerability: The check_1_6_dummy function in lib/kadm5/srv/svr_principal.c in kadmind in MIT Kerberos 5 (aka krb5) 1.8.x, 1.9.x, and 1.10.x before 1.10.2 allows remote authenticated administrators to cause a denial of service (NULL pointer dereference and daemon crash) via a KRB5_KDB_DISALLOW_ALL_TIX create request that lacks a password. (CVSS 4.0) — fix modifies lines 186",
+      "evidence": {
+        "file": "src/lib/kadm5/srv/svr_principal.c",
+        "line_start": 186,
+        "commit_hash": "c5be6209311d4a8f10fda37d0d3f876c1b33b77b",
+        "project": "krb5"
+      }
+    },
+    {
+      "id": "BV-0059",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-310 vulnerability: Mumble 1.2.3 and earlier uses world-readable permissions for .local/share/data/Mumble/.mumble.sqlite files in home directories, which might allow local users to obtain a cleartext password and configuration data by reading a file. (CVSS 2.1) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "5632c35d6759f5e13a7dfe78e4ee6403ff6a8e3e",
+        "project": "mumble"
+      }
+    },
+    {
+      "id": "BV-0060",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function encryption has CWE-119 vulnerability: Stack-based buffer overflow in the suhosin_encrypt_single_cookie function in the transparent cookie-encryption feature in the Suhosin extension before 0.9.33 for PHP, when suhosin.cookie.encrypt and suhosin.multiheader are enabled, might allow remote attackers to execute arbitrary code via a long string that is used in a Set-Cookie HTTP header. (CVSS 5.1) — fix modifies lines 1",
+      "evidence": {
+        "file": "encryption.c",
+        "line_start": 1,
+        "commit_hash": "73b1968ee30f6d9d2dae497544b910e68e114bfa",
+        "project": "suhosin"
+      }
+    },
+    {
+      "id": "BV-0066",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function soup has CWE-200 vulnerability: Redland Raptor (aka libraptor) before 2.0.7, as used by OpenOffice 3.3 and 3.4 Beta, LibreOffice before 3.4.6 and 3.5.x before 3.5.1, and other products, allows user-assisted remote attackers to read arbitrary files via a crafted XML external entity (XXE) declaration and reference in an RDF document. (CVSS 4.3) — fix modifies lines 1",
+      "evidence": {
+        "file": "soup.c",
+        "line_start": 1,
+        "commit_hash": "a676f235309a59d4aa78eeffd2574ae5d341fcb0",
+        "project": "raptor"
+      }
+    },
+    {
+      "id": "BV-0067",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function Protocols has CWE-89 vulnerability: curl and libcurl 7.2x before 7.24.0 do not properly consider special characters during extraction of a pathname from a URL, which allows remote attackers to conduct data-injection attacks via a crafted URL, as demonstrated by a CRLF injection attack on the (1) IMAP, (2) POP3, or (3) SMTP protocol. (CVSS 7.5) — fix modifies lines 1",
+      "evidence": {
+        "file": "Protocols.c",
+        "line_start": 1,
+        "commit_hash": "75ca568fa1c19de4c5358fed246686de8467c238",
+        "project": "curl"
+      }
+    },
+    {
+      "id": "BV-0102",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-264 vulnerability: nspluginwrapper before 1.4.4 does not properly provide access to NPNVprivateModeBool variable settings, which could prevent Firefox plugins from determining if they should run in Private Browsing mode and allow remote attackers to bypass intended access restrictions, as demonstrated using Flash. (CVSS 5.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "7e4ab8e1189846041f955e6c83f72bc1624e7a98",
+        "project": "nspluginwrapper"
+      }
+    },
+    {
+      "id": "BV-0127",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-119 vulnerability: The jpeg2000_decode_tile function in libavcodec/jpeg2000dec.c in FFmpeg before 2.1 does not consider the component number in certain calculations, which allows remote attackers to cause a denial of service (out-of-bounds array access) or possibly have unspecified other impact via crafted JPEG2000 data. (CVSS 6.8) — fix modifies lines 1278",
+      "evidence": {
+        "file": "libavcodec/jpeg2000dec.c",
+        "line_start": 1278,
+        "commit_hash": "fe448cd28d674c3eff3072552eae366d0b659ce9",
+        "project": "FFmpeg"
+      }
+    },
+    {
+      "id": "BV-0128",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function int has CWE-119 vulnerability: The ff_combine_frame function in libavcodec/parser.c in FFmpeg before 2.1 does not properly handle certain memory-allocation errors, which allows remote attackers to cause a denial of service (out-of-bounds array access) or possibly have unspecified other impact via crafted data. (CVSS 6.8) — fix modifies lines 237",
+      "evidence": {
+        "file": "libavcodec/parser.c",
+        "line_start": 237,
+        "commit_hash": "f31011e9abfb2ae75bb32bc44e2c34194c8dc40a",
+        "project": "FFmpeg"
+      }
+    },
+    {
+      "id": "BV-0129",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-119 vulnerability: The g2m_init_buffers function in libavcodec/g2meet.c in FFmpeg before 2.1 does not properly allocate memory for tiles, which allows remote attackers to cause a denial of service (out-of-bounds array access) or possibly have unspecified other impact via crafted Go2Webinar data. (CVSS 6.8) — fix modifies lines 443",
+      "evidence": {
+        "file": "libavcodec/g2meet.c",
+        "line_start": 443,
+        "commit_hash": "e07ac727c1cc9eed39e7f9117c97006f719864bd",
+        "project": "FFmpeg"
+      }
+    },
+    {
+      "id": "BV-0130",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-399 vulnerability: The filter_frame function in libavfilter/vf_fps.c in FFmpeg before 2.1 does not properly ensure the availability of FIFO content, which allows remote attackers to cause a denial of service (double free) or possibly have unspecified other impact via crafted data. (CVSS 6.8) — fix modifies lines 205",
+      "evidence": {
+        "file": "libavfilter/vf_fps.c",
+        "line_start": 205,
+        "commit_hash": "cdd5df8189ff1537f7abe8defe971f80602cc2d2",
+        "project": "FFmpeg"
+      }
+    },
+    {
+      "id": "BV-0131",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-119 vulnerability: The read_header function in libavcodec/ffv1dec.c in FFmpeg before 2.1 does not properly enforce certain bit-count and colorspace constraints, which allows remote attackers to cause a denial of service (out-of-bounds array access) or possibly have unspecified other impact via crafted FFV1 data. (CVSS 6.8) — fix modifies lines 580",
+      "evidence": {
+        "file": "libavcodec/ffv1dec.c",
+        "line_start": 580,
+        "commit_hash": "b05cd1ea7e45a836f7f6071a716c38bb30326e0f",
+        "project": "FFmpeg"
+      }
+    },
+    {
+      "id": "BV-0132",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-20 vulnerability: The get_cox function in libavcodec/jpeg2000dec.c in FFmpeg before 2.1 does not properly validate the reduction factor, which allows remote attackers to cause a denial of service (out-of-bounds array access) or possibly have unspecified other impact via crafted JPEG2000 data. (CVSS 6.8) — fix modifies lines 370",
+      "evidence": {
+        "file": "libavcodec/jpeg2000dec.c",
+        "line_start": 370,
+        "commit_hash": "a1b9004b768bef606ee98d417bceb9392ceb788d",
+        "project": "FFmpeg"
+      }
+    },
+    {
+      "id": "BV-0133",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-119 vulnerability: libavcodec/jpeg2000dec.c in FFmpeg before 2.1 does not ensure the use of valid code-block dimension values, which allows remote attackers to cause a denial of service (out-of-bounds array access) or possibly have unspecified other impact via crafted JPEG2000 data. (CVSS 6.8) — fix modifies lines 384",
+      "evidence": {
+        "file": "libavcodec/jpeg2000dec.c",
+        "line_start": 384,
+        "commit_hash": "9a271a9368eaabf99e6c2046103acb33957e63b7",
+        "project": "FFmpeg"
+      }
+    },
+    {
+      "id": "BV-0134",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function int has  vulnerability: libavcodec/jpeg2000.c in FFmpeg before 2.1 allows remote attackers to cause a denial of service (invalid pointer dereference) or possibly have unspecified other impact via crafted JPEG2000 data. (CVSS 6.8) — fix modifies lines 272",
+      "evidence": {
+        "file": "libavcodec/jpeg2000.c",
+        "line_start": 272,
+        "commit_hash": "912ce9dd2080c5837285a471d750fa311e09b555",
+        "project": "FFmpeg"
+      }
+    },
+    {
+      "id": "BV-0135",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-119 vulnerability: The get_siz function in libavcodec/jpeg2000dec.c in FFmpeg before 2.1 does not ensure the expected sample separation, which allows remote attackers to cause a denial of service (out-of-bounds array access) or possibly have unspecified other impact via crafted JPEG2000 data. (CVSS 6.8) — fix modifies lines 273",
+      "evidence": {
+        "file": "libavcodec/jpeg2000dec.c",
+        "line_start": 273,
+        "commit_hash": "8bb11c3ca77b52e05a9ed1496a65f8a76e6e2d8f",
+        "project": "FFmpeg"
+      }
+    },
+    {
+      "id": "BV-0136",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-20 vulnerability: The flashsv_decode_frame function in libavcodec/flashsv.c in FFmpeg before 2.1 does not properly validate a certain height value, which allows remote attackers to cause a denial of service (out-of-bounds array access) or possibly have unspecified other impact via crafted Flash Screen Video data. (CVSS 6.8) — fix modifies lines 387",
+      "evidence": {
+        "file": "libavcodec/flashsv.c",
+        "line_start": 387,
+        "commit_hash": "880c73cd76109697447fbfbaa8e5ee5683309446",
+        "project": "FFmpeg"
+      }
+    },
+    {
+      "id": "BV-0137",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-189 vulnerability: Integer signedness error in the add_bytes_l2_c function in libavcodec/pngdsp.c in FFmpeg before 2.1 allows remote attackers to cause a denial of service (out-of-bounds array access) or possibly have unspecified other impact via crafted PNG data. (CVSS 6.8) — fix modifies lines 31",
+      "evidence": {
+        "file": "libavcodec/pngdsp.c",
+        "line_start": 31,
+        "commit_hash": "86736f59d6a527d8bc807d09b93f971c0fe0bb07",
+        "project": "FFmpeg"
+      }
+    },
+    {
+      "id": "BV-0138",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-189 vulnerability: The g2m_init_buffers function in libavcodec/g2meet.c in FFmpeg before 2.1 uses an incorrect ordering of arithmetic operations, which allows remote attackers to cause a denial of service (out-of-bounds array access) or possibly have unspecified other impact via crafted Go2Webinar data. (CVSS 6.8) — fix modifies lines 453",
+      "evidence": {
+        "file": "libavcodec/g2meet.c",
+        "line_start": 453,
+        "commit_hash": "821a5938d100458f4d09d634041b05c860554ce0",
+        "project": "FFmpeg"
+      }
+    },
+    {
+      "id": "BV-0139",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-119 vulnerability: The get_siz function in libavcodec/jpeg2000dec.c in FFmpeg before 2.1 does not prevent attempts to use non-zero image offsets, which allows remote attackers to cause a denial of service (out-of-bounds array access) or possibly have unspecified other impact via crafted JPEG2000 data. (CVSS 6.8) — fix modifies lines 243",
+      "evidence": {
+        "file": "libavcodec/jpeg2000dec.c",
+        "line_start": 243,
+        "commit_hash": "780669ef7c23c00836a24921fcc6b03be2b8ca4a",
+        "project": "FFmpeg"
+      }
+    },
+    {
+      "id": "BV-0140",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-119 vulnerability: The read_header function in libavcodec/ffv1dec.c in FFmpeg before 2.1 does not prevent changes to global parameters, which allows remote attackers to cause a denial of service (out-of-bounds array access) or possibly have unspecified other impact via crafted FFV1 data. (CVSS 6.8) — fix modifies lines 580",
+      "evidence": {
+        "file": "libavcodec/ffv1dec.c",
+        "line_start": 580,
+        "commit_hash": "547d690d676064069d44703a1917e0dab7e33445",
+        "project": "FFmpeg"
+      }
+    },
+    {
+      "id": "BV-0141",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function void has CWE-189 vulnerability: Multiple integer signedness errors in libavcodec/dsputil.c in FFmpeg before 2.1 allow remote attackers to cause a denial of service (out-of-bounds array access) or possibly have unspecified other impact via crafted data. (CVSS 6.8) — fix modifies lines 1931",
+      "evidence": {
+        "file": "libavcodec/dsputil.c",
+        "line_start": 1931,
+        "commit_hash": "454a11a1c9c686c78aa97954306fb63453299760",
+        "project": "FFmpeg"
+      }
+    },
+    {
+      "id": "BV-0142",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-119 vulnerability: The rpza_decode_stream function in libavcodec/rpza.c in FFmpeg before 2.1 does not properly maintain a pointer to pixel data, which allows remote attackers to cause a denial of service (out-of-bounds array access) or possibly have unspecified other impact via crafted Apple RPZA data. (CVSS 6.8) — fix modifies lines 85",
+      "evidence": {
+        "file": "libavcodec/rpza.c",
+        "line_start": 85,
+        "commit_hash": "3819db745da2ac7fb3faacb116788c32f4753f34",
+        "project": "FFmpeg"
+      }
+    },
+    {
+      "id": "BV-0143",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has  vulnerability: The decode_slice_header function in libavcodec/h264.c in FFmpeg before 2.1 incorrectly relies on a certain droppable field, which allows remote attackers to cause a denial of service (deadlock) or possibly have unspecified other impact via crafted H.264 data. (CVSS 6.8) — fix modifies lines 3621",
+      "evidence": {
+        "file": "libavcodec/h264.c",
+        "line_start": 3621,
+        "commit_hash": "29ffeef5e73b8f41ff3a3f2242d356759c66f91f",
+        "project": "FFmpeg"
+      }
+    },
+    {
+      "id": "BV-0144",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function setup_server_realm has  vulnerability: An unspecified third-party database module for the Key Distribution Center (KDC) in MIT Kerberos 5 (aka krb5) 1.10.x allows remote authenticated users to cause a denial of service (NULL pointer dereference and daemon crash) via a crafted request, a different vulnerability than CVE-2013-1418. (CVSS 4.0) — fix modifies lines 140",
+      "evidence": {
+        "file": "src/kdc/main.c",
+        "line_start": 140,
+        "commit_hash": "c2ccf4197f697c4ff143b8a786acdd875e70a89d",
+        "project": "krb5"
+      }
+    },
+    {
+      "id": "BV-0148",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-264 vulnerability: Quassel core (server daemon) in Quassel IRC before 0.9.2 does not properly verify the user ID when accessing user backlogs, which allows remote authenticated users to read other users' backlogs via the bufferid in (1) 16/select_buffer_by_id.sql, (2) 16/select_buffer_by_id.sql, and (3) 16/select_buffer_by_id.sql in core/SQL/PostgreSQL/. (CVSS 4.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "a1a24da",
+        "project": "quassel"
+      }
+    },
+    {
+      "id": "BV-0158",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function ssl_parse_certificate has CWE-20 vulnerability: The x509parse_crt function in x509.h in PolarSSL 1.1.x before 1.1.7 and 1.2.x before 1.2.8 does not properly parse certificate messages during the SSL/TLS handshake, which allows remote attackers to cause a denial of service (infinite loop and CPU consumption) via a certificate message that contains a PEM encoded certificate. (CVSS 4.3) — fix modifies lines 1",
+      "evidence": {
+        "file": "ssl_parse_certificate.c",
+        "line_start": 1,
+        "commit_hash": "1922a4e6aade7b1d685af19d4d9339ddb5c02859",
+        "project": "polarssl"
+      }
+    },
+    {
+      "id": "BV-0176",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function int has  vulnerability: The av_reallocp_array function in libavutil/mem.c in FFmpeg before 2.0.1 has an unspecified impact and remote vectors related to a *wrong return code* and a resultant NULL pointer dereference. (CVSS 10.0) — fix modifies lines 191",
+      "evidence": {
+        "file": "libavutil/mem.c",
+        "line_start": 191,
+        "commit_hash": "c94f9e854228e0ea00e1de8769d8d3f7cab84a55",
+        "project": "FFmpeg"
+      }
+    },
+    {
+      "id": "BV-0177",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-119 vulnerability: The kempf_decode_tile function in libavcodec/g2meet.c in FFmpeg before 2.0.1 allows remote attackers to cause a denial of service (out-of-bounds heap write) via a G2M4 encoded file. (CVSS 4.3) — fix modifies lines 389",
+      "evidence": {
+        "file": "libavcodec/g2meet.c",
+        "line_start": 389,
+        "commit_hash": "2960576378d17d71cc8dccc926352ce568b5eec1",
+        "project": "FFmpeg"
+      }
+    },
+    {
+      "id": "BV-0178",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-119 vulnerability: libavfilter in FFmpeg before 2.0.1 has unspecified impact and remote vectors related to a crafted *plane,* which triggers an out-of-bounds heap write. (CVSS 7.5) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "e43a0a232dbf6d3c161823c2e07c52e76227a1bc",
+        "project": "FFmpeg"
+      }
+    },
+    {
+      "id": "BV-0181",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-119 vulnerability: The LZW decompressor in the gif2tiff tool in libtiff 4.0.3 and earlier allows context-dependent attackers to cause a denial of service (out-of-bounds write and crash) or possibly execute arbitrary code via a crafted GIF image. (CVSS 6.8) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "ce6841d9e41d621ba23cf18b190ee6a23b2cc833",
+        "project": "libtiff"
+      }
+    },
+    {
+      "id": "BV-0186",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-59 vulnerability: ext/common/ServerInstanceDir.h in Phusion Passenger gem before 4.0.6 for Ruby allows local users to gain privileges or possibly change the ownership of arbitrary directories via a symlink attack on a directory with a predictable name in /tmp/. (CVSS 4.4) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "5483b3292cc2af1c83033eaaadec20dba4dcfd9b",
+        "project": "passenger"
+      }
+    },
+    {
+      "id": "BV-0190",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-20 vulnerability: ** DISPUTED ** The Zend Engine in PHP before 5.4.16 RC1, and 5.5.0 before RC2, does not properly determine whether a parser error occurred, which allows context-dependent attackers to cause a denial of service (memory consumption and application crash) via a crafted function definition, as demonstrated by an attack within a shared web-hosting environment.  NOTE: the vendor's http://php.net/security-note.php page says *for critical security situations you should be using OS-level security by running multiple web servers each as their own user id.* (CVSS 5.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "fb58e69a84f4fde603a630d2c9df2fa3be16d846",
+        "project": "php-src"
+      }
+    },
+    {
+      "id": "BV-0213",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has  vulnerability: The ModSecurity module before 2.7.4 for the Apache HTTP Server allows remote attackers to cause a denial of service (NULL pointer dereference, process crash, and disk consumption) via a POST request with a large body and a crafted Content-Type header. (CVSS 4.3) — fix modifies lines 170",
+      "evidence": {
+        "file": "apache2/msc_reqbody.c",
+        "line_start": 170,
+        "commit_hash": "0840b13612a0b7ef1ce7441cf811dcfc6b463fba",
+        "project": "ModSecurity"
+      }
+    },
+    {
+      "id": "BV-0222",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-119 vulnerability: GNU ZRTPCPP before 3.2.0 allows remote attackers to obtain sensitive information (uninitialized heap memory) or cause a denial of service (out-of-bounds read) via a crafted packet, as demonstrated by a truncated Ping packet that is not properly handled by the getEpHash function. (CVSS 5.8) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "4654f330317c9948bb61d138eb24d49690ca4637",
+        "project": "ZRTPCPP"
+      }
+    },
+    {
+      "id": "BV-0223",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function radius_get_vendor_attr has CWE-119 vulnerability: Buffer overflow in the radius_get_vendor_attr function in the Radius extension before 1.2.7 for PHP allows remote attackers to cause a denial of service (crash) and possibly execute arbitrary code via a large Vendor Specific Attributes (VSA) length value. (CVSS 7.5) — fix modifies lines 1",
+      "evidence": {
+        "file": "radius_get_vendor_attr.c",
+        "line_start": 1,
+        "commit_hash": "13c149b051f82b709e8d7cc32111e84b49d57234",
+        "project": "php-radius"
+      }
+    },
+    {
+      "id": "BV-0225",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function curl_easy_unescape has CWE-119 vulnerability: Heap-based buffer overflow in the curl_easy_unescape function in lib/escape.c in cURL and libcurl 7.7 through 7.30.0 allows remote attackers to cause a denial of service (application crash) or possibly execute arbitrary code via a crafted string ending in a *%* (percent) character. (CVSS 6.8) — fix modifies lines 5",
+      "evidence": {
+        "file": "lib/escape.c",
+        "line_start": 5,
+        "commit_hash": "192c4f788d48f82c03e9cef40013f34370e90737",
+        "project": "curl"
+      }
+    },
+    {
+      "id": "BV-0230",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function int has CWE-119 vulnerability: Buffer overflow in the exposure correction code in LibRaw before 0.15.1 allows context-dependent attackers to cause a denial of service (crash) and possibly execute arbitrary code via unspecified vectors. (CVSS 7.5) — fix modifies lines 2336",
+      "evidence": {
+        "file": "src/libraw_cxx.cpp",
+        "line_start": 2336,
+        "commit_hash": "2f912f5b33582961b1cdbd9fd828589f8b78f21d",
+        "project": "LibRaw"
+      }
+    },
+    {
+      "id": "BV-0231",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function int has CWE-399 vulnerability: Multiple double free vulnerabilities in the LibRaw::unpack function in libraw_cxx.cpp in LibRaw before 0.15.2 allow context-dependent attackers to cause a denial of service (application crash) and possibly execute arbitrary code via a malformed full-color (1) Foveon or (2) sRAW image file. (CVSS 7.5) — fix modifies lines 1144",
+      "evidence": {
+        "file": "src/libraw_cxx.cpp",
+        "line_start": 1144,
+        "commit_hash": "19ffddb0fe1a4ffdb459b797ffcf7f490d28b5a6",
+        "project": "LibRaw"
+      }
+    },
+    {
+      "id": "BV-0233",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-200 vulnerability: The openvpn_decrypt function in crypto.c in OpenVPN 2.3.0 and earlier, when running in UDP mode, allows remote attackers to obtain sensitive information via a timing attack involving an HMAC comparison function that does not run in constant time and a padding oracle attack on the CBC mode cipher. (CVSS 2.6) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "11d21349a4e7e38a025849479b36ace7c2eec2ee",
+        "project": "openvpn"
+      }
+    },
+    {
+      "id": "BV-0235",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-119 vulnerability: pdf.c in ClamAV 0.97.1 through 0.97.7 allows remote attackers to cause a denial of service (out-of-bounds-read) via a crafted length value in an encrypted PDF file. (CVSS 4.3) — fix modifies lines 296",
+      "evidence": {
+        "file": "libclamav/pdf.c",
+        "line_start": 296,
+        "commit_hash": "24ff855c82d3f5c62bc5788a5776cefbffce2971",
+        "project": "clamav-devel"
+      }
+    },
+    {
+      "id": "BV-0236",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-189 vulnerability: Integer underflow in the cli_scanpe function in pe.c in ClamAV before 0.97.8 allows remote attackers to cause a denial of service (crash) via a skewed offset larger than the size of the PE section in a UPX packed executable, which triggers an out-of-bounds read. (CVSS 5.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "270e368b99e93aa5447d46c797c92c3f9f39f375",
+        "project": "clamav-devel"
+      }
+    },
+    {
+      "id": "BV-0244",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-200 vulnerability: The tailMatch function in cookie.c in cURL and libcurl before 7.30.0 does not properly match the path domain when sending cookies, which allows remote attackers to steal cookies via a matching suffix in the domain of a URL. (CVSS 5.0) — fix modifies lines 118",
+      "evidence": {
+        "file": "lib/cookie.c",
+        "line_start": 118,
+        "commit_hash": "2eb8dcf26cb37f09cffe26909a646e702dbcab66",
+        "project": "curl"
+      }
+    },
+    {
+      "id": "BV-0248",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-20 vulnerability: ModSecurity before 2.7.3 allows remote attackers to read arbitrary files, send HTTP requests to intranet servers, or cause a denial of service (CPU and memory consumption) via an XML external entity declaration in conjunction with an entity reference, aka an XML External Entity (XXE) vulnerability. (CVSS 7.5) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "d4d80b38aa85eccb26e3c61b04d16e8ca5de76fe",
+        "project": "ModSecurity"
+      }
+    },
+    {
+      "id": "BV-0265",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has  vulnerability: The *faster LJPEG decoder* in libraw 0.13.x, 0.14.x, and 0.15.x before 0.15.4 allows context-dependent attackers to cause a denial of service (NULL pointer dereference) via a crafted photo file. (CVSS 4.3) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "11909cc59e712e09b508dda729b99aeaac2b29ad",
+        "project": "LibRaw"
+      }
+    },
+    {
+      "id": "BV-0266",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-119 vulnerability: Stack-based buffer overflow in the receive_tcppacket function in net_packet.c in tinc before 1.0.21 and 1.1 before 1.1pre7 allows remote authenticated peers to cause a denial of service (crash) or possibly execute arbitrary code via a large TCP packet. (CVSS 6.5) — fix modifies lines 394",
+      "evidence": {
+        "file": "src/net_packet.c",
+        "line_start": 394,
+        "commit_hash": "17a33dfd95b1a29e90db76414eb9622df9632320",
+        "project": "tinc"
+      }
+    },
+    {
+      "id": "BV-0267",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function find_alternate_tgs has CWE-20 vulnerability: do_tgs_req.c in the Key Distribution Center (KDC) in MIT Kerberos 5 (aka krb5) 1.11 before 1.11.4, when a single-component realm name is used, allows remote authenticated users to cause a denial of service (daemon crash) via a TGS-REQ request that triggers an attempted cross-realm referral for a host-based service principal. (CVSS 3.5) — fix modifies lines 1057",
+      "evidence": {
+        "file": "src/kdc/do_tgs_req.c",
+        "line_start": 1057,
+        "commit_hash": "4c023ba43c16396f0d199e2df1cfa59b88b62acc",
+        "project": "krb5"
+      }
+    },
+    {
+      "id": "BV-0268",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function prep_reprocess_req has CWE-119 vulnerability: The prep_reprocess_req function in do_tgs_req.c in the Key Distribution Center (KDC) in MIT Kerberos 5 (aka krb5) before 1.10.5 does not properly perform service-principal realm referral, which allows remote authenticated users to cause a denial of service (NULL pointer dereference and daemon crash) via a crafted TGS-REQ request. (CVSS 4.0) — fix modifies lines 1141",
+      "evidence": {
+        "file": "src/kdc/do_tgs_req.c",
+        "line_start": 1141,
+        "commit_hash": "8ee70ec63931d1e38567905387ab9b1d45734d81",
+        "project": "krb5"
+      }
+    },
+    {
+      "id": "BV-0269",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function pkinit_check_kdc_pkid has  vulnerability: The pkinit_check_kdc_pkid function in plugins/preauth/pkinit/pkinit_crypto_openssl.c in the PKINIT implementation in the Key Distribution Center (KDC) in MIT Kerberos 5 (aka krb5) before 1.10.4 and 1.11.x before 1.11.1 does not properly handle errors during extraction of fields from an X.509 certificate, which allows remote attackers to cause a denial of service (NULL pointer dereference and daemon crash) via a malformed KRB5_PADATA_PK_AS_REQ AS-REQ request. (CVSS 7.1) — fix modifies lines 3253",
+      "evidence": {
+        "file": "src/plugins/preauth/pkinit/pkinit_crypto_openssl.c",
+        "line_start": 3253,
+        "commit_hash": "f249555301940c6df3a2cdda13b56b5674eebc2e",
+        "project": "krb5"
+      }
+    },
+    {
+      "id": "BV-0278",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-399 vulnerability: Pacemaker 1.1.10, when remote Cluster Information Base (CIB) configuration or resource management is enabled, does not limit the duration of connections to the blocking sockets, which allows remote attackers to cause a denial of service (connection blocking). (CVSS 4.3) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "564f7cc2a51dcd2f28ab12a13394f31be5aa3c93",
+        "project": "pacemaker"
+      }
+    },
+    {
+      "id": "BV-0283",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-189 vulnerability: Integer signedness error in the archive_write_zip_data function in archive_write_set_format_zip.c in libarchive 3.1.2 and earlier, when running on 64-bit machines, allows context-dependent attackers to cause a denial of service (crash) via unspecified vectors, which triggers an improper conversion between unsigned and signed types, leading to a buffer overflow. (CVSS 5.0) — fix modifies lines 673",
+      "evidence": {
+        "file": "libarchive/archive_write.c",
+        "line_start": 673,
+        "commit_hash": "22531545514043e04633e1c015c7540b9de9dbe4",
+        "project": "libarchive"
+      }
+    },
+    {
+      "id": "BV-0302",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function pkinit_server_return_padata has  vulnerability: The pkinit_server_return_padata function in plugins/preauth/pkinit/pkinit_srv.c in the PKINIT implementation in the Key Distribution Center (KDC) in MIT Kerberos 5 (aka krb5) before 1.10.4 attempts to find an agility KDF identifier in inappropriate circumstances, which allows remote attackers to cause a denial of service (NULL pointer dereference and daemon crash) via a crafted Draft 9 request. (CVSS 4.3) — fix modifies lines 1016",
+      "evidence": {
+        "file": "src/plugins/preauth/pkinit/pkinit_srv.c",
+        "line_start": 1016,
+        "commit_hash": "db64ca25d661a47b996b4e2645998b5d7f0eb52c",
+        "project": "krb5"
+      }
+    },
+    {
+      "id": "BV-0318",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function process_chpw_request has CWE-20 vulnerability: schpw.c in the kpasswd service in kadmind in MIT Kerberos 5 (aka krb5) before 1.11.3 does not properly validate UDP packets before sending responses, which allows remote attackers to cause a denial of service (CPU and bandwidth consumption) via a forged packet that triggers a communication loop, as demonstrated by krb_pingpong.nasl, a related issue to CVE-1999-0103. (CVSS 5.0) — fix modifies lines 52",
+      "evidence": {
+        "file": "src/kadmin/server/schpw.c",
+        "line_start": 52,
+        "commit_hash": "cf1a0c411b2668c57c41e9c4efd15ba17b6b322c",
+        "project": "krb5"
+      }
+    },
+    {
+      "id": "BV-0321",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function void has CWE-20 vulnerability: engine/server/server.cpp in Teeworlds 0.6.x before 0.6.3 allows remote attackers to read memory and cause a denial of service (crash) via unspecified vectors. (CVSS 6.4) — fix modifies lines 845",
+      "evidence": {
+        "file": "src/engine/server/server.cpp",
+        "line_start": 845,
+        "commit_hash": "a766cb44bcffcdb0b88e776d01c5ee1323d44f85",
+        "project": "teeworlds"
+      }
+    },
+    {
+      "id": "BV-0323",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function ID has CWE-134 vulnerability: Format string vulnerability in the yyerror function in lib/cgraph/scan.l in Graphviz allows remote attackers to have unspecified impact via format string specifiers in unknown vectors, which are not properly handled in an error string. (CVSS 7.5) — fix modifies lines 225",
+      "evidence": {
+        "file": "lib/cgraph/scan.l",
+        "line_start": 225,
+        "commit_hash": "99eda421f7ddc27b14e4ac1d2126e5fe41719081",
+        "project": "graphviz"
+      }
+    },
+    {
+      "id": "BV-0324",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-119 vulnerability: Buffer overflow in the ppp_hdlc function in print-ppp.c in tcpdump 4.6.2 and earlier allows remote attackers to cause a denial of service (crash) cia a crafted PPP packet. (CVSS 5.0) — fix modifies lines 1351",
+      "evidence": {
+        "file": "print-ppp.c",
+        "line_start": 1351,
+        "commit_hash": "0f95d441e4b5d7512cc5c326c8668a120e048eda",
+        "project": "tcpdump"
+      }
+    },
+    {
+      "id": "BV-0325",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function int has CWE-119 vulnerability: Heap-based buffer overflow in the cli_scanpe function in libclamav/pe.c in ClamAV before 0.98.5 allows remote attackers to cause a denial of service (crash) via a crafted y0da Crypter PE file. (CVSS 5.0) — fix modifies lines 737",
+      "evidence": {
+        "file": "libclamav/pe.c",
+        "line_start": 737,
+        "commit_hash": "fc3794a54d2affe5770c1f876484a871c783e91e",
+        "project": "clamav-devel"
+      }
+    },
+    {
+      "id": "BV-0328",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-399 vulnerability: The mod_auth_mellon module before 0.8.1 allows remote attackers to cause a denial of service (Apache HTTP server crash) via a crafted logout request that triggers a read of uninitialized data. (CVSS 9.4) — fix modifies lines 1",
+      "evidence": {
+        "file": "NEWS",
+        "line_start": 1,
+        "commit_hash": "0f5b4fd860fa7e3a6c47201637aab05395f32647",
+        "project": "mod_auth_mellon"
+      }
+    },
+    {
+      "id": "BV-0329",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-119 vulnerability: The lazy_bdecode function in BitTorrent bootstrap-dht (aka Bootstrap) allows remote attackers to execute arbitrary code via a crafted packet, which triggers an out-of-bounds read, related to *Improper Indexing.* (CVSS 7.5) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "bbc0b7191e3f48461ca6e5b1b34bdf4b3f1e79a9",
+        "project": "bootstrap-dht"
+      }
+    },
+    {
+      "id": "BV-0330",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function QByteArray has CWE-125 vulnerability: The blowfishECB function in core/cipher.cpp in Quassel IRC 0.10.0 allows remote attackers to cause a denial of service (out-of-bounds read) via a malformed string. (CVSS 5.0) — fix modifies lines 364",
+      "evidence": {
+        "file": "src/core/cipher.cpp",
+        "line_start": 364,
+        "commit_hash": "8b5ecd226f9208af3074b33d3b7cf5e14f55b138",
+        "project": "quassel"
+      }
+    },
+    {
+      "id": "BV-0333",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function send_interface has  vulnerability: The default configuration in systemd-shim 8 enables the Abandon debugging clause, which allows local users to cause a denial of service via unspecified vectors. (CVSS 2.1) — fix modifies lines 86",
+      "evidence": {
+        "file": "data/org.freedesktop.systemd1.conf",
+        "line_start": 86,
+        "commit_hash": "d2e91c118f6128875274a638007702d1cc665893",
+        "project": "systemd-shim"
+      }
+    },
+    {
+      "id": "BV-0336",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-399 vulnerability: softmagic.c in file before 5.21 does not properly limit recursion, which allows remote attackers to cause a denial of service (CPU consumption or crash) via unspecified vectors. (CVSS 5.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "6f737ddfadb596d7d4a993f7ed2141ffd664a81c",
+        "project": "file"
+      }
+    },
+    {
+      "id": "BV-0337",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-399 vulnerability: The ELF parser (readelf.c) in file before 5.21 allows remote attackers to cause a denial of service (CPU consumption or crash) via a large number of (1) program or (2) section headers or (3) invalid capabilities. (CVSS 5.0) — fix modifies lines 27",
+      "evidence": {
+        "file": "src/readelf.c",
+        "line_start": 27,
+        "commit_hash": "d7cdad007c507e6c79f51f058dd77fab70ceb9f6",
+        "project": "file"
+      }
+    },
+    {
+      "id": "BV-0338",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-264 vulnerability: mod_lua.c in the mod_lua module in the Apache HTTP Server 2.3.x and 2.4.x through 2.4.10 does not support an httpd configuration in which the same Lua authorization provider is used with different arguments within different contexts, which allows remote attackers to bypass intended access restrictions in opportunistic circumstances by leveraging multiple Require directives, as demonstrated by a configuration that specifies authorization for one group to access a certain directory, and authorization for a second group to access a second directory. (CVSS 4.3) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "3f1693d558d0758f829c8b53993f1749ddf6ffcb",
+        "project": "httpd"
+      }
+    },
+    {
+      "id": "BV-0348",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function struct has CWE-119 vulnerability: The dissector_postgresql function in dissectors/ec_postgresql.c in Ettercap before 0.8.1 allows remote attackers to cause a denial of service and possibly execute arbitrary code via a crafted password length, which triggers a 0 character to be written to an arbitrary memory location. (CVSS 7.5) — fix modifies lines 39",
+      "evidence": {
+        "file": "src/dissectors/ec_postgresql.c",
+        "line_start": 39,
+        "commit_hash": "e3abe7d7585ecc420a7cab73313216613aadad5a",
+        "project": "ettercap"
+      }
+    },
+    {
+      "id": "BV-0349",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function class has CWE-200 vulnerability: The HashContext class in hphp/runtime/ext/ext_hash.cpp in Facebook HipHop Virtual Machine (HHVM) before 3.3.0 incorrectly expects that a certain key string uses '0' for termination, which allows remote attackers to obtain sensitive information by leveraging read access beyond the end of the string, and makes it easier for remote attackers to defeat cryptographic protection mechanisms by leveraging truncation of a string containing an internal '0' character. (CVSS 5.0) — fix modifies lines 152",
+      "evidence": {
+        "file": "hphp/runtime/ext/ext_hash.cpp",
+        "line_start": 152,
+        "commit_hash": "7135ec229882370a00411aa50030eada6034cc1b",
+        "project": "hhvm"
+      }
+    },
+    {
+      "id": "BV-0350",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-189 vulnerability: Integer overflow in the string_chunk_split function in hphp/runtime/base/zend-string.cpp in Facebook HipHop Virtual Machine (HHVM) before 3.3.0 allows remote attackers to cause a denial of service (application crash) or possibly have unspecified other impact via crafted arguments to the chunk_split function. (CVSS 7.5) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "1f91e076a585118495b976a413c1df40f6fd3d41",
+        "project": "hhvm"
+      }
+    },
+    {
+      "id": "BV-0352",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function mcrypt_create_iv has CWE-310 vulnerability: The mcrypt_create_iv function in hphp/runtime/ext/mcrypt/ext_mcrypt.cpp in Facebook HipHop Virtual Machine (HHVM) before 3.3.0 does not seed the random number generator, which makes it easier for remote attackers to defeat cryptographic protection mechanisms by leveraging the use of a single initialization vector. (CVSS 5.0) — fix modifies lines 17",
+      "evidence": {
+        "file": "hphp/runtime/ext/mcrypt/ext_mcrypt.cpp",
+        "line_start": 17,
+        "commit_hash": "ab6fdeb84fb090b48606b6f7933028cfe7bf3a5e",
+        "project": "hhvm"
+      }
+    },
+    {
+      "id": "BV-0353",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function krb5_encode_krbsecretkey has  vulnerability: plugins/kdb/ldap/libkdb_ldap/ldap_principal2.c in MIT Kerberos 5 (aka krb5) 1.12.x and 1.13.x before 1.13.1, when the KDC uses LDAP, allows remote authenticated users to cause a denial of service (NULL pointer dereference and daemon crash) by creating a database entry for a keyless principal, as demonstrated by a kadmin *add_principal -nokey* or *purgekeys -all* command. (CVSS 3.5) — fix modifies lines 406",
+      "evidence": {
+        "file": "src/plugins/kdb/ldap/libkdb_ldap/ldap_principal2.c",
+        "line_start": 406,
+        "commit_hash": "04038bf3633c4b909b5ded3072dc88c8c419bf16",
+        "project": "krb5"
+      }
+    },
+    {
+      "id": "BV-0354",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function krb5_ldap_get_password_policy_from_dn has  vulnerability: The krb5_ldap_get_password_policy_from_dn function in plugins/kdb/ldap/libkdb_ldap/ldap_pwd_policy.c in MIT Kerberos 5 (aka krb5) before 1.13.1, when the KDC uses LDAP, allows remote authenticated users to cause a denial of service (daemon crash) via a successful LDAP query with no results, as demonstrated by using an incorrect object type for a password policy. (CVSS 3.5) — fix modifies lines 314",
+      "evidence": {
+        "file": "src/plugins/kdb/ldap/libkdb_ldap/ldap_pwd_policy.c",
+        "line_start": 314,
+        "commit_hash": "d1f707024f1d0af6e54a18885322d70fa15ec4d3",
+        "project": "krb5"
+      }
+    },
+    {
+      "id": "BV-0355",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function check_1_6_dummy has CWE-255 vulnerability: The kadm5_randkey_principal_3 function in lib/kadm5/srv/svr_principal.c in kadmind in MIT Kerberos 5 (aka krb5) before 1.13 sends old keys in a response to a -randkey -keepold request, which allows remote authenticated users to forge tickets by leveraging administrative access. (CVSS 2.1) — fix modifies lines 344",
+      "evidence": {
+        "file": "src/lib/kadm5/srv/svr_principal.c",
+        "line_start": 344,
+        "commit_hash": "af0ed4df4dfae762ab5fb605f5a0c8f59cb4f6ca",
+        "project": "krb5"
+      }
+    },
+    {
+      "id": "BV-0356",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function open has CWE-20 vulnerability: Monkey HTTP Server before 1.5.3, when the File Descriptor Table (FDT) is enabled and custom error messages are set, allows remote attackers to cause a denial of service (file descriptor consumption) via an HTTP request that triggers an error message. (CVSS 4.3) — fix modifies lines 1",
+      "evidence": {
+        "file": "open.c",
+        "line_start": 1,
+        "commit_hash": "b2d0e6f92310bb14a15aa2f8e96e1fb5379776dd",
+        "project": "monkey"
+      }
+    },
+    {
+      "id": "BV-0363",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function cherokee_validator_ldap_check has CWE-287 vulnerability: The cherokee_validator_ldap_check function in validator_ldap.c in Cherokee 1.2.103 and earlier, when LDAP is used, does not properly consider unauthenticated-bind semantics, which allows remote attackers to bypass authentication via an empty password. (CVSS 6.8) — fix modifies lines 335",
+      "evidence": {
+        "file": "cherokee/validator_ldap.c",
+        "line_start": 335,
+        "commit_hash": "fbda667221c51f0aa476a02366e0cf66cb012f88",
+        "project": "webserver"
+      }
+    },
+    {
+      "id": "BV-0371",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-20 vulnerability: The parse_notify function in util.c in sgminer before 4.2.2 and cgminer 3.3.0 through 4.0.1 allows man-in-the-middle attackers to cause a denial of service (application exit) via a crafted (1) bbversion, (2) prev_hash, (3) nbit, or (4) ntime parameter in a mining.notify action stratum message. (CVSS 4.3) — fix modifies lines 1600",
+      "evidence": {
+        "file": "util.c",
+        "line_start": 1600,
+        "commit_hash": "910c36089940e81fb85c65b8e63dcd2fac71470c",
+        "project": "sgminer"
+      }
+    },
+    {
+      "id": "BV-0372",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-119 vulnerability: Multiple heap-based buffer overflows in the parse_notify function in sgminer before 4.2.2, cgminer before 4.3.5, and BFGMiner before 4.1.0 allow remote pool servers to have unspecified impact via a (1) large or (2) negative value in the Extranonc2_size parameter in a mining.subscribe response and a crafted mining.notify request. (CVSS 10.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "util.c",
+        "line_start": 1,
+        "commit_hash": "e1c5050734123973b99d181c45e74b2cbb00272e",
+        "project": "cgminer"
+      }
+    },
+    {
+      "id": "BV-0373",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function bool has CWE-119 vulnerability: Multiple stack-based buffer overflows in sgminer before 4.2.2, cgminer before 4.3.5, and BFGMiner before 3.3.0 allow remote pool servers to have unspecified impact via a long URL in a client.reconnect stratum message to the (1) extract_sockaddr or (2) parse_reconnect functions in util.c. (CVSS 10.0) — fix modifies lines 1219",
+      "evidence": {
+        "file": "util.c",
+        "line_start": 1219,
+        "commit_hash": "b65574bef233474e915fdf18614aa211e31cc6c2",
+        "project": "sgminer"
+      }
+    },
+    {
+      "id": "BV-0374",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function krb5_encode_krbsecretkey has CWE-189 vulnerability: Off-by-one error in the krb5_encode_krbsecretkey function in plugins/kdb/ldap/libkdb_ldap/ldap_principal2.c in the LDAP KDB module in kadmind in MIT Kerberos 5 (aka krb5) 1.6.x through 1.11.x before 1.11.6 and 1.12.x before 1.12.2 allows remote authenticated users to cause a denial of service (buffer overflow) or possibly execute arbitrary code via a series of *cpw -keepold* commands. (CVSS 8.5) — fix modifies lines 463",
+      "evidence": {
+        "file": "src/plugins/kdb/ldap/libkdb_ldap/ldap_principal2.c",
+        "line_start": 463,
+        "commit_hash": "dc7ed55c689d57de7f7408b34631bf06fec9dab1",
+        "project": "krb5"
+      }
+    },
+    {
+      "id": "BV-0375",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function acc_ctx_cont has CWE-476 vulnerability: The acc_ctx_cont function in the SPNEGO acceptor in lib/gssapi/spnego/spnego_mech.c in MIT Kerberos 5 (aka krb5) 1.5.x through 1.12.x before 1.12.2 allows remote attackers to cause a denial of service (NULL pointer dereference and application crash) via an empty continuation token at a certain point during a SPNEGO negotiation. (CVSS 7.8) — fix modifies lines 1442",
+      "evidence": {
+        "file": "src/lib/gssapi/spnego/spnego_mech.c",
+        "line_start": 1442,
+        "commit_hash": "a7886f0ed1277c69142b14a2c6629175a6331edc",
+        "project": "krb5"
+      }
+    },
+    {
+      "id": "BV-0376",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function init_ctx_reselect has CWE-415 vulnerability: Double free vulnerability in the init_ctx_reselect function in the SPNEGO initiator in lib/gssapi/spnego/spnego_mech.c in MIT Kerberos 5 (aka krb5) 1.10.x through 1.12.x before 1.12.2 allows remote attackers to cause a denial of service (memory corruption) or possibly execute arbitrary code via network traffic that appears to come from an intended acceptor, but specifies a security mechanism different from the one proposed by the initiator. (CVSS 7.6) — fix modifies lines 818",
+      "evidence": {
+        "file": "src/lib/gssapi/spnego/spnego_mech.c",
+        "line_start": 818,
+        "commit_hash": "f18ddf5d82de0ab7591a36e465bc24225776940f",
+        "project": "krb5"
+      }
+    },
+    {
+      "id": "BV-0377",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-119 vulnerability: MIT Kerberos 5 (aka krb5) 1.7.x through 1.12.x before 1.12.2 allows remote attackers to cause a denial of service (buffer over-read or NULL pointer dereference, and application crash) by injecting invalid tokens into a GSSAPI application session. (CVSS 5.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "e6ae703ae597d798e310368d52b8f38ee11c6a73",
+        "project": "krb5"
+      }
+    },
+    {
+      "id": "BV-0379",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-119 vulnerability: Heap-based buffer overflow in the php_parserr function in ext/standard/dns.c in PHP 5.6.0beta4 and earlier allows remote servers to cause a denial of service (crash) and possibly execute arbitrary code via a crafted DNS TXT record, related to the dns_get_record function. (CVSS 5.1) — fix modifies lines 517",
+      "evidence": {
+        "file": "ext/standard/dns.c",
+        "line_start": 517,
+        "commit_hash": "b34d7849ed90ced9345f8ea1c59bc8d101c18468",
+        "project": "php-src"
+      }
+    },
+    {
+      "id": "BV-0382",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-119 vulnerability: The getHTTPResponse function in miniwget.c in MiniUPnP 1.9 allows remote attackers to cause a denial of service (crash) via crafted headers that trigger an out-of-bounds read. (CVSS 5.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "3a87aa2f10bd7f1408e1849bdb59c41dd63a9fe9",
+        "project": "miniupnp"
+      }
+    },
+    {
+      "id": "BV-0383",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-264 vulnerability: libfep 0.0.5 before 0.1.0 does not properly use UNIX domain sockets in the abstract namespace, which allows local users to gain privileges via unspecified vectors. (CVSS 4.6) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "293d9d3f",
+        "project": "libfep"
+      }
+    },
+    {
+      "id": "BV-0384",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function namespace has CWE-20 vulnerability: The CmdAuthenticate::_authenticateX509 function in db/commands/authentication_commands.cpp in mongod in MongoDB 2.6.x before 2.6.2 allows remote attackers to cause a denial of service (daemon crash) by attempting authentication with an invalid X.509 client certificate. (CVSS 5.0) — fix modifies lines 303",
+      "evidence": {
+        "file": "src/mongo/db/commands/authentication_commands.cpp",
+        "line_start": 303,
+        "commit_hash": "c151e0660b9736fe66b224f1129a16871165251b",
+        "project": "mongo"
+      }
+    },
+    {
+      "id": "BV-0385",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-20 vulnerability: The donote function in readelf.c in file through 5.20, as used in the Fileinfo component in PHP 5.4.34, does not ensure that sufficient note headers are present, which allows remote attackers to cause a denial of service (out-of-bounds read and application crash) via a crafted ELF file. (CVSS 5.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "39c7ac1106be844a5296d3eb5971946cc09ffda0",
+        "project": "file"
+      }
+    },
+    {
+      "id": "BV-0397",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function PHP_FUNCTION has CWE-119 vulnerability: Multiple buffer overflows in the php_parserr function in ext/standard/dns.c in PHP before 5.4.32 and 5.5.x before 5.5.16 allow remote DNS servers to cause a denial of service (application crash) or possibly execute arbitrary code via a crafted DNS record, related to the dns_get_record function and the dn_expand function.  NOTE: this issue exists because of an incomplete fix for CVE-2014-4049. (CVSS 6.8) — fix modifies lines 412",
+      "evidence": {
+        "file": "ext/standard/dns.c",
+        "line_start": 412,
+        "commit_hash": "2fefae47716d501aec41c1102f3fd4531f070b05",
+        "project": "php-src"
+      }
+    },
+    {
+      "id": "BV-0398",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-189 vulnerability: Integer overflow in the cdf_read_property_info function in cdf.c in file through 5.19, as used in the Fileinfo component in PHP before 5.4.32 and 5.5.x before 5.5.16, allows remote attackers to cause a denial of service (application crash) via a crafted CDF file.  NOTE: this vulnerability exists because of an incomplete fix for CVE-2012-1571. (CVSS 4.3) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "7ba1409a1aee5925180de546057ddd84ff267947",
+        "project": "php-src"
+      }
+    },
+    {
+      "id": "BV-0399",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-399 vulnerability: file before 5.19 does not properly restrict the amount of data read during a regex search, which allows remote attackers to cause a denial of service (CPU consumption) via a crafted file that triggers backtracking during processing of an awk rule.  NOTE: this vulnerability exists because of an incomplete fix for CVE-2013-7345. (CVSS 5.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "4a284c89d6ef11aca34da65da7d673050a5ea320",
+        "project": "file"
+      }
+    },
+    {
+      "id": "BV-0402",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function test has CWE-20 vulnerability: The cdf_read_property_info function in file before 5.19, as used in the Fileinfo component in PHP before 5.4.30 and 5.5.x before 5.5.14, does not properly validate a stream offset, which allows remote attackers to cause a denial of service (application crash) via a crafted CDF file. (CVSS 4.3) — fix modifies lines 35",
+      "evidence": {
+        "file": "src/cdf.c",
+        "line_start": 35,
+        "commit_hash": "93e063ee374b6a75729df9e7201fb511e47e259d",
+        "project": "file"
+      }
+    },
+    {
+      "id": "BV-0403",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-20 vulnerability: The cdf_count_chain function in cdf.c in file before 5.19, as used in the Fileinfo component in PHP before 5.4.30 and 5.5.x before 5.5.14, does not properly validate sector-count data, which allows remote attackers to cause a denial of service (application crash) via a crafted CDF file. (CVSS 4.3) — fix modifies lines 35",
+      "evidence": {
+        "file": "src/cdf.c",
+        "line_start": 35,
+        "commit_hash": "40bade80cbe2af1d0b2cd0420cebd5d5905a2382",
+        "project": "file"
+      }
+    },
+    {
+      "id": "BV-0404",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function offsets has CWE-189 vulnerability: The cdf_check_stream_offset function in cdf.c in file before 5.19, as used in the Fileinfo component in PHP before 5.4.30 and 5.5.x before 5.5.14, relies on incorrect sector-size data, which allows remote attackers to cause a denial of service (application crash) via a crafted stream offset in a CDF file. (CVSS 4.3) — fix modifies lines 35",
+      "evidence": {
+        "file": "src/cdf.c",
+        "line_start": 35,
+        "commit_hash": "36fadd29849b8087af9f4586f89dbf74ea45be67",
+        "project": "file"
+      }
+    },
+    {
+      "id": "BV-0405",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function size has CWE-119 vulnerability: Buffer overflow in the mconvert function in softmagic.c in file before 5.19, as used in the Fileinfo component in PHP before 5.4.30 and 5.5.x before 5.5.14, allows remote attackers to cause a denial of service (application crash) via a crafted Pascal string in a FILE_PSTRING conversion. (CVSS 5.0) — fix modifies lines 32",
+      "evidence": {
+        "file": "src/softmagic.c",
+        "line_start": 32,
+        "commit_hash": "27a14bc7ba285a0a5ebfdb55e54001aa11932b08",
+        "project": "file"
+      }
+    },
+    {
+      "id": "BV-0412",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function getword has CWE-119 vulnerability: Integer overflow in the getword function in options.c in pppd in Paul's PPP Package (ppp) before 2.4.7 allows attackers to *access privileged options* via a long word in an options file, which triggers a heap-based buffer overflow that *[corrupts] security-relevant variables.* (CVSS 7.5) — fix modifies lines 1289",
+      "evidence": {
+        "file": "pppd/options.c",
+        "line_start": 1289,
+        "commit_hash": "7658e8257183f062dc01f87969c140707c7e52cb",
+        "project": "ppp"
+      }
+    },
+    {
+      "id": "BV-0421",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function path_in has CWE-189 vulnerability: Multiple integer overflows in contrib/hstore/hstore_io.c in PostgreSQL 9.0.x before 9.0.16, 9.1.x before 9.1.12, 9.2.x before 9.2.7, and 9.3.x before 9.3.3 allow remote authenticated users to have unspecified impact via vectors related to the (1) hstore_recv, (2) hstore_from_arrays, and (3) hstore_from_array functions in contrib/hstore/hstore_io.c; and the (4) hstoreArrayToPairs function in contrib/hstore/hstore_op.c, which triggers a buffer overflow.  NOTE: this issue was SPLIT from CVE-2014-0064 because it has a different set of affected versions. (CVSS 6.5) — fix modifies lines 1",
+      "evidence": {
+        "file": "path_in.c",
+        "line_start": 1,
+        "commit_hash": "31400a673325147e1205326008e32135a78b4d8a",
+        "project": "postgres"
+      }
+    },
+    {
+      "id": "BV-0422",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-200 vulnerability: The OpenConnectionTask::handleStateHelper function in Imap/Tasks/OpenConnectionTask.cpp in Trojita before 0.4.1 allows man-in-the-middle attackers to trigger use of cleartext for saving a message into a (1) sent or (2) draft folder via a PREAUTH response that prevents later use of the STARTTLS command. (CVSS 4.3) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "25fffa3e25cbad85bbca804193ad336b090a9ce1",
+        "project": "trojita"
+      }
+    },
+    {
+      "id": "BV-0424",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-119 vulnerability: softmagic.c in file before 5.17 and libmagic allows context-dependent attackers to cause a denial of service (out-of-bounds memory access and crash) via crafted offsets in the softmagic of a PE executable. (CVSS 4.3) — fix modifies lines 32",
+      "evidence": {
+        "file": "src/softmagic.c",
+        "line_start": 32,
+        "commit_hash": "447558595a3650db2886cd2f416ad0beba965801",
+        "project": "file"
+      }
+    },
+    {
+      "id": "BV-0425",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-264 vulnerability: Facebook HipHop Virtual Machine (HHVM) before 3.1.0 does not drop supplemental group memberships within hphp/util/capability.cpp and hphp/util/light-process.cpp, which allows remote attackers to bypass intended access restrictions by leveraging group permissions for a file or directory. (CVSS 5.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "851fff90a9b7461df2393af32239ba217bc25946",
+        "project": "hhvm"
+      }
+    },
+    {
+      "id": "BV-0426",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function namespace has CWE-94 vulnerability: CRLF injection vulnerability in the LightProcess protocol implementation in hphp/util/light-process.cpp in Facebook HipHop Virtual Machine (HHVM) before 2.4.2 allows remote attackers to execute arbitrary commands by entering a n (newline) character before the end of a string. (CVSS 7.5) — fix modifies lines 42",
+      "evidence": {
+        "file": "hphp/util/light-process.cpp",
+        "line_start": 42,
+        "commit_hash": "506a44194a9016406c752ad8e010c01aeffc18cc",
+        "project": "hhvm"
+      }
+    },
+    {
+      "id": "BV-0429",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function imagecrop has CWE-189 vulnerability: ext/gd/gd.c in PHP 5.5.x before 5.5.9 does not check data types, which might allow remote attackers to obtain sensitive information by using a (1) string or (2) array data type in place of a numeric data type, as demonstrated by an imagecrop function call with a string for the x dimension value, a different vulnerability than CVE-2013-7226. (CVSS 5.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "imagecrop.c",
+        "line_start": 1,
+        "commit_hash": "2938329ce19cb8c4197dec146c3ec887c6f61d01",
+        "project": "php-src"
+      }
+    },
+    {
+      "id": "BV-0438",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function libxml_disable_entity_loader has  vulnerability: The libxml_disable_entity_loader function in runtime/ext/ext_simplexml.cpp in HipHop Virtual Machine for PHP (HHVM) before 2.4.0 and 2.3.x before 2.3.3 does not properly disable a certain libxml handler, which allows remote attackers to conduct XML External Entity (XXE) attacks. (CVSS 5.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "libxml_disable_entity_loader.c",
+        "line_start": 1,
+        "commit_hash": "95f96e7287effe2fcdfb9a5338d1a7e4f55b083b",
+        "project": "hhvm"
+      }
+    },
+    {
+      "id": "BV-0440",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-119 vulnerability: Stack-based buffer overflow in the chkNum function in lib/cgraph/scan.l in Graphviz 2.34.0 allows remote attackers to have unspecified impact via vectors related to a *badly formed number* and a *long digit list.* (CVSS 10.0) — fix modifies lines 129",
+      "evidence": {
+        "file": "lib/cgraph/scan.l",
+        "line_start": 129,
+        "commit_hash": "1d1bdec6318746f6f19f245db589eddc887ae8ff",
+        "project": "graphviz"
+      }
+    },
+    {
+      "id": "BV-0441",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-119 vulnerability: Stack-based buffer overflow in the yyerror function in lib/cgraph/scan.l in Graphviz 2.34.0 allows remote attackers to have unspecified impact via a long line in a dot file. (CVSS 9.3) — fix modifies lines 16",
+      "evidence": {
+        "file": "lib/cgraph/scan.l",
+        "line_start": 16,
+        "commit_hash": "7aaddf52cd98589fb0c3ab72a393f8411838438a",
+        "project": "graphviz"
+      }
+    },
+    {
+      "id": "BV-0442",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function BOOL has CWE-189 vulnerability: Integer overflow in the license_read_scope_list function in libfreerdp/core/license.c in FreeRDP through 1.0.2 allows remote RDP servers to cause a denial of service (application crash) or possibly have unspecified other impact via a large ScopeCount value in a Scope List in a Server License Request packet. (CVSS 6.8) — fix modifies lines 670",
+      "evidence": {
+        "file": "libfreerdp/core/license.c",
+        "line_start": 670,
+        "commit_hash": "e2745807c4c3e0a590c0f69a9b655dc74ebaa03e",
+        "project": "FreeRDP"
+      }
+    },
+    {
+      "id": "BV-0443",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function int has CWE-119 vulnerability: Stack-based buffer overflow in lib/Libdis/disrsi_.c in Terascale Open-Source Resource and Queue Manager (aka TORQUE Resource Manager) 2.5.x through 2.5.13 allows remote attackers to execute arbitrary code via a large count value. (CVSS 10.0) — fix modifies lines 112",
+      "evidence": {
+        "file": "src/lib/Libdis/disrsi_.c",
+        "line_start": 112,
+        "commit_hash": "3ed749263abe3d69fa3626d142a5789dcb5a5684",
+        "project": "torque"
+      }
+    },
+    {
+      "id": "BV-0444",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-119 vulnerability: The cdf_read_property_info function in cdf.c in the Fileinfo component in PHP before 5.4.29 and 5.5.x before 5.5.13 allows remote attackers to cause a denial of service (infinite loop or out-of-bounds memory access) via a vector that (1) has zero length or (2) is too long. (CVSS 5.0) — fix modifies lines 35",
+      "evidence": {
+        "file": "src/cdf.c",
+        "line_start": 35,
+        "commit_hash": "f97486ef5dc3e8735440edc4fc8808c63e1a3ef0",
+        "project": "file"
+      }
+    },
+    {
+      "id": "BV-0445",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function offset has CWE-399 vulnerability: The cdf_unpack_summary_info function in cdf.c in the Fileinfo component in PHP before 5.4.29 and 5.5.x before 5.5.13 allows remote attackers to cause a denial of service (performance degradation) by triggering many file_printf calls. (CVSS 5.0) — fix modifies lines 35",
+      "evidence": {
+        "file": "src/cdf.c",
+        "line_start": 35,
+        "commit_hash": "b8acc83781d5a24cc5101e525d15efe0482c280d",
+        "project": "file"
+      }
+    },
+    {
+      "id": "BV-0446",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function files has CWE-119 vulnerability: The cdf_read_short_sector function in cdf.c in file before 5.19, as used in the Fileinfo component in PHP before 5.4.30 and 5.5.x before 5.5.14, allows remote attackers to cause a denial of service (assertion failure and application exit) via a crafted CDF file. (CVSS 4.3) — fix modifies lines 1",
+      "evidence": {
+        "file": "files.c",
+        "line_start": 1,
+        "commit_hash": "6d209c1c489457397a5763bca4b28e43aac90391",
+        "project": "file"
+      }
+    },
+    {
+      "id": "BV-0451",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-264 vulnerability: sapi/fpm/fpm/fpm_unix.c in the FastCGI Process Manager (FPM) in PHP before 5.4.28 and 5.5.x before 5.5.12 uses 0666 permissions for the UNIX socket, which allows local users to gain privileges via a crafted FastCGI client. (CVSS 7.2) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "35ceea928b12373a3b1e3eecdc32ed323223a40d",
+        "project": "php-src"
+      }
+    },
+    {
+      "id": "BV-0456",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function interval_out has CWE-119 vulnerability: Multiple stack-based buffer overflows in PostgreSQL before 8.4.20, 9.0.x before 9.0.16, 9.1.x before 9.1.12, 9.2.x before 9.2.7, and 9.3.x before 9.3.3 allow remote authenticated users to cause a denial of service (crash) or possibly execute arbitrary code via vectors related to an incorrect MAXDATELEN constant and datetime values involving (1) intervals, (2) timestamps, or (3) timezones, a different vulnerability than CVE-2014-0065. (CVSS 6.5) — fix modifies lines 1",
+      "evidence": {
+        "file": "interval_out.c",
+        "line_start": 1,
+        "commit_hash": "4318daecc959886d001a6e79c6ea853e8b1dfb4b",
+        "project": "postgres"
+      }
+    },
+    {
+      "id": "BV-0460",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-264 vulnerability: The BEGIN regular expression in the awk script detector in magic/Magdir/commands in file before 5.15 uses multiple wildcards with unlimited repetitions, which allows context-dependent attackers to cause a denial of service (CPU consumption) via a crafted ASCII file that triggers a large amount of backtracking, as demonstrated via a file with many newline characters. (CVSS 5.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "magic/Magdir/commands",
+        "line_start": 1,
+        "commit_hash": "ef2329cf71acb59204dd981e2c6cce6c81fe467c",
+        "project": "file"
+      }
+    },
+    {
+      "id": "BV-0462",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function namespace has CWE-200 vulnerability: framework/common/messageheaderparser.cpp in Tntnet before 2.2.1 allows remote attackers to obtain sensitive information via a header that ends in n instead of rn, which prevents a null terminator from being added and causes Tntnet to include headers from other requests. (CVSS 5.0) — fix modifies lines 204",
+      "evidence": {
+        "file": "framework/common/messageheaderparser.cpp",
+        "line_start": 204,
+        "commit_hash": "9bd3b14042e12d84f39ea9f55731705ba516f525",
+        "project": "tntnet"
+      }
+    },
+    {
+      "id": "BV-0463",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-20 vulnerability: The ikev2parent_inI1outR1 function in pluto/ikev2_parent.c in libreswan before 3.7 allows remote attackers to cause a denial of service (restart) via an IKEv2 I1 notification without a KE payload. (CVSS 5.0) — fix modifies lines 306",
+      "evidence": {
+        "file": "programs/pluto/ikev2_parent.c",
+        "line_start": 306,
+        "commit_hash": "2899351224fe2940aec37d7656e1e392c0fe07f0",
+        "project": "libreswan"
+      }
+    },
+    {
+      "id": "BV-0464",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-362 vulnerability: Race condition in the libreswan.spec files for Red Hat Enterprise Linux (RHEL) and Fedora packages in libreswan 3.6 has unspecified impact and attack vectors, involving the /var/tmp/libreswan-nss-pwd temporary file. (CVSS 9.3) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "ef2d756e73a188401c36133c2e2f7ce4f3c6ae55",
+        "project": "libreswan"
+      }
+    },
+    {
+      "id": "BV-0467",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function int has CWE-89 vulnerability: SQL injection vulnerability in the msPostGISLayerSetTimeFilter function in mappostgis.c in MapServer before 6.4.1, when a WMS-Time service is used, allows remote attackers to execute arbitrary SQL commands via a crafted string in a PostGIS TIME filter. (CVSS 6.8) — fix modifies lines 3212",
+      "evidence": {
+        "file": "mappostgis.c",
+        "line_start": 3212,
+        "commit_hash": "3a10f6b829297dae63492a8c63385044bc6953ed",
+        "project": "mapserver"
+      }
+    },
+    {
+      "id": "BV-0468",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function lxc has CWE-264 vulnerability: The lxc-sshd template (templates/lxc-sshd.in) in LXC before 1.0.0.beta2 uses read-write permissions when mounting /sbin/init, which allows local users to gain privileges by modifying the init file. (CVSS 7.2) — fix modifies lines 128",
+      "evidence": {
+        "file": "templates/lxc-sshd.in",
+        "line_start": 128,
+        "commit_hash": "f4d5cc8e1f39d132b61e110674528cac727ae0e2",
+        "project": "lxc"
+      }
+    },
+    {
+      "id": "BV-0469",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-310 vulnerability: Jansson, possibly 2.4 and earlier, does not restrict the ability to trigger hash collisions predictably, which allows context-dependent attackers to cause a denial of service (CPU consumption) via a crafted JSON document. (CVSS 5.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "8f80c2d83808150724d31793e6ade92749b1faa4",
+        "project": "jansson"
+      }
+    },
+    {
+      "id": "BV-0470",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-310 vulnerability: The hash functionality in json-c before 0.12 allows context-dependent attackers to cause a denial of service (CPU consumption) via crafted JSON data, involving collisions. (CVSS 5.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "64e36901a0614bf64a19bc3396469c66dcd0b015",
+        "project": "json-c"
+      }
+    },
+    {
+      "id": "BV-0471",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function apr_status_t has CWE-264 vulnerability: apache2/modsecurity.c in ModSecurity before 2.7.6 allows remote attackers to bypass rules by using chunked transfer coding with a capitalized Chunked value in the Transfer-Encoding HTTP header. (CVSS 5.0) — fix modifies lines 297",
+      "evidence": {
+        "file": "apache2/modsecurity.c",
+        "line_start": 297,
+        "commit_hash": "f8d441cd25172fdfe5b613442fedfc0da3cc333d",
+        "project": "ModSecurity"
+      }
+    },
+    {
+      "id": "BV-0472",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has  vulnerability: Little CMS (lcms2) before 2.5, as used in OpenJDK 7 and possibly other products, allows remote attackers to cause a denial of service (NULL pointer dereference and crash) via vectors related to (1) cmsStageAllocLabV2ToV4curves, (2) cmsPipelineDup, (3) cmsAllocProfileSequenceDescription, (4) CurvesAlloc, and (5) cmsnamed. (CVSS 5.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "91c2db7f2559be504211b283bc3a2c631d6f06d9",
+        "project": "Little-CMS"
+      }
+    },
+    {
+      "id": "BV-0473",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function int has CWE-264 vulnerability: The Mandril security plugin in Monkey HTTP Daemon (monkeyd) before 1.5.0 allows remote attackers to bypass access restrictions via a crafted URI, as demonstrated by an encoded forward slash. (CVSS 5.8) — fix modifies lines 349",
+      "evidence": {
+        "file": "plugins/mandril/mandril.c",
+        "line_start": 349,
+        "commit_hash": "15f72c1ee5e0afad20232bdf0fcecab8d62a5d89",
+        "project": "monkey"
+      }
+    },
+    {
+      "id": "BV-0474",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function class has  vulnerability: ZNC 1.0 allows remote authenticated users to cause a denial of service (NULL pointer reference and crash) via a crafted request to the (1) editnetwork, (2) editchan, (3) addchan, or (4) delchan page in modules/webadmin.cpp. (CVSS 4.0) — fix modifies lines 426",
+      "evidence": {
+        "file": "modules/webadmin.cpp",
+        "line_start": 426,
+        "commit_hash": "2bd410ee5570cea127233f1133ea22f25174eb28",
+        "project": "znc"
+      }
+    },
+    {
+      "id": "BV-0475",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has  vulnerability: The init_nss_hash function in exec/totemcrypto.c in Corosync 2.0 before 2.3 does not properly initialize the HMAC key, which allows remote attackers to cause a denial of service (crash) via a crafted packet. (CVSS 5.0) — fix modifies lines 478",
+      "evidence": {
+        "file": "exec/totemcrypto.c",
+        "line_start": 478,
+        "commit_hash": "b3f456a8ceefac6e9f2e9acc2ea0c159d412b595",
+        "project": "corosync"
+      }
+    },
+    {
+      "id": "BV-0479",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function set_interface_var has CWE-22 vulnerability: Directory traversal vulnerability in device-linux.c in the router advertisement daemon (radvd) before 1.8.2 allows local users to overwrite arbitrary files, and remote attackers to overwrite certain files, via a .. (dot dot) in an interface name.  NOTE: this can be leveraged with a symlink to overwrite arbitrary files. (CVSS 6.4) — fix modifies lines 243",
+      "evidence": {
+        "file": "device-linux.c",
+        "line_start": 243,
+        "commit_hash": "92e22ca23e52066da2258df8c76a2dca8a428bcc",
+        "project": "radvd"
+      }
+    },
+    {
+      "id": "BV-0480",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function typedef has CWE-119 vulnerability: Buffer overflow in hw/scsi-disk.c in the SCSI subsystem in QEMU before 0.15.2, as used by Xen, might allow local guest users with permission to access the CD-ROM to cause a denial of service (guest crash) via a crafted SAI READ CAPACITY SCSI command.  NOTE: this is only a vulnerability when root has manually modified certain permissions or ACLs. (CVSS 4.0) — fix modifies lines 55",
+      "evidence": {
+        "file": "hw/scsi-disk.c",
+        "line_start": 55,
+        "commit_hash": "7285477ab11831b1cf56e45878a89170dd06d9b9",
+        "project": "qemu"
+      }
+    },
+    {
+      "id": "BV-0496",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function mm_answer_pam_respond has CWE-264 vulnerability: Use-after-free vulnerability in the mm_answer_pam_free_ctx function in monitor.c in sshd in OpenSSH before 7.0 on non-OpenBSD platforms might allow local users to gain privileges by leveraging control of the sshd uid to send an unexpectedly early MONITOR_REQ_PAM_FREE_CTX request. (CVSS 6.9) — fix modifies lines 1166",
+      "evidence": {
+        "file": "monitor.c",
+        "line_start": 1166,
+        "commit_hash": "5e75f5198769056089fb06c4d738ab0e5abc66f7",
+        "project": "openssh-portable"
+      }
+    },
+    {
+      "id": "BV-0497",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-20 vulnerability: The monitor component in sshd in OpenSSH before 7.0 on non-OpenBSD platforms accepts extraneous username data in MONITOR_REQ_PAM_INIT_CTX requests, which allows local users to conduct impersonation attacks by leveraging any SSH login access in conjunction with control of the sshd uid to send a crafted MONITOR_REQ_PWNAM request, related to monitor.c and monitor_wrap.c. (CVSS 1.9) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "d4697fe9a28dab7255c60433e4dd23cf7fce8a8b",
+        "project": "openssh-portable"
+      }
+    },
+    {
+      "id": "BV-0499",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function interfaces has CWE-264 vulnerability: IPPUSBXD before 1.22 listens on all interfaces, which allows remote attackers to obtain access to USB connected printers via a direct request. (CVSS 7.5) — fix modifies lines 1",
+      "evidence": {
+        "file": "interfaces.c",
+        "line_start": 1,
+        "commit_hash": "46844402bca7a38fc224483ba6f0a93c4613203f",
+        "project": "ippusbxd"
+      }
+    },
+    {
+      "id": "BV-0501",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-119 vulnerability: Buffer overflow in the IGDstartelt function in igd_desc_parse.c in the MiniUPnP client (aka MiniUPnPc) before 1.9.20150917 allows remote UPNP servers to cause a denial of service (application crash) and possibly execute arbitrary code via an *oversized* XML element name. (CVSS 6.8) — fix modifies lines 1",
+      "evidence": {
+        "file": "miniupnpc/igd_desc_parse.c",
+        "line_start": 1,
+        "commit_hash": "79cca974a4c2ab1199786732a67ff6d898051b78",
+        "project": "miniupnp"
+      }
+    },
+    {
+      "id": "BV-0505",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function namespace has CWE-20 vulnerability: The lazy_bdecode function in BitTorrent DHT bootstrap server (bootstrap-dht ) allows remote attackers to execute arbitrary code via a crafted packet, related to *improper indexing.* (CVSS 7.5) — fix modifies lines 150",
+      "evidence": {
+        "file": "lazy_bdecode.cpp",
+        "line_start": 150,
+        "commit_hash": "e809ea80e3527e32c40756eddd8b2ae44bc3af1a",
+        "project": "bootstrap-dht"
+      }
+    },
+    {
+      "id": "BV-0508",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-200 vulnerability: libreport 2.0.7 before 2.6.3 only saves changes to the first file when editing a crash report, which allows remote attackers to obtain sensitive information via unspecified vectors related to the (1) backtrace, (2) cmdline, (3) environ, (4) open_fds, (5) maps, (6) smaps, (7) hostname, (8) remote, (9) ks.cfg, or (10) anaconda-tb file attachment included in a Red Hat Bugzilla bug report. (CVSS 5.0) — fix modifies lines 433",
+      "evidence": {
+        "file": "src/gui-wizard-gtk/wizard.c",
+        "line_start": 433,
+        "commit_hash": "257578a23d1537a2d235aaa2b1488ee4f818e360",
+        "project": "libreport"
+      }
+    },
+    {
+      "id": "BV-0509",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function int has CWE-59 vulnerability: The abrt-hook-ccpp help program in Automatic Bug Reporting Tool (ABRT) before 2.7.1 allows local users with certain permissions to gain privileges via a symlink attack on a file with a predictable name, as demonstrated by /var/tmp/abrt/abrt-hax-coredump or /var/spool/abrt/abrt-hax-coredump. (CVSS 6.9) — fix modifies lines 718",
+      "evidence": {
+        "file": "src/hooks/abrt-hook-ccpp.c",
+        "line_start": 718,
+        "commit_hash": "3c1b60cfa62d39e5fff5a53a5bc53dae189e740e",
+        "project": "abrt"
+      }
+    },
+    {
+      "id": "BV-0511",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-59 vulnerability: The abrt-action-install-debuginfo-to-abrt-cache help program in Automatic Bug Reporting Tool (ABRT) before 2.7.1 allows local users to write to arbitrary files via a symlink attack on unpacked.cpio in a pre-created directory with a predictable name in /var/tmp. (CVSS 3.6) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "50ee8130fb4cd4ef1af7682a2c85dd99cb99424e",
+        "project": "abrt"
+      }
+    },
+    {
+      "id": "BV-0517",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function overflow has CWE-119 vulnerability: The extractFrom function in Internals/QuotedString.cpp in Arduino JSON before 4.5 allows remote attackers to cause a denial of service (crash) via a JSON string with a  (backslash) followed by a terminator, as demonstrated by *0*, which triggers a buffer overflow and over-read. (CVSS 5.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "overflow.c",
+        "line_start": 1,
+        "commit_hash": "5e7b9ec688d79e7b16ec7064e1d37e8481a31e72",
+        "project": "ArduinoJson"
+      }
+    },
+    {
+      "id": "BV-0518",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-189 vulnerability: Off-by-one error in the lzxd_decompress function in lzxd.c in libmspack before 0.5 allows remote attackers to cause a denial of service (buffer under-read and application crash) via a crafted CAB archive. (CVSS 4.3) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "18b6a2cc0b87536015bedd4f7763e6b02d5aa4f3",
+        "project": "libmspack"
+      }
+    },
+    {
+      "id": "BV-0519",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-17 vulnerability: Redis before 2.8.21 and 3.x before 3.0.2 allows remote attackers to execute arbitrary Lua bytecode via the eval command. (CVSS 10.0) — fix modifies lines 495",
+      "evidence": {
+        "file": "deps/lua/src/ldo.c",
+        "line_start": 495,
+        "commit_hash": "fdf9d455098f54f7666c702ae464e6ea21e25411",
+        "project": "redis"
+      }
+    },
+    {
+      "id": "BV-0525",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function buffer has CWE-119 vulnerability: Buffer overflow in the set_cs_start function in t1disasm.c in t1utils before 1.39 allows remote attackers to cause a denial of service (crash) and possibly execute arbitrary code via a crafted font file. (CVSS 7.5) — fix modifies lines 1",
+      "evidence": {
+        "file": "buffer.c",
+        "line_start": 1,
+        "commit_hash": "6b9d1aafcb61a3663c883663eb19ccdbfcde8d33",
+        "project": "t1utils"
+      }
+    },
+    {
+      "id": "BV-0526",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function struct has CWE-189 vulnerability: Integer overflow in the ljpeg_start function in dcraw 7.00 and earlier allows remote attackers to cause a denial of service (crash) via a crafted image, which triggers a buffer overflow, related to the len variable. (CVSS 4.3) — fix modifies lines 890",
+      "evidence": {
+        "file": "plugins/load-dcraw/dcraw.cc",
+        "line_start": 890,
+        "commit_hash": "983bda1f0fa5fa86884381208274198a620f006e",
+        "project": "rawstudio"
+      }
+    },
+    {
+      "id": "BV-0528",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function void has  vulnerability: Use-after-free vulnerability in the ff_h264_free_tables function in libavcodec/h264.c in FFmpeg before 2.3.6 allows remote attackers to cause a denial of service or possibly have unspecified other impact via crafted H.264 data in an MP4 file, as demonstrated by an HTML VIDEO element that references H.264 data. (CVSS 6.8) — fix modifies lines 391",
+      "evidence": {
+        "file": "libavcodec/h264.c",
+        "line_start": 391,
+        "commit_hash": "e8714f6f93d1a32f4e4655209960afcf4c185214",
+        "project": "FFmpeg"
+      }
+    },
+    {
+      "id": "BV-0534",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function ap_some_auth_required has CWE-264 vulnerability: The ap_some_auth_required function in server/request.c in the Apache HTTP Server 2.4.x before 2.4.14 does not consider that a Require directive may be associated with an authorization setting rather than an authentication setting, which allows remote attackers to bypass intended access restrictions in opportunistic circumstances by leveraging the presence of a module that relies on the 2.2 API behavior. (CVSS 4.3) — fix modifies lines 1",
+      "evidence": {
+        "file": "ap_some_auth_required.c",
+        "line_start": 1,
+        "commit_hash": "cd2b7a26c776b0754fb98426a67804fd48118708",
+        "project": "httpd"
+      }
+    },
+    {
+      "id": "BV-0535",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-20 vulnerability: The chunked transfer coding implementation in the Apache HTTP Server before 2.4.14 does not properly parse chunk headers, which allows remote attackers to conduct HTTP request smuggling attacks via a crafted request, related to mishandling of large chunk-size values and invalid chunk-extension characters in modules/http/http_filters.c. (CVSS 5.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "e427c41257957b57036d5a549b260b6185d1dd73",
+        "project": "httpd"
+      }
+    },
+    {
+      "id": "BV-0538",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-119 vulnerability: Buffer overflow in das_watchdog 0.9.0 allows local users to execute arbitrary code with root privileges via a large string in the XAUTHORITY environment variable. (CVSS 7.2) — fix modifies lines 306",
+      "evidence": {
+        "file": "das_watchdog.c",
+        "line_start": 306,
+        "commit_hash": "bd20bb02e75e2c0483832b52f2577253febfb690",
+        "project": "das_watchdog"
+      }
+    },
+    {
+      "id": "BV-0540",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function query has CWE-399 vulnerability: Stack consumption vulnerability in the message splitting functionality in Quassel before 0.12-rc1 allows remote attackers to cause a denial of service (uncontrolled recursion) via a crafted massage. (CVSS 5.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "query.c",
+        "line_start": 1,
+        "commit_hash": "b5e38970ffd55e2dd9f706ce75af9a8d7730b1b8",
+        "project": "quassel"
+      }
+    },
+    {
+      "id": "BV-0541",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function iakerb_gss_export_sec_context has CWE-119 vulnerability: The iakerb_gss_export_sec_context function in lib/gssapi/krb5/iakerb.c in MIT Kerberos 5 (aka krb5) 1.14 pre-release 2015-09-14 improperly accesses a certain pointer, which allows remote authenticated users to cause a denial of service (memory corruption) or possibly have unspecified other impact by interacting with an application that calls the gss_export_sec_context function.  NOTE: this vulnerability exists because of an incorrect fix for CVE-2015-2696. (CVSS 8.5) — fix modifies lines 1",
+      "evidence": {
+        "file": "iakerb_gss_export_sec_context.c",
+        "line_start": 1,
+        "commit_hash": "3db8dfec1ef50ddd78d6ba9503185995876a39fd",
+        "project": "krb5"
+      }
+    },
+    {
+      "id": "BV-0542",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function build_principal_va has CWE-119 vulnerability: The build_principal_va function in lib/krb5/krb/bld_princ.c in MIT Kerberos 5 (aka krb5) before 1.14 allows remote authenticated users to cause a denial of service (out-of-bounds read and KDC crash) via an initial '0' character in a long realm field within a TGS request. (CVSS 6.8) — fix modifies lines 40",
+      "evidence": {
+        "file": "src/lib/krb5/krb/bld_princ.c",
+        "line_start": 40,
+        "commit_hash": "f0c094a1b745d91ef2f9a4eae2149aac026a5789",
+        "project": "krb5"
+      }
+    },
+    {
+      "id": "BV-0543",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function gss_inquire_context has CWE-18 vulnerability: lib/gssapi/krb5/iakerb.c in MIT Kerberos 5 (aka krb5) before 1.14 relies on an inappropriate context handle, which allows remote attackers to cause a denial of service (incorrect pointer read and process crash) via a crafted IAKERB packet that is mishandled during a gss_inquire_context call. (CVSS 7.1) — fix modifies lines 1",
+      "evidence": {
+        "file": "gss_inquire_context.c",
+        "line_start": 1,
+        "commit_hash": "e04f0283516e80d2f93366e0d479d13c9b5c8c2a",
+        "project": "krb5"
+      }
+    },
+    {
+      "id": "BV-0544",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function gss_inquire_context has CWE-18 vulnerability: lib/gssapi/spnego/spnego_mech.c in MIT Kerberos 5 (aka krb5) before 1.14 relies on an inappropriate context handle, which allows remote attackers to cause a denial of service (incorrect pointer read and process crash) via a crafted SPNEGO packet that is mishandled during a gss_inquire_context call. (CVSS 7.1) — fix modifies lines 1",
+      "evidence": {
+        "file": "gss_inquire_context.c",
+        "line_start": 1,
+        "commit_hash": "b51b33f2bc5d1497ddf5bd107f791c101695000d",
+        "project": "krb5"
+      }
+    },
+    {
+      "id": "BV-0545",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-264 vulnerability: The kdcpreauth modules in MIT Kerberos 5 (aka krb5) 1.12.x and 1.13.x before 1.13.2 do not properly track whether a client's request has been validated, which allows remote attackers to bypass an intended preauthentication requirement by providing (1) zero bytes of data or (2) an arbitrary realm name, related to plugins/preauth/otp/main.c and plugins/preauth/pkinit/pkinit_srv.c. (CVSS 5.8) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "e3b5a5e5267818c97750b266df50b6a3d4649604",
+        "project": "krb5"
+      }
+    },
+    {
+      "id": "BV-0547",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-22 vulnerability: Absolute path traversal vulnerability in bsdcpio in libarchive 3.1.2 and earlier allows remote attackers to write to arbitrary files via a full pathname in an archive. (CVSS 6.4) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "59357157706d47c365b2227739e17daba3607526",
+        "project": "libarchive"
+      }
+    },
+    {
+      "id": "BV-0549",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function Integer has CWE-200 vulnerability: The InvertibleRWFunction::CalculateInverse function in rw.cpp in libcrypt++ 5.6.2 does not properly blind private key operations for the Rabin-Williams digital signature algorithm, which allows remote attackers to obtain private keys via a timing attack. (CVSS 5.0) — fix modifies lines 126",
+      "evidence": {
+        "file": "rw.cpp",
+        "line_start": 126,
+        "commit_hash": "9425e16437439e68c7d96abef922167d68fafaff",
+        "project": "cryptopp"
+      }
+    },
+    {
+      "id": "BV-0552",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function __xml_acl_post_process has CWE-264 vulnerability: Pacemaker before 1.1.13 does not properly evaluate added nodes, which allows remote read-only users to gain privileges via an acl command. (CVSS 7.5) — fix modifies lines 1020",
+      "evidence": {
+        "file": "lib/common/xml.c",
+        "line_start": 1020,
+        "commit_hash": "84ac07c",
+        "project": "pacemaker"
+      }
+    },
+    {
+      "id": "BV-0554",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-399 vulnerability: The do_free_upto function in crypto/cms/cms_smime.c in OpenSSL before 0.9.8zg, 1.0.0 before 1.0.0s, 1.0.1 before 1.0.1n, and 1.0.2 before 1.0.2b allows remote attackers to cause a denial of service (infinite loop) via vectors that trigger a NULL value of a BIO data structure, as demonstrated by an unrecognized X.660 OID for a hash function. (CVSS 5.0) — fix modifies lines 60",
+      "evidence": {
+        "file": "crypto/cms/cms_smime.c",
+        "line_start": 60,
+        "commit_hash": "cd30f03ac5bf2962f44bd02ae8d88245dff2f12c",
+        "project": "openssl"
+      }
+    },
+    {
+      "id": "BV-0555",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-362 vulnerability: Race condition in the ssl3_get_new_session_ticket function in ssl/s3_clnt.c in OpenSSL before 0.9.8zg, 1.0.0 before 1.0.0s, 1.0.1 before 1.0.1n, and 1.0.2 before 1.0.2b, when used for a multi-threaded client, allows remote attackers to cause a denial of service (double free and application crash) or possibly have unspecified other impact by providing a NewSessionTicket during an attempt to reuse a ticket that had been obtained earlier. (CVSS 6.8) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "98ece4eebfb6cd45cc8d550c6ac0022965071afc",
+        "project": "openssl"
+      }
+    },
+    {
+      "id": "BV-0556",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function BIO has  vulnerability: The PKCS7_dataDecodefunction in crypto/pkcs7/pk7_doit.c in OpenSSL before 0.9.8zg, 1.0.0 before 1.0.0s, 1.0.1 before 1.0.1n, and 1.0.2 before 1.0.2b allows remote attackers to cause a denial of service (NULL pointer dereference and application crash) via a PKCS#7 blob that uses ASN.1 encoding and lacks inner EncryptedContent data. (CVSS 5.0) — fix modifies lines 432",
+      "evidence": {
+        "file": "crypto/pkcs7/pk7_doit.c",
+        "line_start": 432,
+        "commit_hash": "59302b600e8d5b77ef144e447bb046fd7ab72686",
+        "project": "openssl"
+      }
+    },
+    {
+      "id": "BV-0557",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function int has CWE-119 vulnerability: The X509_cmp_time function in crypto/x509/x509_vfy.c in OpenSSL before 0.9.8zg, 1.0.0 before 1.0.0s, 1.0.1 before 1.0.1n, and 1.0.2 before 1.0.2b allows remote attackers to cause a denial of service (out-of-bounds read and application crash) via a crafted length field in ASN1_TIME data, as demonstrated by an attack against a server that supports client authentication with a custom verification callback. (CVSS 4.3) — fix modifies lines 1808",
+      "evidence": {
+        "file": "crypto/x509/x509_vfy.c",
+        "line_start": 1808,
+        "commit_hash": "f48b83b4fb7d6689584cf25f61ca63a4891f5b11",
+        "project": "openssl"
+      }
+    },
+    {
+      "id": "BV-0558",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function int has CWE-399 vulnerability: The BN_GF2m_mod_inv function in crypto/bn/bn_gf2m.c in OpenSSL before 0.9.8s, 1.0.0 before 1.0.0e, 1.0.1 before 1.0.1n, and 1.0.2 before 1.0.2b does not properly handle ECParameters structures in which the curve is over a malformed binary polynomial field, which allows remote attackers to cause a denial of service (infinite loop) via a session that uses an Elliptic Curve algorithm, as demonstrated by an attack against a server that supports client authentication. (CVSS 4.3) — fix modifies lines 691",
+      "evidence": {
+        "file": "crypto/bn/bn_gf2m.c",
+        "line_start": 691,
+        "commit_hash": "4924b37ee01f71ae19c94a8934b80eeb2f677932",
+        "project": "openssl"
+      }
+    },
+    {
+      "id": "BV-0562",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-264 vulnerability: The do_write_pids function in lxcfs.c in LXCFS before 0.12 does not properly check permissions, which allows local users to gain privileges by writing a pid to the tasks file. (CVSS 7.2) — fix modifies lines 1336",
+      "evidence": {
+        "file": "lxcfs.c",
+        "line_start": 1336,
+        "commit_hash": "8ee2a503e102b1a43ec4d83113dc275ab20a869a",
+        "project": "lxcfs"
+      }
+    },
+    {
+      "id": "BV-0563",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function opendir has CWE-264 vulnerability: LXCFS before 0.12 does not properly enforce directory escapes, which might allow local users to gain privileges by (1) querying or (2) updating a cgroup. (CVSS 4.6) — fix modifies lines 1",
+      "evidence": {
+        "file": "opendir.c",
+        "line_start": 1,
+        "commit_hash": "a8b6c3e0537e90fba3c55910fd1b7229d54a60a7",
+        "project": "lxcfs"
+      }
+    },
+    {
+      "id": "BV-0564",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function startup has CWE-59 vulnerability: lxc-start in lxc before 1.0.8 and 1.1.x before 1.1.4 allows local container administrators to escape AppArmor confinement via a symlink attack on a (1) mount target or (2) bind mount source. (CVSS 7.2) — fix modifies lines 1",
+      "evidence": {
+        "file": "startup.c",
+        "line_start": 1,
+        "commit_hash": "592fd47a6245508b79fe6ac819fe6d3b2c1289be",
+        "project": "lxc"
+      }
+    },
+    {
+      "id": "BV-0565",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function lxc_log_define has CWE-17 vulnerability: attach.c in LXC 1.1.2 and earlier uses the proc filesystem in a container, which allows local container users to escape AppArmor or SELinux confinement by mounting a proc filesystem with a crafted (1) AppArmor profile or (2) SELinux label. (CVSS 4.6) — fix modifies lines 76",
+      "evidence": {
+        "file": "src/lxc/attach.c",
+        "line_start": 76,
+        "commit_hash": "5c3fcae78b63ac9dd56e36075903921bd9461f9e",
+        "project": "lxc"
+      }
+    },
+    {
+      "id": "BV-0567",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-59 vulnerability: lxclock.c in LXC 1.1.2 and earlier allows local users to create arbitrary files via a symlink attack on /run/lock/lxc/*. (CVSS 4.9) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "72cf81f6a3404e35028567db2c99a90406e9c6e6",
+        "project": "lxc"
+      }
+    },
+    {
+      "id": "BV-0568",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function local has CWE-22 vulnerability: Multiple directory traversal vulnerabilities in pigz 2.3.1 allow remote attackers to write to arbitrary files via a (1) full pathname or (2) .. (dot dot) in an archive. (CVSS 5.0) — fix modifies lines 3520",
+      "evidence": {
+        "file": "pigz.c",
+        "line_start": 3520,
+        "commit_hash": "fdad1406b3ec809f4954ff7cdf9e99eb18c2458f",
+        "project": "pigz"
+      }
+    },
+    {
+      "id": "BV-0569",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function namespace has CWE-264 vulnerability: daemon/Greeter.cpp in sddm before 0.13.0 does not properly disable the KDE crash handler, which allows local users to gain privileges by crashing a greeter when using certain themes, as demonstrated by the plasma-workspace breeze theme. (CVSS 4.6) — fix modifies lines 145",
+      "evidence": {
+        "file": "src/daemon/Greeter.cpp",
+        "line_start": 145,
+        "commit_hash": "4cfed6b0a625593fb43876f04badc4dd99799d86",
+        "project": "sddm"
+      }
+    },
+    {
+      "id": "BV-0570",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function Fix has  vulnerability: Multiple use-after-free vulnerabilities in OpenType Sanitiser, as used in Mozilla Firefox before 36.0, might allow remote attackers to trigger problematic Developer Console information or possibly have unspecified other impact by leveraging incorrect macro expansion, related to the ots::ots_gasp_parse function. (CVSS 7.5) — fix modifies lines 1",
+      "evidence": {
+        "file": "Fix.c",
+        "line_start": 1,
+        "commit_hash": "003c62d28ae438aa8943cb31535563397f838a2c",
+        "project": "ots"
+      }
+    },
+    {
+      "id": "BV-0571",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function static has CWE-264 vulnerability: libuv before 0.10.34 does not properly drop group privileges, which allows context-dependent attackers to gain privileges via unspecified vectors. (CVSS 10.0) — fix modifies lines 330",
+      "evidence": {
+        "file": "src/unix/process.c",
+        "line_start": 330,
+        "commit_hash": "66ab38918c911bcff025562cf06237d7fedaba0c",
+        "project": "libuv"
+      }
+    },
+    {
+      "id": "BV-0574",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has  vulnerability: The read_request_line function in server/protocol.c in the Apache HTTP Server 2.4.12 does not initialize the protocol structure member, which allows remote attackers to cause a denial of service (NULL pointer dereference and process crash) by sending a request that lacks a method to an installation that enables the INCLUDES filter and has an ErrorDocument 400 directive specifying a local URI. (CVSS 5.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "6a974059190b8a0c7e499f4ab12fe108127099cb",
+        "project": "httpd"
+      }
+    },
+    {
+      "id": "BV-0576",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unserialize has  vulnerability: Use-after-free vulnerability in the process_nested_data function in ext/standard/var_unserializer.re in PHP before 5.4.37, 5.5.x before 5.5.21, and 5.6.x before 5.6.5 allows remote attackers to execute arbitrary code via a crafted unserialize call that leverages improper handling of duplicate numerical keys within the serialized properties of an object.  NOTE: this vulnerability exists because of an incomplete fix for CVE-2014-8142. (CVSS 7.5) — fix modifies lines 1",
+      "evidence": {
+        "file": "unserialize.c",
+        "line_start": 1,
+        "commit_hash": "b585a3aed7880a5fa5c18e2b838fc96f40e075bd",
+        "project": "php-src"
+      }
+    },
+    {
+      "id": "BV-0577",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function wsupgrade has CWE-20 vulnerability: The lua_websocket_read function in lua_request.c in the mod_lua module in the Apache HTTP Server through 2.4.12 allows remote attackers to cause a denial of service (child-process crash) by sending a crafted WebSocket Ping frame after a Lua script has called the wsupgrade function. (CVSS 5.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "wsupgrade.c",
+        "line_start": 1,
+        "commit_hash": "643f0fcf3b8ab09a68f0ecd2aa37aafeda3e63ef",
+        "project": "httpd"
+      }
+    },
+    {
+      "id": "BV-0578",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function dtls1_buffer_record has CWE-119 vulnerability: Memory leak in the dtls1_buffer_record function in d1_pkt.c in OpenSSL 1.0.0 before 1.0.0p and 1.0.1 before 1.0.1k allows remote attackers to cause a denial of service (memory consumption) by sending many duplicate records for the next epoch, leading to failure of replay detection. (CVSS 5.0) — fix modifies lines 212",
+      "evidence": {
+        "file": "ssl/d1_pkt.c",
+        "line_start": 212,
+        "commit_hash": "103b171d8fc282ef435f8de9afbf7782e312961f",
+        "project": "openssl"
+      }
+    },
+    {
+      "id": "BV-0579",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function int has CWE-310 vulnerability: The ssl3_get_cert_verify function in s3_srvr.c in OpenSSL 1.0.0 before 1.0.0p and 1.0.1 before 1.0.1k accepts client authentication with a Diffie-Hellman (DH) certificate without requiring a CertificateVerify message, which allows remote attackers to obtain access without knowledge of a private key via crafted TLS Handshake Protocol traffic to a server that recognizes a Certification Authority with DH support. (CVSS 5.0) — fix modifies lines 3056",
+      "evidence": {
+        "file": "ssl/s3_srvr.c",
+        "line_start": 3056,
+        "commit_hash": "1421e0c584ae9120ca1b88098f13d6d2e90b83a3",
+        "project": "openssl"
+      }
+    },
+    {
+      "id": "BV-0580",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-310 vulnerability: The ssl3_get_key_exchange function in s3_clnt.c in OpenSSL before 0.9.8zd, 1.0.0 before 1.0.0p, and 1.0.1 before 1.0.1k allows remote SSL servers to conduct RSA-to-EXPORT_RSA downgrade attacks and facilitate brute-force decryption by offering a weak ephemeral RSA key in a noncompliant role, related to the *FREAK* issue.  NOTE: the scope of this CVE is only client code based on OpenSSL, not EXPORT_RSA issues associated with servers or other TLS implementations. (CVSS 4.3) — fix modifies lines 1",
+      "evidence": {
+        "file": "unknown.c",
+        "line_start": 1,
+        "commit_hash": "ce325c60c74b0fa784f5872404b722e120e5cab0",
+        "project": "openssl"
+      }
+    },
+    {
+      "id": "BV-0581",
+      "severity": "P1",
+      "l4_eligible": false,
+      "dimension": "security",
+      "claim": "function unknown has CWE-189 vulnerability: The psf_fwrite function in file_io.c in libsndfile allows attackers to cause a denial of service (divide-by-zero error and application crash) via unspecified vectors related to the headindex variable. (CVSS 5.0) — fix modifies lines 1",
+      "evidence": {
+        "file": "src/file_io.c",
+        "line_start": 1,
+        "commit_hash": "725c7dbb95bfaf8b4bb7b04820e3a00cceea9ce6",
+        "project": "libsndfile"
+      }
+    }
+  ]
+}
