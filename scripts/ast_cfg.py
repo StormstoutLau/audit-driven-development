@@ -620,6 +620,228 @@ def verify_imports(repo_root, claim):
     return verify_imports_in_repo(repo_root, claim)
 
 
+# ── v3.0 T9' Phase 1: intra-procedural def-use taint tracking (GAP-3) ──
+
+# 已知输入 API 的调用名 (赋值 RHS 出现即视为污点产生)
+_INPUT_ASSIGN_CALLS = frozenset({
+    "input", "raw_input", "getenv", "getpass", "get", "getlist",
+})
+
+# 属性型输入基名 (x = os.environ[...] / x = sys.argv[...] / x = request.args[...])
+_INPUT_ATTR_BASES = frozenset({
+    "environ", "argv", "args", "form", "json", "data", "values", "files",
+    "GET", "POST", "params", "query",
+})
+
+
+def _base_name(node):
+    """取 Name/Attribute/Subscript 的最左标识符基名 (GAP-3 def-use 传播基名).
+
+    x        -> "x"
+    a.b      -> "a"
+    a[k]     -> "a"
+    a.b.c[d] -> "a"
+    非标识符链 (如常量) => None。
+    """
+    while isinstance(node, (ast.Attribute, ast.Subscript)):
+        node = node.value
+    if isinstance(node, ast.Name):
+        return node.id
+    return None
+
+
+def _iter_assignments(func_node, before_line=None):
+    """按源码顺序产出 (lineno, targets, value) 三元组, 仅函数体内, lineno <= before_line。
+
+    遍历 func_node 子树收集 Assign/AnnAssign/AugAssign, 按 lineno 排序。
+    复杂度: O(N log N), N = 赋值语句数。
+    """
+    assigns = []
+    for node in ast.walk(func_node):
+        if isinstance(node, ast.Assign):
+            assigns.append((node.lineno, node.targets, node.value))
+        elif isinstance(node, ast.AnnAssign):
+            if node.value is not None:
+                assigns.append((node.lineno, [node.target], node.value))
+        elif isinstance(node, ast.AugAssign):
+            assigns.append((node.lineno, [node.target], node.value))
+    assigns.sort(key=lambda item: item[0])
+    if before_line is not None:
+        assigns = [item for item in assigns if item[0] <= before_line]
+    return assigns
+
+
+def _target_base_names(targets):
+    """收集赋值目标的最左基名集合 (支持 Tuple 解包 / 属性 / 下标)."""
+    names = set()
+    for target in targets:
+        for node in ast.walk(target):
+            if isinstance(node, ast.Name):
+                names.add(node.id)
+            else:
+                base = _base_name(node)
+                if base:
+                    names.add(base)
+    return names
+
+
+def _collect_taint_names(node, tainted):
+    """收集 node 中引用的、位于 tainted 集合内的标识符基名 (递归)。
+
+    属性/下标形式 (x.y / a[k]) 以其 base 名 (x / a) 入集。
+    """
+    names = set()
+    if node is None:
+        return names
+    for n in ast.walk(node):
+        if isinstance(n, ast.Name):
+            if n.id in tainted:
+                names.add(n.id)
+        else:
+            base = _base_name(n)
+            if base and base in tainted:
+                names.add(base)
+    return names
+
+
+def _rhs_generates_taint(value):
+    """判断赋值右侧是否“产生”污点 (输入 API 调用 / 属性型输入读取)。
+
+    过近似说明: ^get$ 会匹配任意 .get() 调用 => 方向偏“保留”(不产生假阴性)。
+    """
+    if value is None:
+        return False
+    for n in ast.walk(value):
+        if isinstance(n, ast.Call):
+            func = n.func
+            if isinstance(func, ast.Attribute):
+                tail = func.attr
+            elif isinstance(func, ast.Name):
+                tail = func.id
+            else:
+                tail = None
+            if tail in _INPUT_ASSIGN_CALLS:
+                return True
+        elif isinstance(n, ast.Attribute):
+            if n.attr in _INPUT_ATTR_BASES:
+                return True
+    return False
+
+
+def _function_arg_names(func_node):
+    """收集函数形参名 (posonly/arg/kwonly/vararg/kwarg)。"""
+    args = func_node.args
+    names = [a.arg for a in getattr(args, "posonlyargs", [])]
+    names += [a.arg for a in args.args]
+    names += [a.arg for a in args.kwonlyargs]
+    if args.vararg:
+        names.append(args.vararg.arg)
+    if args.kwarg:
+        names.append(args.kwarg.arg)
+    return names
+
+
+def verify_taint_flow_in_source(source_code, sink_line,
+                                source_line=None, source_name=None):
+    """Tier 2: 过程内 (intra-procedural) def-use 污点追踪.
+
+    语义 (设计 spec §3.3, 边界写入 docstring 防能力高估):
+      1. 污点集初值 = sink 所在最内层函数的全部参数 + 已知输入 API 赋值目标
+      2. 按语句顺序沿赋值链传播: RHS 引用任一污点标识符 => LHS 基名入集
+      3. sink_line 处: sink 调用实参引用任一污点标识符 => True; 否则 False
+      4. 解析失败 / sink 行非法 / 无外层函数 / 无污点标识符 => None
+
+    exact 通道预留 (D-T9'-6): source_name / source_line 非 None 时把显式来源注入
+      污点初值 (source_name = 变量名; source_line = 该行赋值的目标基名), 使参数被实际消费。
+
+    边界 (显式声明):
+      - 仅过程内, 无跨函数/跨文件 => Tier 2 的 False 跨过程时可能假阴性 (由 D-T9'-4 吸收)
+      - 无 sanitizer 建模: html.escape(x) 后 x 仍视为污点 => 方向偏“保留”(不产生假阴性)
+      - 返回 False 的强条件: sink 实参完全不含污点标识符
+
+    Returns:
+        {"verified": True|False|None, "evidence": str, "tier": 2, "latency_ms": int,
+         "taint_names": list, "sink_line": int}
+    """
+    t0 = time.perf_counter()
+    latency = lambda: int((time.perf_counter() - t0) * 1000)  # noqa: E731
+
+    def _none(reason):
+        return {"verified": None, "evidence": reason, "tier": 2,
+                "latency_ms": latency(), "taint_names": [], "sink_line": sink_line}
+
+    try:
+        tree = ast.parse(source_code)
+    except SyntaxError as e:
+        return _none(f"SyntaxError: {e}")
+
+    func_node = _find_enclosing_function(tree, sink_line)
+    if func_node is None:
+        return _none(f"line {sink_line} is not inside a function "
+                     f"(intra-procedural analysis only) — cannot decide")
+
+    tainted = set(_function_arg_names(func_node))
+
+    # exact 通道预留 (D-T9'-6): 显式来源注入
+    if source_name:
+        tainted.add(str(source_name))
+    if source_line is not None:
+        for lineno, targets, _value in _iter_assignments(
+                func_node, before_line=sink_line - 1):
+            if lineno == source_line:
+                tainted |= _target_base_names(targets)
+
+    # 按语句顺序传播污点
+    for _lineno, targets, value in _iter_assignments(
+            func_node, before_line=sink_line - 1):
+        if _rhs_generates_taint(value) or _collect_taint_names(value, tainted):
+            tainted |= _target_base_names(targets)
+
+    if not tainted:
+        return _none(f"no taint identifiers before sink line {sink_line} — cannot decide")
+
+    sink_calls = [n for n in ast.walk(func_node)
+                  if isinstance(n, ast.Call) and n.lineno == sink_line]
+    if not sink_calls:
+        return _none(f"no call statement at sink line {sink_line} — cannot decide")
+
+    referenced = set()
+    for call in sink_calls:
+        args_nodes = list(call.args) + [kw.value for kw in call.keywords
+                                        if kw.value is not None]
+        for arg in args_nodes:
+            referenced |= _collect_taint_names(arg, tainted)
+
+    if referenced:
+        return {"verified": True,
+                "evidence": f"ast def-use: sink line {sink_line} args reference tainted "
+                            f"{sorted(referenced)}",
+                "tier": 2, "latency_ms": latency(),
+                "taint_names": sorted(tainted), "sink_line": sink_line}
+    return {"verified": False,
+            "evidence": f"ast def-use: sink line {sink_line} args reference no tainted "
+                        f"identifier (tainted={sorted(tainted)})",
+            "tier": 2, "latency_ms": latency(),
+            "taint_names": sorted(tainted), "sink_line": sink_line}
+
+
+def verify_taint_flow(repo_root, file_path, sink_line,
+                      source_line=None, source_name=None):
+    """Verify taint claim against a file on disk. Returns unified schema."""
+    abs_path = Path(repo_root) / file_path
+    if not abs_path.exists():
+        return {"verified": None, "evidence": f"file not found: {file_path}",
+                "tier": 2, "latency_ms": 0}
+    try:
+        source = abs_path.read_text(encoding="utf-8", errors="replace")
+    except Exception as e:
+        return {"verified": None, "evidence": f"read error: {e}",
+                "tier": 2, "latency_ms": 0}
+    return verify_taint_flow_in_source(source, sink_line,
+                                       source_line=source_line,
+                                       source_name=source_name)
+
+
 # ── CLI entry point ─────────────────────────────────────────────────────
 
 

@@ -39,6 +39,11 @@ from _script_utils import run_script
 
 JOERN_TIMEOUT_SEC = 30  # §6.3: Tier 1 budget; exceeded -> fallback to Tier 2
 JOERN_VERSION_MIN = "4.0"  # v4.0 flatgraph migration; v3.x API incompatible
+# 注意: 本常量是**最低兼容 floor**（≠ 实测版本）。实测环境（2026-10-20 实证）:
+#   Joern 4.0.595，安装 2026-08-05 12:31 —— 证据与方法（发行包 lib/ 的 jar 文件名）
+#   见 docs/audit-log/2026-10-20-T9prime-joern-api-validation.md §0 / M-10。
+#   成功路径返回的 "joern_version" 字段即本 floor 值；MVP 不做运行时版本探测
+#   （避免为每个 finding 增加 WSL 子进程，且 ADR-023 要求零新增依赖）—— 见验收报告 §10 L-7。
 
 # v2.7.1: Internal language name → Joern --language flag mapping
 JOERN_LANGUAGE_MAP = {
@@ -46,6 +51,19 @@ JOERN_LANGUAGE_MAP = {
     "java": "javasrc2cpg",
     "cpp": "c2cpg",
 }
+
+# ── v3.0 T9' Phase 1: taint reachability (D-T9'-3 / ADR-027) ──
+
+# 宽来源集正则 (E-2 修正 + T0 实测定稿 M-1): 仅 call 形状的名字 —— 属性访问
+# (os.environ / request.args) 不是 cpg.call 节点, 不能出现在此正则中; 属性型输入由
+# cpg.method.parameter 覆盖。此处 ^get$ 因 pysrc2cpg 把点分调用渲染为【末段名】
+# (os.getenv → "getenv"; request.args.get → "get") 而成立; 已删除 loads|load。
+# 过近似说明: ^get$ 会匹配任意 .get() 调用 ⇒ 来源集偏大 ⇒ verified=False 更难出现 ⇒ 方向安全。
+INPUT_API_REGEX = r"^(input|raw_input|getenv|getpass|get|getlist)$"
+
+# Tier 1 查询结果 memo (§0.4 禁止重复计算)。有界, 防止内存泄漏 (不做 LRU, 避免复杂度)。
+_TAINT_QUERY_MEMO = {}
+_TAINT_QUERY_MEMO_MAX = 512
 
 # Cache directory: Linux/WSL2 uses /tmp; Windows uses %TEMP%
 _CACHE_DIR = None  # lazy-init (see _get_cache_dir())
@@ -677,6 +695,7 @@ def _generate_cpg(repo_root, cache_key, language="pythonsrc"):
         proc = subprocess.run(
             cmd, env=env, capture_output=True, text=True,
             timeout=JOERN_TIMEOUT_SEC,
+            cwd=str(cache_dir),  # N-1 (T0 实测同源): 防 joern-parse 在调用者 CWD 生成 workspace/
         )
         if proc.returncode != 0 or not cpg_path.exists():
             return None
@@ -740,12 +759,182 @@ def _run_joern_query(cpg_path, script_text, script_name="query"):
         proc = subprocess.run(
             cmd, env=env, capture_output=True, text=True,
             timeout=JOERN_TIMEOUT_SEC,
+            cwd=str(cache_dir),  # N-1 (T0 实测): 防 joern --script 在调用者 CWD 生成 workspace/<cpg>/
         )
         if proc.returncode != 0:
             return None
         return _parse_joern_output(proc.stdout)
     except (subprocess.TimeoutExpired, FileNotFoundError, OSError):
         return None
+
+
+# ── v3.0 T9' Phase 1: taint reachability script + API ───────────────────
+
+
+def _gen_taint_flow_script(sink_line, sink_file, source_line=None,
+                           source_file=None, language="python"):
+    """Generate Scala DSL script for taint reachability (bare REPL style).
+
+    遵守既有踩坑约定 (joern_cpg L338-L363):
+      - bare REPL: 顶层语句, 禁止入口注解 (v4.0.595 script 模式 @main 失效)
+      - 输出协议: 复用 _parse_joern_output 的 key=value 行解析
+
+    E-1 (文件过滤, 阻断项 R1c): 必须按 sink_file 过滤 —— 否则行号 N 在多文件中命中,
+      会把别的文件的调用当 sink, 导致 verified=False 不可靠。
+    E-4 (step 形式): 用 cpg.call.lineNumber(N) 而非 filter(_.lineNumber == N)
+      (lineNumber 是 Option[Integer]; step 形式与已实测的 cpg.method.lineNumber(N) 同构)
+
+    G-2 (Step 6 审计发现): source_line 必须被脚本实际消费 —— 否则它是 dead parameter。
+      source_line=None => broad 变体; source_line 给定 => exact 变体 (来源集限定为
+      source_line 处的调用, 不含 cpg.method.parameter 兜底)。
+
+    Args:
+        sink_line: int sink 行号。
+        sink_file: str sink 文件 basename。
+        source_line: int|None 精确来源行号。
+        source_file: str|None 精确来源文件 basename (缺省同 sink_file, 仅 exact 变体消费)。
+        language: str 内部语言名 (仅用于注释标注)。
+
+    Returns:
+        str: Scala 脚本 (bare statements, 无入口注解)。
+    """
+    if source_line is None:
+        return f"""// v3.0 T9' Phase 1: taint reachability (broad source) — bare REPL, no entry-point annotation
+// language={language} — cpg.call / cpg.method are universal across frontends
+import io.joern.dataflowengineoss.language._
+val sinkLine = {sink_line}
+val sinkFile = "{sink_file}"
+val srcRe = "{INPUT_API_REGEX}"
+val sinkList = cpg.call.lineNumber(sinkLine).filter(_.file.head.name == sinkFile).l
+val sources = (cpg.call.name(srcRe) ++ cpg.method.parameter).l
+val hasFlow = sinkList.exists(s => s.reachableBy(sources).size > 0)
+println("sink_nodes=" + sinkList.size)
+println("source_nodes=" + sources.size)
+println("has_flow=" + hasFlow)
+"""
+    src_file = source_file or sink_file
+    return f"""// v3.0 T9' Phase 1: taint reachability (exact source) — bare REPL, no entry-point annotation
+// language={language} — source set restricted to the call at sourceLine
+import io.joern.dataflowengineoss.language._
+val sinkLine = {sink_line}
+val sourceLine = {source_line}
+val sinkFile = "{sink_file}"
+val srcFile = "{src_file}"
+val sinkList = cpg.call.lineNumber(sinkLine).filter(_.file.head.name == sinkFile).l
+val srcList = cpg.call.lineNumber(sourceLine).filter(_.file.head.name == srcFile).l
+val hasFlow = sinkList.exists(s => s.reachableBy(srcList).size > 0)
+println("sink_nodes=" + sinkList.size)
+println("source_nodes=" + srcList.size)
+println("has_flow=" + hasFlow)
+"""
+
+
+def _to_int(value, default=0):
+    """把 Joern 输出字符串转为 int; 缺键/非数字 => default (调用方视同 0 => verified=None)。"""
+    try:
+        return int(str(value).strip())
+    except (TypeError, ValueError):
+        return default
+
+
+def _store_taint_memo(memo_key, result):
+    """写入 taint 查询 memo (G-5: 存副本; §0.4: 有界, 超出即清空)。"""
+    if len(_TAINT_QUERY_MEMO) >= _TAINT_QUERY_MEMO_MAX:
+        _TAINT_QUERY_MEMO.clear()
+    _TAINT_QUERY_MEMO[memo_key] = dict(result)
+
+
+def verify_taint_flow(repo_root, sink_file, sink_line, language="python",
+                      source_file=None, source_line=None):
+    """Tier 1: Joern CPG-based taint reachability verification (MVP: broad-source).
+
+    三段来源策略 (设计 spec §2.3):
+      S1 exact: source_line 可得 + sink 可达 source => taint_mode="exact"
+      S2 broad: source 不可得 (MVP 默认)          => taint_mode="broad"
+      S3 不可判定                                 => verified=None
+
+    降级触发 (全部 => verified=None, tier=0):
+      1. JOERN_DISABLE=1 或 is_available() is False  => evidence="joern_unavailable"
+      2. _generate_cpg 返回 None                     => "cpg_generation_failed"
+      3. _run_joern_query 返回 None                  => "joern_query_failed"
+      4. sink_nodes == 0                             => "sink_not_located"  (D-T9'-3 关键保护)
+      5. source_nodes == 0                           => "no_sources"
+
+    Returns (统一 schema, 只增不删):
+      {"verified": True|False|None, "evidence": str, "tier": 0|1, "latency_ms": int,
+       "taint_mode": "exact"|"broad"|None, "sink_nodes": int, "source_nodes": int,
+       "joern_version": str  # 仅成功查询时存在, 对齐 verify_dead_code
+      }
+    """
+    t0 = time.perf_counter()
+    latency = lambda: int((time.perf_counter() - t0) * 1000)  # noqa: E731
+    base = {"taint_mode": None, "sink_nodes": 0, "source_nodes": 0}
+
+    # Test hook: simulate runtime failure (caught by verify_findings.py)
+    if os.environ.get("JOERN_FORCE_RAISE") == "1":
+        raise RuntimeError("JOERN_FORCE_RAISE=1 (test simulation)")
+
+    # Unavailable -> verified=None, tier=0 (triggers Tier 2 fallback)
+    if not is_available():
+        return dict(base, verified=None, evidence="joern_unavailable",
+                    tier=0, latency_ms=latency())
+
+    # v3.0: 映射内部语言名到 Joern --language flag
+    joern_lang = JOERN_LANGUAGE_MAP.get(language, "pythonsrc")
+
+    # 查询级 memo (§0.4 性能保护 2): 同一 (cache_key, sink, source, language) 只跑一次
+    cache_key = _get_cache_key(repo_root, language=language)
+    memo_key = (cache_key, sink_file, sink_line, source_line, language)
+    hit = _TAINT_QUERY_MEMO.get(memo_key)
+    if hit is not None:
+        return dict(hit)  # G-5: 返回浅拷贝, 防调用方可变引用跨 finding 污染
+
+    # Generate / load cached CPG (cache key is language-scoped; 与 dead_code 复用同一 CPG)
+    cpg_path = _generate_cpg(repo_root, cache_key, language=joern_lang)
+    if cpg_path is None:
+        result = dict(base, verified=None, evidence="cpg_generation_failed",
+                      tier=0, latency_ms=latency())
+        _store_taint_memo(memo_key, result)
+        return result
+
+    mode = "exact" if source_line is not None else "broad"
+    script = _gen_taint_flow_script(sink_line, sink_file, source_line=source_line,
+                                    source_file=source_file, language=language)
+    out = _run_joern_query(cpg_path, script, script_name="taint_flow")
+    if out is None:
+        result = dict(base, verified=None, evidence="joern_query_failed",
+                      tier=0, latency_ms=latency())
+        _store_taint_memo(memo_key, result)
+        return result
+
+    sink_nodes = _to_int(out.get("sink_nodes"))
+    source_nodes = _to_int(out.get("source_nodes"))
+
+    # D-T9'-3 关键保护: sink 未定位与"无路径"数值同形 (都是 0) => 必返回 None
+    if sink_nodes == 0:
+        result = dict(base, verified=None, evidence="sink_not_located", tier=0,
+                      latency_ms=latency(), taint_mode=mode, sink_nodes=0,
+                      source_nodes=source_nodes)
+        _store_taint_memo(memo_key, result)
+        return result
+    if source_nodes == 0:
+        result = dict(base, verified=None, evidence="no_sources", tier=0,
+                      latency_ms=latency(), taint_mode=mode, sink_nodes=sink_nodes,
+                      source_nodes=0)
+        _store_taint_memo(memo_key, result)
+        return result
+
+    has_flow = out.get("has_flow", "").strip().lower() == "true"
+    result = {"verified": has_flow,
+              "evidence": (f"Joern CPG: taint {'reachable' if has_flow else 'NOT reachable'} "
+                           f"from {'exact source' if mode == 'exact' else 'broad source set'} "
+                           f"to {sink_file}:{sink_line} "
+                           f"(sinks={sink_nodes}, sources={source_nodes})"),
+              "tier": 1, "latency_ms": latency(),
+              "taint_mode": mode, "sink_nodes": sink_nodes,
+              "source_nodes": source_nodes, "joern_version": JOERN_VERSION_MIN}
+    _store_taint_memo(memo_key, result)
+    return result
 
 
 # ── Public API: verify_dead_code, verify_imports ────────────────────────

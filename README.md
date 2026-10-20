@@ -23,7 +23,7 @@
 </a>
 &nbsp;
 <a href="https://github.com/StormstoutLau/audit-driven-development">
-  <img alt="tdd" src="https://img.shields.io/badge/TDD-490%2F490%20PASS-brightgreen?style=for-the-badge&logo=python&logoColor=white" />
+  <img alt="tdd" src="https://img.shields.io/badge/TDD-491%2F491%20PASS-brightgreen?style=for-the-badge&logo=python&logoColor=white" />
 </a>
 &nbsp;
 <a href="https://github.com/StormstoutLau/audit-driven-development">
@@ -40,6 +40,14 @@
   │  ──────────  │      │  ──────────  │      │  ─────────────── │
   │  Spec truth   │      │  Human loop  │      │  Self-evolving    │
   └──────────────┘      └──────────────┘      └──────────────────┘
+         ▲
+         │ v2.8 SAST Integration
+  ┌──────┴───────┐
+  │  SAST INPUT  │
+  │  Semgrep/QL  │
+  │  → findings  │
+  │  + CWE Top25 │
+  └──────────────┘
 ```
 
 <br>
@@ -177,7 +185,7 @@ Six benchmarks across three languages (Python / Java / C++) — the verification
 
 This is a **real RL loop** running on real audit data. No simulation.
 
-### 28 Scripts · 5 Layers
+### 39 Scripts · 6 Layers
 
 ```
   Core ──── v0.1→v1.0  │  audit_files · rule_index · verify_lines
@@ -194,24 +202,29 @@ This is a **real RL loop** running on real audit data. No simulation.
   ──────────────────────┤
   External ── v2.3      │  mcp_lookup · benchmark_syncer · live_knowledge
            (3 scripts)  │
+  ──────────────────────┤
+  SAST Bridge v2.8      │  semgrep_to_findings · codeql_to_findings
+           (5 scripts)  │  cwe_rules · download_linux_commits
+                         │  download_repos
 ```
 
 <br>
 
 ---
 
-## Version Journey · 7 Days · 9 Versions
+## Version Journey · 7 Days + 1 Month · 10 Versions
 
 ```
   7/6   7/7-9   7/9-10   7/10-11   7/11    7/11    7/12    7/12    7/12   8/12
    │      │       │        │        │       │       │       │       │      │
-  v0.1 → v0.2 → v0.3 →  v0.4  →  v1.0 → v2.0 → v2.1 → v2.2 → v2.3 → v2.7
+  v0.1 → v0.2 → v0.3 →  v0.4  →  v1.0 → v2.0 → v2.1 → v2.2 → v2.3 → v2.8
    │      │       │        │        │       │       │       │       │      │
-  Iron   Struct  Detec   Repair   Eco-   Know-   Dual-   LLM    External Closure
-  Law    Foundation tion  Baseline system  ledge   Track   Gen    Injection +L4 ML
+  Iron   Struct  Detec   Repair   Eco-   Know-   Dual-   LLM    External SAST
+  Law    Foundation tion  Baseline system  ledge   Track   Gen    Injection +CWE
   ──────────────────────────────────────────────────────────────────────────────
-  1 行   4 个     12 个   15 个    15 个   16 个   20 个   24 个   28 个   33 个
+  1 行   4 个     12 个   15 个    15 个   16 个   20 个   24 个   28 个   39 个
   SKILL 脚本     脚本    脚本     脚本    脚本    脚本    脚本    scripts scripts
+                                                                +RL threshold
 ```
 
 <br>

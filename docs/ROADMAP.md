@@ -590,8 +590,58 @@ Initial 80% single-threshold was too aggressive for OSS projects where design do
 | v2.2 | LLM Generalization + Recipe Book | Detection: llm_generalize.py (具体bug→通用规则), rule_validator.py (benchmark复测). Repair: fix_recipes.py (人类+LLM双源配方库). 双轨合并 — 共享 LLM 泛化引擎. | — | ✅ Done (25/25 tests) |
 | v2.3 | External Knowledge + Community | Detection: mcp_lookup.py (结构化MCP搜索+缓存), benchmark_syncer.py (标杆项目持续监控), add-rules独立仓库. Repair: mcp_lookup侧修复方案搜索, live_knowledge.py (post-audit自动更新). 外部知识注入管道 — 从开源标杆项目获取知识. | — | ✅ Done (22/22 tests) |
 | v2.4 | CPG Integration: Formal-Grade Hallucination Defense | Phase 2.4a: ast_cfg.py (Tier 2, ~90%, Python stdlib 零依赖). Phase 2.4b: joern_cpg.py (Tier 1, ~95%, Joern CLI v4.0.595 + JDK 21 可选). Phase 2.4c: SKILL.md + 7 adapters + ROADMAP 同步. verify_findings.py 三层降级 Tier 1→2→3. P1-5 实测验证 4 个 Joern API 路径. 66/66 + 51/51 测试通过. | — | ✅ Done |
+| v2.5 | Learning Pipeline Closure | live_knowledge 6 步闭环打通: diff_miner+fix_history+rule_suggester 真正调用. rule_suggester 消费 hallucination_log 生成反例规则. run_phase8_benchmark --baseline 回归检查. | — | ✅ Done |
+| v2.6 | Dataset Integration | 3 datasets × 3 languages (Python/Java/C++). swebench/defects4j/bigvul/cvefixes 转换器. hallucination synthesizer. 687 findings benchmark. | — | ✅ Done |
+| v2.7 | Closure + Data Completion + L4 Multilang | v2.7.3: 5 个闭环断点修复 (hallucination_log 持久化, classify_claim 消费规则, history_threshold 流转, fix_history --findings-format). v2.7.2: download_repos.py (GitHub URL 推断+克隆). v2.7.1: L4 多语言 (Java/C/C++, joern_cpg language 参数, 语言前缀缓存键). | — | ✅ Done |
+| v2.8 | SAST Integration + CWE + RL Threshold | T1: RL threshold 闭环 (threshold→min_keywords 映射驱动 L3). T2: GitHub Actions CI (Semgrep→ADD). T3/T4: semgrep/codeql 转换器. T5: CWE Top 25 (2023) 映射+enrich. T6: Linux kernel 批量下载. P3 修复: docstring/mock 签名/benchmark 参数透传. | — | ✅ Done (491/491 TDD) |
 
 Total: P0+P1+P2+P3 complete. **1.0 reached.** v2.0→v2.3 comprehensive upgrade roadmap finalized. **16 scripts (v2.0), 28 scripts (v2.3), ~3,500 lines, knowledge accumulation + autonomous learning + external injection.**
+
+---
+
+## v3.0+ Roadmap (Reassessed 2026-08-12) / v3.0+ 路线图（2026-08-12 重新评估）
+
+> **背景**: v2.8 完成后，10 个 Gap 中 4 个已解决 (G1/G7/G10 + G3 部分解决)，3 个部分缓解 (G4/G5/G9)，3 个仍存在 (G2/G6/G8)。致命级 Gap 从 2 个降至 1 个（仅剩 G2 taint）。
+>
+> **战略转向**: v2.8 确认 ADD = "SAST Findings Validator"（非 SAST Tool）。中期/远期路线从"补全 Detection 能力"转向"深化 Verification 能力"。
+
+### v3.0 — Verification Deepening / 验证能力深化
+
+| ID | 任务 | 价值 | 工作量 | 变化说明 |
+|---|---|---|---|---|
+| **T9'** | Taint 验证能力 (验证 Semgrep/CodeQL 报告的 taint finding source→sink 可达性) | 修复 G2 (唯一致命 Gap) | 高 | **Phase 1 已交付 (2026-10-20)**: Joern MVP `reachableBy` + AST def-use + regex 三层；Phase 2 触发条件不变 (待 T12 引入 SAST 转换器语料) |
+| **T12** | Benchmark 扩展到 5000+ findings | 修复 G9，验证泛化能力 | 中 | **提升优先级**: T6 已提供数据基础，benchmark 规模是验证泛化能力的前提 |
+| **T11** | Tier 2 AST CFG 扩展到 Java | 提升多语言验证精度 | 中 | 保持 |
+| **T8'** | 深化 Joern 跨文件验证 (修复 import_related 误判) | 修复 G4 残余 + v2.7.3 已知局限 | 中 | **重构**: 原 T8 是"自建 import graph"，改为"深化 Joern"，避免与 Joern 重复 |
+| **T10** | VSCode 插件 (LSP) | 修复 G6 | 中 | **降级**: 体验提升非核心护城河，优先级让位于验证能力深化 |
+| ❌ | ~~T7: AST pattern Python detection~~ | — | — | **取消**: v2.8 战略转向后 G1 已通过消费 SAST 输出解决，自建 detection 违背定位 |
+
+### v3.5+ — Ecosystem + Convergence Layering / 生态 + 收敛分层
+
+| ID | 任务 | 价值 | 变化说明 |
+|---|---|---|---|
+| **T13** | ADD 作为 SAST findings 通用验证层 | 核心战略护城河 | **提升为核心战略**: v2.8 已通过 T3/T4/T5 迈出第一步 |
+| **T15** | 与 Joern 深度集成 (修复 verify_imports 任意循环依赖误判) | 修复已知局限 + 跨文件验证 | **提升优先级**: v2.7.3/v2.8 已修复集成断点，深度集成是短期投入中期收益 |
+| **T17** | Spec-driven Audit (用户提供 spec 时 spec 覆盖范围内 P=R=1, H=0) | 条件性 1 收敛 | **新增**: convergence-analysis.md §4.7 理论支撑 |
+| **T18** | Lean4 形式化验证子集 (形式化子集上 P=R=1, H=0) | 强收敛子集 | **新增**: convergence-analysis.md §4.3 理论支撑 |
+| **T14** | Rule Marketplace (公开 hallucination_log + 反例规则) | 修复 G8 | 保持: 需先达到 T12 benchmark 规模才有说服力 |
+| **T16** | 学习闭环的真实 RL | 规则级→模型级 | **明确边界**: v2.8 T1 已实现"规则级 RL"，"模型级 RL"是远期 |
+| ❌ | ~~原 T16: 学习闭环的真实 RL (无边界)~~ | — | 明确边界后重新定义 |
+
+### Gap 闭合追踪 (2026-08-12)
+
+| Gap | 原状态 | v2.8 后 | v3.0 目标 | v3.5+ 目标 |
+|-----|--------|---------|-----------|-----------|
+| G1 无 Detection | 🔴 致命 | ✅ 解决 | — | — |
+| G2 无 taint | 🔴 致命 | 🟡 部分缓解 | T9' Phase 1 已交付 (结构通道 dormant, 待 SAST 语料) | T9' Phase 2 解决 |
+| G3 无 CWE/CVE | 🟠 严重 | 🟡 部分解决 | — | 完全解决 |
+| G4 无跨文件 | 🟠 严重 | 🟡 部分缓解 | T8' 解决 | — |
+| G5 语言窄 | 🟠 严重 | 🟡 部分缓解 | T11 提升 | — |
+| G6 无 IDE | 🟡 中等 | 🟡 仍存在 | T10 解决 | — |
+| G7 无 CI/CD | 🟡 中等 | ✅ 解决 | — | — |
+| G8 规则生态 0 | 🟡 中等 | 🟡 仍存在 | — | T14 解决 |
+| G9 Benchmark 小 | 🟡 中等 | 🟡 部分缓解 | T12 解决 | — |
+| G10 Loop 展示非决策 | 🟡 中等 | ✅ 解决 | — | — |
 
 ---
 
@@ -613,6 +663,8 @@ These constraints were derived from the V1 post-mortem and govern all P2/P3 impl
 
 | Date / 日期 | Version / 版本 | Change / 变更 |
 |---|---|---|
+| 2026-10-20 | v3.0 T9' Phase 1 | Taint 验证能力 (Joern MVP) 交付: `_verify_l5_taint` (Tier 1 Joern `reachableBy` → Tier 2 AST def-use → Tier 3 regex) + 双通道 claim 识别 (`TAINT_CWE_SET` 8 项 / `TAINT_PATTERNS`) + 三态 `taint_verified`/`taint_mode`/`taint_disproof_action`；kill switch `ADD_TAINT_DISABLE`；`verification_level` 保持 1..4 (ADR-026/027)。T0 实测 R1/R1b/R1c/R1d 全闭合；TDD 41/41；零回归 153/68/25/e2e。G2 从"仍存在"→"部分缓解"。 |
+| 2026-08-12 | v2.8 + v3.0+ Reassessment | v2.8 完成: 6 任务 (T1-T6) + 3 个 P3 修复. 491/491 TDD. 战略转向确认: ADD = SAST Findings Validator. v3.0+ 路线重新评估: 取消 T7 (AST detection), T9 重新定位 (检测→验证 taint), T8 重构 (自建→深化 Joern), T12 提升优先级, 新增 T17 (Spec-driven Audit) + T18 (Lean4 子集). Gap 闭合: 4/10 解决, 致命 Gap 从 2→1. |
 | 2026-08-05 | v2.4 Phase 2.4b | joern_cpg.py (633L) — Tier 1 Joern CPG 验证器. P1-5 实测验证 4 个 API: `cpg.method.lineNumber(N)`, `target.flatMap(_.caller.l)`, `cpg.imports.l + imp.importedEntity`, `--language pythonsrc`. CPG 缓存 (mtime hash, 24h TTL). verify_findings.py 三层降级 Tier 1→2→3. SKILL.md 增加 Tier 分层表. J1-J10 + V7-V9 TDD 全绿 (66/66). |
 | 2026-08-05 | v2.4 Phase 2.4a | ast_cfg.py (CFGBuilder + BFS 可达性 + 导入图 3-color DFS 环检测). verify_findings.py Tier 2 集成. P0-2 schema 统一 (verified 字段). P1-2 visit_Try except 分支可达性修复. 292/292 回归测试通过. |
 | 2026-07-12 | v2.0→v2.3 Comprehensive Roadmap | Full 4-stage dual-track (Detection+Repair) upgrade. v2.1: diff_miner+rule_suggester+fix_history (~440L). v2.2: LLM generalize+fix_recipes (~350L). v2.3: mcp_lookup+benchmark_syncer+add-rules (~470L). Total: 23 scripts, ~2,060 lines. |

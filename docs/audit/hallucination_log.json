@@ -1,34 +1,5 @@
 {
-  "hallucinations": [
-    {
-      "id": "E2E-P0-UNVERIFIED-FILE",
-      "claim": "missing null check in nonexistent.py",
-      "file": "scripts/nonexistent_module.py",
-      "line": 10,
-      "severity": "P0",
-      "reason": "file_not_found",
-      "l4": null,
-      "best_tier": 0
-    },
-    {
-      "id": "E2E-P0-UNVERIFIED-LINE",
-      "claim": "dead code in verify_lines.py",
-      "file": "scripts/verify_lines.py",
-      "line": 99999,
-      "severity": "P0",
-      "reason": "line 99999 out of range (1-88)",
-      "l4": null,
-      "best_tier": 0
-    },
-    {
-      "id": "E2E-P1-UNVERIFIED-FILE",
-      "claim": "missing validation in nonexistent.py",
-      "file": "scripts/nonexistent_p1.py",
-      "line": 5,
-      "severity": "P1",
-      "reason": "file_not_found"
-    }
-  ],
-  "count": 3,
-  "timestamp": "2026-08-12T17:16:50.439591"
+  "hallucinations": [],
+  "count": 0,
+  "timestamp": "2026-10-20T17:30:13.237824"
 }
