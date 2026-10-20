@@ -611,7 +611,8 @@ Total: P0+P1+P2+P3 complete. **1.0 reached.** v2.0→v2.3 comprehensive upgrade 
 |---|---|---|---|---|
 | **T9'** | Taint 验证能力 (验证 Semgrep/CodeQL 报告的 taint finding source→sink 可达性) | 修复 G2 (唯一致命 Gap) | 高 | **Phase 1 已交付 (2026-10-20)**: Joern MVP `reachableBy` + AST def-use + regex 三层；Phase 2 触发条件不变 (待 T12 引入 SAST 转换器语料) |
 | **T19** | 跨模块契约确定性验证 (把「Spec↔Code 契约对齐」中的**分层依赖**从 LLM 透镜转为确定性规则) | 修复 W1 (护城河建在概率性地基上) | 中 | **已交付 (2026-10-20)**: Tier 2 纯 stdlib [`contract_graph.py`](file:///f:/Coding/audit-driven-development/scripts/contract_graph.py) + `guards.yml` 的 `contract` 子对象 + **图完整性哨兵** + kill switch `ADD_CONTRACT_DISABLE`；**零新增依赖**（ADR-028，不引入 import-linter）；TDD **37/37** |
-| **T12** | Benchmark 扩展到 5000+ findings | 修复 G9，验证泛化能力 | 中 | **提升优先级**: T6 已提供数据基础，benchmark 规模是验证泛化能力的前提 |
+| **T20** | Findings schema 激活（分层 schema + `category` 生产者 + `analysis_kind` 证据驱动 + 纯 stdlib 校验器） | 修复 T19 R-1 的真实根因（结构性通道无生产者） | 中 | **已交付 (2026-10-20)**: 新增 [`sast-finding.schema.json`](file:///f:/Coding/audit-driven-development/schemas/sast-finding.schema.json) + [`validate_findings.py`](file:///f:/Coding/audit-driven-development/scripts/validate_findings.py)（draft-07 子集）+ Semgrep/CodeQL 显式透传 + 消费端容错；TDD **35/35**；golden case 激活 contract 通道（ADR-029） |
+| **T12** | Benchmark 扩展到 5000+ findings | 修复 G9，验证泛化能力 | 中 | **提升优先级**: T6 已提供数据基础，benchmark 规模是验证泛化能力的前提；**T20 已先行修复 schema 激活缺口**（否则新语料仍无法进入结构化通道） |
 | **T11** | Tier 2 AST CFG 扩展到 Java | 提升多语言验证精度 | 中 | 保持 |
 | **T8'** | 深化 Joern 跨文件验证 (修复 import_related 误判) | 修复 G4 残余 + v2.7.3 已知局限 | 中 | **重构**: 原 T8 是"自建 import graph"，改为"深化 Joern"，避免与 Joern 重复 |
 | **T10** | VSCode 插件 (LSP) | 修复 G6 | 中 | **降级**: 体验提升非核心护城河，优先级让位于验证能力深化 |

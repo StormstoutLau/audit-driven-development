@@ -711,6 +711,81 @@ v2.7.3 引入 RL threshold 调整，需确保向后兼容。
 
 ---
 
+## ADR-029: Findings schema 分层（AuditFinding = 审计判断 / SastFinding = 工具事实）+ `category` 生产者 = 显式声明 + `analysis_kind` 证据驱动 + 纯 stdlib 校验器
+
+- **Status**: ✅ Accepted
+- **Date**: 2026-10-20
+- **Source**: [设计 spec v1.3 D-T20-1~8](file:///f:/Coding/audit-driven-development/docs/superpowers/specs/2026-10-20-v3.0-T20-findings-schema-design.md) · [Step 4/6/8/9 审计追溯](file:///f:/Coding/audit-driven-development/docs/audit/2026-10-20-v3.0-T20-findings-schema-spec-audit-trace.md) · [Step 2 调研](file:///f:/Coding/audit-driven-development/docs/research/2026-10-20-v3.0-T20-findings-schema-research.md)
+- **Related**: [ADR-001](#adr-001-add-定位为-sast-findings-validator) · [ADR-023](#adr-023-python--39标准库优先不引入新-runtime-依赖) · [ADR-028](#adr-028-t19-跨模块契约确定性验证--tier-2-纯-stdlib--不引入-import-linter-依赖--图完整性哨兵)
+
+### Context
+
+T19 交付后，benchmark 语料（882 条）上 **contract 通道裁决面 ≈ 0**。补测证明根因**不是语料规模**，而是 schema 自身断裂：
+- `category` 字段在转换器产物中**零出现**（882/882 缺失）⇒ `contract` 结构化通道永不可达；
+- 转换器产物与 canonical `AuditFinding` schema（8 必填 + `additionalProperties:false`）**二元不兼容**；
+- `issues_tracker.py` 对缺字段**强取**⇒ KeyError；`inter_rater.py` 分组缺 category 时**静默失真**（`unknown` 桶恒空）。
+⇒ T12（语料扩展）之前必须先**修复 schema 激活缺口**，否则任何新语料仍无法进入结构化通道。
+
+### Decision
+
+**D1 — 分层 schema**（`AuditFinding` **逐字节不动**，新增 `SastFinding`）：
+- `AuditFinding` = 审计透镜产物，必填 `spec_ref`/`confidence`/`fix_cost`（反幻觉链路核心语义），SAST 转换器不具备这些字段 ⇒ 不能强行统一；
+- `SastFinding` = 工具产物，仅校验不写入 Phase 4 状态机；`category` **可选**；`evidence` **开放**（容纳工具溯源键），严格性放在**顶层**（防字段漂移）。
+
+**D2 — `category` 生产者 = 显式声明，value-level 映射表为空**：
+- 权威来源：Phase 2 透镜（`AuditFinding`）按 SKILL.md 定义写 `category`；
+- 受限来源：仅当上游规则元数据**显式声明** `extra.metadata.add_category ∈ canonical 5 值枚举` 时透传（Semgrep）。未标注 ⇒ 省略；禁止猜测（如 `security → behavior`）。
+- CodeQL 侧无与 `add_category` 等价的官方字段 ⇒ **禁止发明字段名**；若将来确有需求，需先取得一手来源再单独立项。
+
+**D3 — `analysis_kind` 仅证据驱动**：
+- Semgrep：`result.extra.dataflow_trace` 存在 ⇒ `evidence.analysis_kind = "taint"`；不存在 ⇒ **省略**；
+- CodeQL：SARIF `result.codeFlows` 存在 ⇒ 同上；不存在 ⇒ **省略**；
+- **禁止**按 `check_id`/`ruleId` 名称推断（如含 `injection` 即判 taint）。
+
+**D4 — 新增 `scripts/validate_findings.py`（纯 stdlib draft-07 受限子集解释器）**：
+- 解释**真实 schema 文件**（`type` / `required` / `enum` / `pattern` / `format` / `minimum` / `minLength` / `items` / `properties` / `additionalProperties` / `$ref`）；
+- 不支持的关键字 ⇒ `SchemaError`（退出码 2），**不静默忽略**；
+- `_extract_findings()` 支持三种形态（list / `{"findings":[]}` / AuditReport 展平 `module_results`+`cross_module_results`），否则 `--schema audit` 校验 0 条并**假绿**（G-1）。
+
+**D5 — golden case 是"激活"唯一验收判据**：
+- synthetic canonical finding（`category="contract"`、`claim="verify_findings imports ast_cfg"`）端到端跑 `verify_single_finding`，断言 `contract_verified is False`（合规方向 ⇒ 断言不成立）且 `action="unverified"`。
+- 预期值由 `guards.yml` 层序**推导**而非猜测。
+
+**D6 — `l4_eligible` 与 `dimension` 只增不删、语义不动**：
+- 不改写 855 条 `l4_eligible=False`；不翻开关；`dimension` 原样保留。**不**与 `category` 互转（另一轴）。
+
+**D7 — 消费端修复 KeyError 与静默失真**：
+- `issues_tracker.py`：`finding["category"]` → `finding.get("category") or "unknown"`；
+- `inter_rater.py`：统一 `_finding_category()` 访问器 + 显式 `unknown` 桶（`setdefault` 恒存在）。
+
+### Rationale
+
+- **D1 的依据**：`confidence` 是反幻觉链路核心语义（high=grep+AST / medium=grep / low=推断）。转换器没有"置信度"概念，填任何值都是编造；强行统一会削弱反幻觉基石。
+- **D2 的依据**：上游 `metadata.category`（security/correctness/…）是**领域**标签，与审计透镜的**判断类型**不同轴（调研 §3 已证 `dimension` 出现 10 种失控取值）。强行映射 = 假精确；保守省略的代价是"不被契约通道识别"，等价于今日行为；而错误映射的代价是**假裁决进入修复基线**（依 ADR-018 会被移除）⇒ 非对称风险选保守侧。
+- **D4 的依据**：若把校验规则硬编码进脚本，schema 文件变成**装饰品**（T19 已识别的"dead parameter"反模式）。解释 schema 文件才能让"schema 是契约"成立；子集化是可控成本（无外部依赖）。
+- **D6 的依据**：翻开关会让 C/C++/Java finding 进入不支持的 L4 路径（Joern v2.6 无 Java 结构化验证），产生假裁决。
+
+### Consequences
+
+- `schemas/audit-finding.schema.json` **零改动**（向后兼容）；`schemas/sast-finding.schema.json` 作为工具产物 schema 新增；
+- `verify_findings.py` **零改动**（AC-22），不改 CLI 参数面；
+- `docs/benchmark/**` **零改动**（AC-19），既有语料全部合法；
+- 新增实现要件（否则本 ADR 不成立）：① `schemas/sast-finding.schema.json`；② `validate_findings.py` 纯 stdlib draft-07 子集解释器；③ 转换器 `add_category` 透传 + `dataflow_trace` / `codeFlows` ⇒ `analysis_kind`；④ 消费端 `.get("category")` 容错；⑤ `_finding_category()` + `unknown` 桶显式；⑥ TDD **35 项**；
+- **契约激活依赖 Phase 2 透镜**：`contract`/`taint` 通道的激活前提是 finding 带有 `category` 或 `evidence.analysis_kind`；当前语料不满足，能力覆盖由**合成 fixture** + **golden case** 承担；
+- 休眠披露：882 条语料中 `contract` 与 `taint` 结构化通道**均零触发** ⇒ Δ=0 仅证明无副作用，不证明功能已被语料验证（同 T19 AC-8 教训）。
+
+### Confirmation / 可机械核验的断言
+
+| # | 命令 | 通过判据 |
+|---|---|---|
+| C-1 | `py -m pytest scripts/test_v30_t20_findings_schema_consistency.py -q` | **35 passed** |
+| C-2 | `py scripts/validate_findings.py --schema sast --findings <8 个语料文件>` | `checked 882 ...: 0 error(s)` |
+| C-3 | `py scripts/validate_findings.py --schema audit --findings schemas/example-audit-report.json` | `checked 5 ...: 0 error(s)` |
+| C-4 | `git diff --exit-code schemas/audit-finding.schema.json scripts/verify_findings.py docs/benchmark` | 空 diff |
+| C-5 | `grep -c "_finding_category(" scripts/inter_rater.py` | ≥ 3（非死函数） |
+
+---
+
 ## 待决策事项
 
 | ID | 待决策 | 触发条件 | 选项 | 当前倾向 |
@@ -728,6 +803,7 @@ v2.7.3 引入 RL threshold 调整，需确保向后兼容。
 |------|------|
 | 2026-08-12 | 初版创建。整合 DEVLOG.md (D1-D4) + v3-roadmap-reassessment.md (D1-D10) + project_memory.md (ADR-018~025) + ROADMAP.md (ADR-015~017)，共 25 条 ADR。 |
 | 2026-10-20 | 新增 **ADR-026**（T9' Phase 1 "L5 层" 解释为语义/调度层，Clarification）与 **ADR-027**（T9' Phase 1 收敛策略：taint 证伪默认降级 + `TAINT_CWE_SET` 定稿 8 项分三档 + 不引入 `verification_level=5`），来源为 [C1–C4 执行裁决分析](file:///f:/Coding/audit-driven-development/docs/research/2026-10-20-T9prime-C1-C4-decision-analysis.md)。ADR-005 状态行追加 `Clarified by ADR-026`（未 Superseded）。 |
+| 2026-10-20 | 新增 **ADR-029**（T20 Findings schema 分层：`AuditFinding` 不动 + 新增 `SastFinding`；`category` 生产者 = 显式声明；`analysis_kind` 证据驱动；纯 stdlib draft-07 子集校验器；golden case 为激活唯一判据），来源为 [T20 设计 spec v1.3](file:///f:/Coding/audit-driven-development/docs/superpowers/specs/2026-10-20-v3.0-T20-findings-schema-design.md)。 |
 
 ---
 

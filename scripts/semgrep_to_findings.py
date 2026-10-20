@@ -42,6 +42,8 @@ except ImportError:
 
 # 模块级常量 (§0.4 性能规范: 预编译正则 + 模块级 import)
 SEVERITY_MAP = {"ERROR": "P0", "WARNING": "P1", "INFO": "P2"}
+# v3.0 T20: 与 schemas/audit-finding.schema.json 的 Category 同源（单测断言相等）
+AUDIT_CATEGORIES = frozenset({"signature", "behavior", "corrective", "blind_spot", "contract"})
 CLAIM_TEMPLATE = "{check_id}: {message} ({cwe}) — affects {path}:{line}"
 _CWE_RE = re.compile(r"CWE-\d+")
 
@@ -115,6 +117,18 @@ def convert_semgrep_result(result, idx):
         "l4_eligible": True,
         "dimension": "security",
     }
+
+    # v3.0 T20 (D-T20-2): 仅透传**显式声明**的审计类别；不做 value-level 猜测映射。
+    add_category = metadata.get("add_category")
+    if isinstance(add_category, str) and add_category in AUDIT_CATEGORIES:
+        finding["category"] = add_category
+
+    # v3.0 T20 (D-T20-3): 仅当工具确实给出数据流证据时标记 taint。
+    #   ⚠️ 禁止按 check_id 名称推断（AC-9）。
+    dataflow_trace = extra.get("dataflow_trace")
+    if dataflow_trace:
+        finding["evidence"]["analysis_kind"] = "taint"
+
     return finding
 
 

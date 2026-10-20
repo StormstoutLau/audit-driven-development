@@ -101,6 +101,13 @@ def compute_cohens_kappa(files_a, files_b, overlap_files):
     }
 
 
+def _finding_category(f):
+    """v3.0 T20: 统一 category 取值口径（缺失 ⇒ 'unknown'），消除 default 不一致。"""
+    if not isinstance(f, dict):
+        return "unknown"
+    return f.get("category") or "unknown"
+
+
 def compute_per_dimension_kappa(findings_a_path, findings_b_path, overlap_files):
     """P2.7 step 4: Compute kappa per finding category (signature/behavior/contract/...).
 
@@ -114,21 +121,20 @@ def compute_per_dimension_kappa(findings_a_path, findings_b_path, overlap_files)
 
     categories = set()
     for f in findings_a + findings_b:
-        cat = f.get("category", "unknown") if isinstance(f, dict) else "unknown"
-        categories.add(cat)
+        categories.add(_finding_category(f))
 
     result = {}
     for cat in sorted(categories):
         files_a = set()
         files_b = set()
         for f in findings_a:
-            if isinstance(f, dict) and f.get("category", "") == cat:
+            if _finding_category(f) == cat:
                 ev = f.get("evidence", {})
                 fp = ev.get("file", "") if isinstance(ev, dict) else f.get("file", "")
                 if fp:
                     files_a.add(fp)
         for f in findings_b:
-            if isinstance(f, dict) and f.get("category", "") == cat:
+            if _finding_category(f) == cat:
                 ev = f.get("evidence", {})
                 fp = ev.get("file", "") if isinstance(ev, dict) else f.get("file", "")
                 if fp:
@@ -137,6 +143,9 @@ def compute_per_dimension_kappa(findings_a_path, findings_b_path, overlap_files)
         if files_a or files_b:
             result[cat] = compute_cohens_kappa(files_a, files_b, overlap_files)
 
+    # v3.0 T20: unknown 桶恒存在（即使无数据），避免"分组看起来完整"的静默失真
+    result.setdefault("unknown", {"kappa": None, "agreement_rate": None,
+                                  "matrix": None, "note": "findings with missing category"})
     return result
 
 

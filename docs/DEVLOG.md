@@ -5,6 +5,72 @@
 
 ---
 
+## 2026-10-20 · v3.0 T20 (Findings schema 激活: 分层 schema + `category` 生产者 + 纯 stdlib 校验器) 交付
+
+### 背景
+
+T19 交付后，882 条 benchmark 语料上 **contract 通道裁决面 ≈ 0**。补测（T20 Step 2）证明根因**不是语料规模**，而是 schema 自身断裂：
+
+1. **门 1 — `category` 无生产者**：六个转换器全部写 `dimension`，**无一写 `category`**（882/882 缺失）；
+2. **门 2 — `l4_eligible` 结构性屏蔽**：**855/882（96.9%）为 `False`**，仅 27 条缺省可进 L4；
+3. **现网缺陷**：`issues_tracker.py` 强取 `finding["category"]` ⇒ KeyError；`inter_rater.py` 的 `unknown` 桶**恒空**（L117 默认 `"unknown"` vs L125/L131 默认 `""`）。
+
+⇒ **schema 对齐是 T12（语料扩展）的硬前置**：只扩语料无法激活任何结构化通道。
+
+### 交付内容
+
+| 文件 | 变更 |
+|------|------|
+| [schemas/sast-finding.schema.json](file:///f:/Coding/audit-driven-development/schemas/sast-finding.schema.json) | **新增**：工具产物 schema（`category` 可选；`evidence` 开放容纳 11 个工具溯源键；顶层 `additionalProperties:false` 防字段漂移） |
+| [scripts/validate_findings.py](file:///f:/Coding/audit-driven-development/scripts/validate_findings.py) | **新增**（纯 stdlib）：draft-07 受限子集解释器 + `_extract_findings` 三形态（list / `findings` / **AuditReport 展平**）+ CLI 退出码 0/1/2 |
+| [scripts/semgrep_to_findings.py](file:///f:/Coding/audit-driven-development/scripts/semgrep_to_findings.py) | 改 **2 处**：`metadata.add_category` 显式透传（值须 ∈ 5 值枚举）+ `dataflow_trace` ⇒ `evidence.analysis_kind="taint"` |
+| [scripts/codeql_to_findings.py](file:///f:/Coding/audit-driven-development/scripts/codeql_to_findings.py) | 改 **1 处**：`codeFlows` ⇒ `analysis_kind="taint"`（**不**增加 category 透传 —— 无官方字段，禁止发明） |
+| [scripts/issues_tracker.py](file:///f:/Coding/audit-driven-development/scripts/issues_tracker.py) | 改 **2 处**：`finding["category"]` → `.get("category") or "unknown"` |
+| [scripts/inter_rater.py](file:///f:/Coding/audit-driven-development/scripts/inter_rater.py) | 改 **2 处**：新增 `_finding_category()` 统一口径（3 处调用）+ `unknown` 桶 `setdefault` 恒存在 |
+| [scripts/test_v30_t20_findings_schema_consistency.py](file:///f:/Coding/audit-driven-development/scripts/test_v30_t20_findings_schema_consistency.py) | **新增** TDD **35 项**（T1 5 / T2 13 / T3 5 / T4 3 / T5 4 / T6 2 / T7 3） |
+
+**零改动守卫**：`schemas/audit-finding.schema.json`（AC-3）· `scripts/verify_findings.py`（AC-22）· `docs/benchmark/**`（AC-19）。
+
+### 关键工程事实
+
+1. **schema 二元化是根因**：canonical `AuditFinding` 要求 8 必填字段（含 `spec_ref`/`confidence`/`fix_cost`）且 `additionalProperties:false`；转换器产物缺 4 项且带 `dimension`/`l4_eligible` ⇒ 两套形态互不兼容。**`confidence` 是反幻觉链路核心语义，转换器没有置信度概念，填任何值都是编造** ⇒ 选择**分层 schema** 而非强行统一。
+2. **`category` 迟到 4 个月的激活链路**：消费者（`verify_findings` / `issues_tracker` / `inter_rater`）早已就绪，但**生产者为零**。T20 后：Phase 2 透镜为权威生产者；Semgrep 仅在规则**显式声明**时透传；**内置 value-level 映射表为空**（拒绝 `security → behavior` 式猜测）。
+3. **`analysis_kind` 只认证据**：`dataflow_trace` / `codeFlows` 存在才写；**禁止**按 `ruleId` 名称推断（T4_03 负样本：`py/sql-injection` 无 codeFlows ⇒ 不写）。
+4. **golden case 的“文本通道污染”（Step 9 实测 I-1）**：impl §7 的 claim 原带「（跨模块依赖）」后缀，该子串命中 `CONTRACT_PATTERNS` ⇒ 即使无 `category` 也会进 contract 分支，**T6_01 无法证明 category 通道被激活**、T6_02 对照组必然失败。已移除后缀（design 原文即无后缀）。
+5. **`evidence` 必须开放**：882 条语料有 **11 个** evidence 键（`commit_hash`/`project`/`repo_url`/`file_fix_*` 等）；若收紧 `additionalProperties:false`，AC-2 在设计层面不可达（Step 4 H1，阻断级）。
+6. **`--schema audit` 的假绿陷阱（Step 6 G-1）**：canonical 示例报告是 **AuditReport**（findings 在 `module_results[]`），只认 `list`/`{"findings":[]}` 会**校验 0 条并静默通过** ⇒ `_extract_findings` 必须展平模块数组。同理 `summary.module_scores` 使用 **schema 形式** 的 `additionalProperties`（G-4），不支持则直接 exit 2。
+
+### 验收结果
+
+- TDD：`py -m pytest scripts/test_v30_t20_findings_schema_consistency.py -q` → **35 passed**。
+- 全量语料：`checked 882 finding(s) in 8 file(s): 0 error(s)`（**0.11 s**，≤ 5 s）。
+- canonical 报告：`checked 5 finding(s) in 1 file(s): 0 error(s)`。
+- 零回归：`test_v24` **153** / `test_v27` **68** / `test_e2e_v24_integration` **22** / `test_v03` **27**（exit 0）；pytest 族 **25 / 41 / 37 / 35**（合计 **138 passed**）。
+- **A/B 逐位一致**（与 `33e872b` 产物，同语料 **687 findings**）：剔除 `timestamp`/`latency*` 后 `json.dumps(sort_keys=True)` **完全相等**（70,131 B）、逐 finding `action`+`outcome` 差异 **0**。
+- **三层披露**：显式 `l4_eligible=True` **0** / 缺省 **27** / `False` **855** = **882**（自洽）。
+- 指标非退化：P=75.0 / R=71.4 / F1=73.2，Δ = 0（休眠：语料无 `category` / `analysis_kind`，Δ=0 属代数必然）。
+
+### 决策记录
+
+- [ADR-029](file:///f:/Coding/audit-driven-development/docs/DECISIONS.md)：Findings schema **分层**（`AuditFinding` 不动 + `SastFinding` 新增）；`category` 生产者 = **显式声明**（value-level 映射为空，CodeQL 不支持）；`analysis_kind` **证据驱动**；校验器**解释 schema 文件**（不支持关键字 ⇒ exit 2）；**golden case 是激活唯一判据**；消费端 `.get` 容错 + `unknown` 桶显式。
+
+### 已知局限（诚实披露）
+
+- **休眠**：882 条语料中 `contract` / `taint` 结构化通道**零触发** ⇒ Δ=0 只证明"无副作用"，**不证明**功能已被语料验证；激活证据由 **golden case（T6_01/T6_02）** + **6 转换器 fixture（T1_04）** 承担。
+- Semgrep CE 是否实际输出 `dataflow_trace` **无官方逐字保证**（X-3 `[unverified]`）⇒ 以构造 JSON 验分支，真实 CE 实测留作 P1 证据。
+- CodeQL 的 `@tags` → `properties.tags` 属**约定**而非 SARIF 强制；`codeFlows` 端点次序（source→sink）**不得**成为实现假设（T0.7），Phase 2/T12 消费时须显式校验。
+- `SastFinding` 的 `evidence` 开放 ⇒ 工具溯源字段**不做白名单校验**（顶层仍严格）。
+
+### Step 10 新发现并修正
+
+1. **F-1（验收项自身错误）**：`test_v03_consistency.py` 实际 checks = **27**（源码逐项计数），checklist/design 原写 `28` 系陈旧口径 ⇒ 当场修正 checklist AC-18/R1 与 design AC-18（design → **v1.4**）。
+2. **F-2（版本号陈旧）**：D2/D3 的期望版本仍为 design `v1.2` / impl `v1.1` ⇒ 同步为 **v1.4 / v1.3**，checklist 头部同步。
+3. Step 8 的 S-1~S-3、Step 9 的 I-1 均已回写，未新增设计缺陷。
+
+**验收报告**: [2026-10-20-v3.0-T20-findings-schema-acceptance-audit-report.md](file:///f:/Coding/audit-driven-development/docs/audit-log/2026-10-20-v3.0-T20-findings-schema-acceptance-audit-report.md)
+
+---
+
 ## 2026-10-20 · v3.0 T19 (跨模块契约确定性验证, Tier 2 纯 stdlib) 交付
 
 ### 背景

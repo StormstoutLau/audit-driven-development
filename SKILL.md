@@ -443,6 +443,20 @@ L4 结构性验证内部按"准确率优先"分层降级。上层不可用时自
 | **partial** (P0 L3 only, L4 fail) | 降级 | P0 → P1 | 标记 `_phase35_action: downgraded`，需人工审核 |
 | **unverified** (L1/L2 fail) | 移出 | 从基线移除 | 记录到 `hallucination_log.json`（区分 P0/P1 幻觉），不进入修复流程 |
 
+#### Schema Pre-gate / Schema 前置校验 (v3.0 T20)
+
+Before Phase 3.5, validate the aggregated findings against the canonical schema. A non-zero exit means the findings are **malformed** (missing `category`/`evidence`/`spec_ref`/`confidence`/`fix_cost`) and MUST be fixed — never bypassed:
+
+Phase 3.5 之前必须先做 schema 校验。非零退出说明 finding 结构不合法，**必须修 finding**，不得绕过：
+
+```bash
+python scripts/validate_findings.py --schema audit --findings <phase3_report.json>
+```
+
+- Exit `0` = all findings conform · `1` = violations listed · `2` = schema/usage error
+- SAST converter products: `python scripts/validate_findings.py --schema sast --findings <findings.json>`
+- The validator interprets the **schema file** (draft-07 subset, stdlib only) and rejects unsupported keywords with exit `2`; it never silently ignores them (ADR-029).
+
 #### Usage / 用法
 
 ```bash
@@ -1274,6 +1288,8 @@ OUTPUT CONTRACT / 输出契约 (MANDATORY / 强制格式):
   - ModuleAuditResult with all 5 dimension_coverage entries
   - Each AuditFinding with id, severity, category, evidence, spec_ref, claim, confidence, fix_cost
   - Optional reasoning_chain and fix_suggestion per finding
+
+**v3.0 T20 (schema activation)**: `category` is the **only** producer of the structured `contract` channel — Phase 2 lenses MUST emit it (missing `category` ⇒ `verify_findings` cannot activate contract verification). SAST converter products (`SastFinding`) may omit `category`; it is emitted only when the upstream rule explicitly declares `extra.metadata.add_category`. See ADR-029.
 
 **v0.1.1 (legacy free-text format — still accepted but discouraged)**:
 For EACH finding:

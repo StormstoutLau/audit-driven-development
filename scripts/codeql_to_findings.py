@@ -143,6 +143,13 @@ def convert_codeql_result(result, idx, rules_index):
         "l4_eligible": True,
         "dimension": "security",
     }
+
+    # v3.0 T20 (D-T20-3): SARIF codeFlows 存在 ⇒ 污点路径证据（仅标记，不解析端点）。
+    #   端点点序校验是 Phase 2/T12 的约束（T0.7），本步不消费路径（N-5）。
+    code_flows = result.get("codeFlows")
+    if code_flows:
+        finding["evidence"]["analysis_kind"] = "taint"
+
     return finding
 
 

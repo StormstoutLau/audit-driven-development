@@ -156,6 +156,20 @@ L4 结构性验证
 
 来源: [SKILL.md §Phase 3.5](file:///f:/Coding/audit-driven-development/SKILL.md), [scripts/verify_findings.py](file:///f:/Coding/audit-driven-development/scripts/verify_findings.py), [scripts/joern_cpg.py](file:///f:/Coding/audit-driven-development/scripts/joern_cpg.py), [scripts/ast_cfg.py](file:///f:/Coding/audit-driven-development/scripts/ast_cfg.py)
 
+### 3.2.3 Findings schema 分层与激活（v3.0 T20）
+
+| 维度 | 定义 |
+|---|---|
+| 分层 schema | `AuditFinding`（审计判断，canonical，**逐字节不动**）· `SastFinding`（工具事实，新增） |
+| 新增文件 | [`schemas/sast-finding.schema.json`](file:///f:/Coding/audit-driven-development/schemas/sast-finding.schema.json) · [`scripts/validate_findings.py`](file:///f:/Coding/audit-driven-development/scripts/validate_findings.py)（纯 stdlib draft-07 受限子集） |
+| `category` 生产者 | Phase 2 透镜（权威）· Semgrep `extra.metadata.add_category` **显式透传**（值须 ∈ 5 值枚举）；**value-level 映射表为空**；CodeQL 不支持（禁止发明字段） |
+| `analysis_kind` | 仅证据驱动：`dataflow_trace`（Semgrep）/ `codeFlows`（CodeQL）存在 ⇒ `"taint"`；**禁止按规则名推断** |
+| 前置校验 | Phase 3.5 之前 `validate_findings.py --schema audit`；不支持关键字 ⇒ 退出码 2（不静默） |
+| 消费端容错 | `issues_tracker` 缺 `category` ⇒ `"unknown"`（不 KeyError）· `inter_rater` 统一 `_finding_category()` + `unknown` 桶恒存在 |
+| 边界 | `l4_eligible` / `dimension` 只增不删；`verify_findings.py` **零改动**；882 条语料**零改写** |
+
+来源: [设计 spec v1.3](file:///f:/Coding/audit-driven-development/docs/superpowers/specs/2026-10-20-v3.0-T20-findings-schema-design.md), [ADR-029](file:///f:/Coding/audit-driven-development/docs/DECISIONS.md), [Step 2 调研](file:///f:/Coding/audit-driven-development/docs/research/2026-10-20-v3.0-T20-findings-schema-research.md)
+
 ### 3.3 Claim 类型分类
 
 | Claim Type | 模式匹配 | 验证逻辑 |

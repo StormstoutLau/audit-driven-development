@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "$id": "https://github.com/StormstoutLau/audit-driven-development/schemas/sast-finding.schema.json",
+  "title": "SAST Finding Schema (tool-produced)",
+  "description": "Tool-produced findings (converters). category is OPTIONAL: only emitted when the upstream rule explicitly declares it. evidence is an open container for tool provenance.",
+  "type": "object",
+  "required": ["id", "severity", "claim", "evidence"],
+  "properties": {
+    "id":          { "type": "string", "minLength": 1 },
+    "severity":    { "enum": ["P0", "P1", "P2", "P3"] },
+    "claim":       { "type": "string", "minLength": 1 },
+    "category":    { "enum": ["signature", "behavior", "corrective", "blind_spot", "contract"] },
+    "dimension":   { "type": "string", "minLength": 1 },
+    "l4_eligible": { "type": "boolean" },
+    "evidence": {
+      "type": "object",
+      "required": ["file", "line_start"],
+      "properties": {
+        "file":          { "type": "string", "minLength": 1 },
+        "line_start":    { "type": "integer", "minimum": 1 },
+        "line_end":      { "type": "integer", "minimum": 1 },
+        "cwe":           { "type": "string" },
+        "owasp":         { "type": "string" },
+        "rule_id":       { "type": "string" },
+        "source":        { "type": "string" },
+        "analysis_kind": { "enum": ["taint"] }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}
