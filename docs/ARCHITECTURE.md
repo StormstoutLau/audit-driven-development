@@ -133,6 +133,27 @@ L4 结构性验证
 
 来源: [设计 spec](file:///f:/Coding/audit-driven-development/docs/superpowers/specs/2026-10-20-v3.0-T9prime-taint-design.md), [实施 spec](file:///f:/Coding/audit-driven-development/docs/superpowers/specs/2026-10-20-v3.0-T9prime-taint-implementation.md), [scripts/verify_findings.py](file:///f:/Coding/audit-driven-development/scripts/verify_findings.py)
 
+### 3.2.2 跨模块契约分支（v3.0 T19）
+
+把「Spec↔Code 契约对齐」中**分层依赖**这一子类从 **LLM 透镜（概率性）转为确定性规则**（[ADR-028](file:///f:/Coding/audit-driven-development/docs/DECISIONS.md#L669)）。
+范本为 import-linter 的 `layers` 语义（层序 + **间接依赖**检测），但**自实现、零新增依赖**（遵守 [ADR-023](file:///f:/Coding/audit-driven-development/docs/DECISIONS.md#L525-L542)，故**不引入 import-linter 包**）。
+
+| 项 | 值 |
+|---|---|
+| 识别 | 双通道：结构化 `category == "contract"`（**经新增可选参数传入**）/ `evidence.analysis_kind == "contract"`；文本 `CONTRACT_PATTERNS`（**禁用裸 `layers?` / `contract`**，实证收紧） |
+| 声明载体 | `docs/audit/guards.yml` 的**可选** `contract` 子对象：`root`（图根）· `kind: layers` · `layers`（**高→低**）· `allow`（**反向例外白名单**） |
+| 实现位置 | [`scripts/contract_graph.py`](file:///f:/Coding/audit-driven-development/scripts/contract_graph.py)（Tier 2，纯 stdlib；复用 `ast_cfg.build_import_graph`） |
+| 三态字段 | `contract_verified` (True/False/None) · `contract_kind` · `contract_rule_id` |
+| 证伪动作 | `False` ⇒ 依 [ADR-018](file:///f:/Coding/audit-driven-development/docs/DECISIONS.md#L426) **移除**（默认 `disproof_action="remove"`，不改 `structural_false`） |
+| kill switch | `ADD_CONTRACT_DISABLE=1` ⇒ 识别与分派全域关闭 ⇒ 与 v3.0-T9' 现状**逐位一致** |
+| **图完整性哨兵** | `模块数 > 1 且 内部边 == 0`（**静默退化**，最重实测发现）⇒ 判 `graph_incomplete` ⇒ **`None`**，**绝不 `False`**（防"假 False"） |
+| 无裁决 | `None` ⇒ **不落 `checks["contract"]`**，回落 `generic`（Tier 3） |
+| 动态 import | 只影响「被禁方向 + 无路径」支 ⇒ 该支降为 `None`；允许方向的 `False` 与已确认的 `True` 不受影响 |
+
+**已知局限（诚实披露）**：图完整性哨兵会误杀「**天然无内部依赖**」的仓库（⇒ 全部契约请求返回 `None`，方向偏保守）。
+
+来源: [设计 spec v1.1](file:///f:/Coding/audit-driven-development/docs/superpowers/specs/2026-10-20-v3.0-T19-contract-design.md), [实施 spec v1.1](file:///f:/Coding/audit-driven-development/docs/superpowers/specs/2026-10-20-v3.0-T19-contract-implementation.md), [Step 2 补测](file:///f:/Coding/audit-driven-development/docs/research/2026-10-20-v3.0-T19-contract-verification-research.md)
+
 来源: [SKILL.md §Phase 3.5](file:///f:/Coding/audit-driven-development/SKILL.md), [scripts/verify_findings.py](file:///f:/Coding/audit-driven-development/scripts/verify_findings.py), [scripts/joern_cpg.py](file:///f:/Coding/audit-driven-development/scripts/joern_cpg.py), [scripts/ast_cfg.py](file:///f:/Coding/audit-driven-development/scripts/ast_cfg.py)
 
 ### 3.3 Claim 类型分类
@@ -144,6 +165,9 @@ L4 结构性验证
 | `violates` | violates/breaks/conflicts | 验证违反模式确实存在 |
 | `dead_code` | dead code/unreachable/unused | 验证代码跟随 return/raise/exit |
 | `import_related` | import/from X import | 验证 import 语句存在 |
+| `taint`（v3.0 T9'） | `TAINT_PATTERNS` / `evidence.cwe ∈ TAINT_CWE_SET` / `analysis_kind=="taint"` | L4 内 `taint` 分支（`_verify_l5_taint`，见 §3.2.1） |
+| `contract_related`（v3.0 T19） | `CONTRACT_PATTERNS` / `category=="contract"` / `analysis_kind=="contract"` | L4 内 `contract` 分支（`contract_graph.verify_contract`，见 §3.2.2） |
+| `hallucination_pattern` | 命中 `rule_suggestions.json` 的反例规则 | 调用方据此降级 severity |
 | `generic` | (以上均不匹配) | 关键词存在性检查 |
 
 **保守策略**: L4 无法提取 claim 关键词时返回 `confirmed=False`，触发 P0→P1 降级。

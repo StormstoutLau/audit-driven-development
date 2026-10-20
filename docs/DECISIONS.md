@@ -666,6 +666,51 @@ v2.7.3 引入 RL threshold 调整，需确保向后兼容。
 
 ---
 
+## ADR-028: T19 跨模块契约确定性验证 — Tier 2 纯 stdlib + **不引入 import-linter 依赖** + 图完整性哨兵
+
+- **Status**: ✅ Accepted
+- **Date**: 2026-10-20
+- **Source**: [设计 spec v1.1 D-T19-1~6](file:///f:/Coding/audit-driven-development/docs/superpowers/specs/2026-10-20-v3.0-T19-contract-design.md) · [Step 4/6 审计追溯（H1–H10 / G-1–G-10）](file:///f:/Coding/audit-driven-development/docs/audit/2026-10-20-v3.0-T19-contract-spec-audit-trace.md) · [Step 2 补测（F-1~F-5）](file:///f:/Coding/audit-driven-development/docs/research/2026-10-20-v3.0-T19-contract-verification-research.md)
+- **Related**: [ADR-001](#adr-001-add-定位为-sast-findings-validator) · [ADR-018](#adr-018-l4-verifiedfalse-直接移除-非降级) · [ADR-023](#adr-023-python--39标准库优先不引入新-runtime-依赖) · [ADR-026](#adr-026-t9-phase-1-中-l5-层-解释为语义调度层c1-裁决)
+
+### Context
+
+补强调研（[§7 #12，P0](file:///f:/Coding/audit-driven-development/docs/research/2026-10-20-ADD-v3.0-reinforcement-research.md)）指出：ADD 自称最独有的护城河「Spec↔Code 契约对齐」由 **7 个 LLM 透镜**承担，属**概率性判断**；而**跨模块契约类断言无任何确定性验证** —— `classify_claim` 无 `contract` 类型，`verify_l4_structural` 仅结构化验证 `dead_code` / `import_related`，其余落 Tier 3 正则。同时 `docs/audit/guards.yml` 的 `check` 字段是**自由文本、不可机械执行**（guards 是半死文件）。
+
+范本选型遇到一个硬约束冲突：**import-linter**（`layers` 语义 + 间接依赖检测）正是所需能力，但 [ADR-023](#adr-023-python--39标准库优先不引入新-runtime-依赖) 规定「Python ≥ 3.9、标准库优先、**不引入新 runtime 依赖**」且**无例外条款**（其 Consequences 明确排除过 JVM 依赖与 `sarif-tools`）。
+
+### Decision
+
+**D1 — 新 claim 类型 `contract_related`**（与 `import_related` 平行）。双通道识别（**仅 `_contract_enabled()` 时生效**）：① 结构化 — `category == "contract"`（经**新增可选参数** `classify_claim(claim, evidence=None, category=None)` 传入）或 `evidence.analysis_kind == "contract"`；② 文本 — 模块级预编译 `CONTRACT_PATTERNS`（**禁用裸 `layers?` 与裸 `contract`**）。
+
+**D2 — 契约声明扩展 `docs/audit/guards.yml`**（**只增不删**）：新增**可选** `contract` 子对象，含 `root`（**图根**，相对仓库根）、`kind`（当前唯一取值 `layers`）、`layers`（顺序 = **高 → 低**）、`allow`（**反向例外白名单** —— 显式允许特定「低→高」边）。既有 `id` / `description` / `scope` / `severity` / `check` 五字段语义**不变**。
+
+**D3 — Tier 2 纯 stdlib 契约求值：明确不引入 import-linter 依赖。** 复用既有 `ast_cfg.build_import_graph`；新能力放独立模块 `scripts/contract_graph.py`（**不改 `ast_cfg.py`**，避免触碰 `test_v24` 等既有套件的被测对象）。**因此本 ADR 不修订 ADR-023**。
+
+**D4 — 三态裁决 + 图完整性哨兵。** `True` = claim 断言成立；`False` = 声明合法且图完整但断言不成立（依 ADR-018 移除）；**`None` = 无裁决（调用方不写 check，回落 generic）**。**哨兵**：`图模块数 > 1 且 内部边数 == 0` ⇒ 判 `graph_incomplete` ⇒ **`None`**（**绝不 `False`**）。
+
+**D5 — kill switch `ADD_CONTRACT_DISABLE=1`** ⇒ 识别与分派全域关闭；新增 3 字段 `contract_verified` / `contract_kind` / `contract_rule_id` **仅在该 finding 被分类为 `contract_related` 时写入**。
+
+**D6 — 不新增 CLI 参数**（无需降级/移除二选一）；**不改 `structural_false`**（contract 的 `disproof_action` 默认 `"remove"`，既有条件已支持）；**不引入 `verification_level = 5`**（沿用 ADR-026）。
+
+### Rationale
+
+- **D3 的依据（为何是自研而非引入）**: 所需能力（层序 + 间接依赖 + 方向判定）在既有导入图上约百余行即可实现；引入外部依赖会带来 env 探测 / 缓存 / 降级 / **许可**的额外面，而收益仅为语义等价。ADR-023 无例外条款，且「零依赖」本身是 ADD 的差异化资产。
+- **D4 哨兵的依据（F-1 实测）**: `build_import_graph('.')` 在仓库根返回 **2164 模块 / 0 内部边**（**静默退化**，无异常）。0 边图与「确实无依赖」数值同形 ⇒ 若不拦截，**任何**违规断言都会得到「无反向路径」⇒ 系统性**假 False**。这与 taint 的 `sink_nodes == 0` 教训同型。
+- **D1 新增 `category` 参数的依据（Step 4 审计 H5）**: `category` 是 finding 的**顶层字段**，而 `classify_claim` 及其**唯一调用点**均不接收它 ⇒ 不改则通道 A 的 `category` 判据**永远不可达**。修正方式为**可选参数**（默认 `None` 时行为与 v3.0-T9' 完全一致）。
+- **D4「动态 import」作用域的细化（Step 9 实施期）**: v1.0 曾规定「涉事模块含动态 import ⇒ 无条件跳过」，实施期实测发现该规则**过强** —— ADD 自身 `scripts/verify_findings.py` 即含 `__import__`（F-5），导致**真实用例永久不可求值**。精化后：动态 import 只可能**隐藏边**，故**仅将「被禁方向 + 无路径」这一支降为 `None`**；允许方向的 `False` 与已确认的 `True` 不受影响。
+- **D2 `allow` 重定义为「反向例外」的依据（Step 4 审计 H1）**: 层序**本身已允许**「高→低」⇒ 若把 `allow` 定义为「高→低白名单」则该字段**语义为空、无任何约束力**。
+
+### Consequences
+
+- **W1 得到部分修复**：跨模块契约断言由概率判断转为**可复算的结构裁决**，且**零新增依赖**；
+- **新增已知局限（G-5，诚实披露）**: 图完整性哨兵会误杀「**天然无内部依赖**」的仓库（模块间确无 import 边 ⇒ 判 `graph_incomplete` ⇒ 全部契约请求返回 `None`）。**方向偏保守（安全），明确不修**；
+- **触发面 = 0（休眠）**: 在现存 **882 条 benchmark 语料**上，结构化通道（`category` / `analysis_kind` 字段**整体不存在**，F-3）与文本通道（收紧后正则 **0 命中**，T4_35 断言）**均无命中** ⇒ contract 分支在当前语料上**不产生任何裁决**。能力覆盖由**合成 repo 夹具（T1/T2/T3 共 31 项）**与**真实 repo 用例（T3_30，ADD 自身 F-2 实边）**承担。**该结论不得被误读为"功能已被语料验证"**；
+- **新增实现要件（否则本 ADR 不成立）**: ① `classify_claim` 的 `category` 可选参数与调用点传参；② `verify_l4_structural` 的 contract 分支；③ generic 门条件追加 `"contract_related"`；④ 3 字段的**条件写入**（承载关闭态逐位一致性）；⑤ `_contract_enabled()` 调用点 ≥2；
+- 未改动 `ast_cfg.py` / `merge_guards.py` / `spec_graph.py` / `structural_false` / CLI 参数面（`git diff` 可核）。
+
+---
+
 ## 待决策事项
 
 | ID | 待决策 | 触发条件 | 选项 | 当前倾向 |

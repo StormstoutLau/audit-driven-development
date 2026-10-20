@@ -42,3 +42,38 @@ guards:
     scope: "src/**/*.ts"
     severity: "critical"
     check: "Every exported function's parameters must be validated at entry point — null checks, type guards, or Pydantic/Zod schema validation"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# v3.0 T19 新增（可选）: 机器可校验的跨模块契约
+#
+# 上面 5 个字段（id / description / scope / severity / check）语义**不变** ——
+# check 仍是自由文本、供 AI 解释性核查。T19 新增的是**可选** contract 子对象，
+# 让「分层依赖」这类约束可以被**确定性机械执行**（无需 LLM）。
+#
+# 字段语义:
+#   root   : 导入图根（相对仓库根）。**必填且关键** —— 导入图对图根敏感：
+#            在仓库根调用可能得到 0 条内部边（静默退化）⇒ 契约会被判为"图不完整"
+#            而**不产生任何裁决**。通常填「包/脚本所在目录」。
+#   kind   : 当前仅支持 "layers"。
+#   layers : 顺序 = **高 → 低**。layers[i] 可依赖 layers[j] (j > i)；反向禁止。
+#            **间接依赖（传递路径）同样违规**。用模块名前缀匹配（最长匹配优先）。
+#   allow  : **反向例外白名单** —— 显式允许特定的「低 → 高」边。
+#            注意：**高 → 低方向本就是允许的**，把高->低边写进 allow 是空转（无效）。
+#
+# 示例（若要启用，取消注释并改写 root/layers）:
+#
+#   - id: "G101"
+#     description: "分层单向依赖"
+#     scope: "src/**/*.py"
+#     severity: "critical"
+#     check: "分层方向合规性（机械校验由 contract 承担）"
+#     contract:
+#       root: "src"
+#       kind: "layers"
+#       layers: ["api", "service", "repository"]     # api 最高，repository 最低
+#       allow: [["repository", "api"]]              # 反向例外: 允许 repository -> api
+#
+# 注意（已知局限）: 若某仓库模块之间**确实没有任何 import 边**（扁平独立库），
+#   图完整性哨兵会判 graph_incomplete ⇒ 全部契约请求返回**无裁决**（安全方向，非误判）。
+#
+# 参考: docs/superpowers/specs/2026-10-20-v3.0-T19-contract-design.md §D-T19-2

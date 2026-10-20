@@ -5,6 +5,82 @@
 
 ---
 
+## 2026-10-20 · v3.0 T19 (跨模块契约确定性验证, Tier 2 纯 stdlib) 交付
+
+### 背景
+
+「Spec↔Code 契约对齐」中的**分层依赖**子类此前只能由 **LLM 透镜（概率性）** 判定，无确定性复核手段：
+一个"低层模块反向依赖高层模块"的 finding 无法被 4-Level 验证门机械证真/证伪。
+T19 以 [import-linter](https://github.com/seddonym/import-linter) 的 `layers` 语义（**层序 + 间接依赖检测**）为**范本**，
+在 ADD 内**自实现**该求值（**零新增依赖**，遵守 [ADR-023](file:///f:/Coding/audit-driven-development/docs/DECISIONS.md#L525-L542)，
+**不引入 import-linter 包**）。
+
+### 交付内容
+
+| 文件 | 变更 |
+|------|------|
+| [scripts/contract_graph.py](file:///f:/Coding/audit-driven-development/scripts/contract_graph.py) | **新增**（Tier 2，纯 stdlib）：`_build_graph`（缓存 + **图完整性哨兵**）/ `_mtime_sig`（排除 `__pycache__`/`.venv`/`.git`）/ `layer_of`（最长前缀）/ `find_path`（BFS + 前驱回溯，返**实际路径**）/ `evaluate_contract`（三态 + `incomplete` 支）/ `load_contract_declarations` / `_validate_layers` / `verify_contract`（对外唯一入口） |
+| [scripts/verify_findings.py](file:///f:/Coding/audit-driven-development/scripts/verify_findings.py) | **六处追加式改动**（+61 / −5）：① `classify_claim(claim, evidence=None, category=None)` 新增可选参数；② 模块级 `CONTRACT_PATTERNS`（9 条，**禁裸 `layers?`/`contract`**）+ `_CONTRACT_DISABLE_ENV` + `_contract_enabled()`；③ 调用点传 `finding.get("category")`；④ L4 内新增 `contract` 分支；⑤ generic 门条件增 `contract_related`；⑥ 3 个 `contract_*` 字段**仅在分类命中时写入** |
+| [scripts/test_v30_contract_consistency.py](file:///f:/Coding/audit-driven-development/scripts/test_v30_contract_consistency.py) | **新增** TDD **37 项**（T1 识别 9 / T2 图与求值 13 / T3 端到端与降级 9 / T4 兼容与 kill switch 6），**pytest 模块** |
+| [docs/audit/guards.yml](file:///f:/Coding/audit-driven-development/docs/audit/guards.yml) | **新增**：ADD 自身真实契约（源自 **F-2 实测依赖边**），`root: "scripts"` + **5 层**（高→低）+ `allow: []` |
+| [docs/audit/guards.template.yml](file:///f:/Coding/audit-driven-development/docs/audit/guards.template.yml) | **纯追加**（+35 / −0）：`contract` 子对象字段语义 + **反向例外**构造法 + 已知局限说明 |
+
+### 关键工程事实（Step 2 补测 F-1~F-5 + 实施期实测）
+
+1. **图根敏感 + 静默退化（最重发现 F-1）**：`build_import_graph('.')` 得 **2164 模块 / 0 内部边**（仓库根下含
+   benchmark 克隆与外部脚本，且**不报错**）；`build_import_graph('scripts')` 得 **56 模块 / 46 边**（含 T19 新增 2 脚本）。
+   ⇒ 0 边图与"确实无依赖"**数值同形**，若不拦截将产生**系统性假 False** ⇒ **图完整性哨兵**（模块 > 1 且内部边 = 0 ⇒ `None`）
+   是**必需项**，非防御性冗余。
+2. **语料零触发（F-3 + F-4）**：882 条 benchmark 语料中 `category` / `evidence.analysis_kind` 字段**整体不存在**
+   ⇒ 结构化通道命中 **0**；旧文本正则（含裸 `layers?`）4/882 **全为噪声**（命中 `msPostGISLayerSetTimeFilter` 等标识符子串）
+   ⇒ 收紧为**带词边界的中英短语集**，命中亦为 0。
+3. **动态 import 只可能"隐藏边"**：ADD 自身 `scripts/verify_findings.py` 含 `__import__`（F-5）；
+   若按 v1.0 设计「涉事即整体跳过」，则**真实用例永久不可求值**（T3_30 首次 RED 的根因）。
+   ⇒ 细化为：**仅**「被禁方向 + 无路径」支降为 `None`（图可能不完整 ⇒ 不可判 `False`）；「允许方向的 `False`」与「已确认的 `True`」**不受影响**。
+4. **索引语义钉死**：`layers[0]` = **最高层** ⇒ `idx(src) < idx(dst)` = **允许方向**（⇒ `False`）；
+   `idx(src) > idx(dst)` = **被禁方向**；**间接依赖（传递路径）同属违规**。`allow` = **反向例外白名单**（非"高→低白名单"，后者语义空转）。
+5. **反幻觉**：`verify_findings.py` 净增 **+56 行** ⇒ design §8 的 11 处行号引用**全部右移**（已在 Step 10 逐项复验并双列记录）。
+
+### 验收结果
+
+- TDD：`py -m pytest scripts/test_v30_contract_consistency.py` → **37 passed**（0 failed）。
+- 零回归：`test_v24` **153** / `test_v27` **68** / `test_e2e_v24_integration` **22** / `test_v28` **25** / `test_v30_taint` **41** 全通过。
+- **kill switch 逐位一致**（`ADD_CONTRACT_DISABLE=1` vs 默认，同语料 **687 findings**）：剔除 `timestamp`/`latency*` 后
+  `json.dumps(sort_keys=True)` **完全相等**（70,131 B）、递归键集合**相等**、逐 finding `action`+`outcome` 差异 **0**、两臂**均无** `contract_*` 键。
+- **指标非退化**：ΔP = ΔR = ΔF1 = **0**（P=75.0 / R=71.4 / F1=73.2 / tp-fp-fn-tn = 15-5-6-176）。
+  > **休眠披露**：Δ=0 属**代数必然**（语料零触发），只能证明"无副作用"，**不能**证明"功能已被语料验证"；
+  > 功能正确性由**合成 repo 强制命中**证据独立承载（T2 13 项 + T3 9 项）。
+- 性能：图缓存生效（同根二次调用**建图 1 次**）；`scripts/` 规模下单次 `verify_contract` **163 ms**（≤ 250 ms）。
+- 真实用例：ADD 自身 `scripts/` 的 7 条实边**全部合规**（`verified=False`，无违规）。
+- **验收**：对接 checklist **59 项 → 59 PASS / 0 FAIL**（P0 45/45）。
+
+### 决策记录
+
+- [ADR-028](file:///f:/Coding/audit-driven-development/docs/DECISIONS.md#L669)：T19 = 跨模块契约确定性验证（Tier 2 纯 stdlib）；
+  识标 `contract_related` 双通道；声明载体 = `guards.yml` 可选 `contract` 子对象；`root` 字段（实证修正 X-1）；
+  `allow` **反向例外**白名单；三态裁决 + **图完整性哨兵（绝不假 False）**；kill switch `ADD_CONTRACT_DISABLE`；
+  **不改 `structural_false` / 不引入 level 5 / 不新增 CLI 参数**；**不引入 import-linter 依赖**。
+
+### 已知局限（诚实披露）
+
+- **图完整性哨兵会误杀「天然无内部依赖」的仓库**（模块 > 1 且内部边 = 0 ⇒ 全部契约请求 `None`）。
+  **方向偏保守（安全），明确不修**。
+- benchmark 语料对 contract 通道**零触发** ⇒ 收益待 T12 引入 SAST 转换器语料（`analysis_kind == "contract"`）后方可兑现。
+- 文本通道 `CONTRACT_PATTERNS` 为**非穷举**中英短语集（9 条），不覆盖所有契约表述。
+- `_load_yaml` 依赖**可选** `PyYAML`；缺失时契约声明不可解析 ⇒ 全部请求 `None`（既有模式，非新依赖）。
+
+### Step 10 新发现并修正（净增量）
+
+1. **实现缺陷 F-1**：`guards.yml` 曾误声明 **6 层**（多出惰性 `_rule_utils`）⇒ 删至 **5 层**（与 design spec 一致），复跑 37 passed。
+2. **checklist 自身错误 F-2**：§8 附录 A 映射有误 ⇒ 改为 `AC-1 → R3 · A10` / `AC-22 → R3 · T4_35`。
+3. **spec 陈旧引用 F-3**：design §8 行号表改**双列**（原行号 / 现行号）并逐项复验（**审计轨迹追加，版本保持 v1.1**）。
+4. **验证方法细化 F-4**：`AC-24` 后半句（本仓库缺省 `.` 触发哨兵）以机械探针补证（`_build_graph('.')` ⇒ `None`）。
+5. 以上均**不涉及设计决策变更** ⇒ **未新增 ADR**（`ADR-028` 仍为 T19 唯一决策记录）。
+
+**验收报告**: [2026-10-20-v3.0-T19-contract-acceptance-audit-report.md](file:///f:/Coding/audit-driven-development/docs/audit-log/2026-10-20-v3.0-T19-contract-acceptance-audit-report.md)
+
+---
+
 ## 2026-10-20 · v3.0 T9' Phase 1 (Taint 验证能力, Joern MVP) 交付
 
 ### 背景

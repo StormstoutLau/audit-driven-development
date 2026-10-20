@@ -610,6 +610,7 @@ Total: P0+P1+P2+P3 complete. **1.0 reached.** v2.0→v2.3 comprehensive upgrade 
 | ID | 任务 | 价值 | 工作量 | 变化说明 |
 |---|---|---|---|---|
 | **T9'** | Taint 验证能力 (验证 Semgrep/CodeQL 报告的 taint finding source→sink 可达性) | 修复 G2 (唯一致命 Gap) | 高 | **Phase 1 已交付 (2026-10-20)**: Joern MVP `reachableBy` + AST def-use + regex 三层；Phase 2 触发条件不变 (待 T12 引入 SAST 转换器语料) |
+| **T19** | 跨模块契约确定性验证 (把「Spec↔Code 契约对齐」中的**分层依赖**从 LLM 透镜转为确定性规则) | 修复 W1 (护城河建在概率性地基上) | 中 | **已交付 (2026-10-20)**: Tier 2 纯 stdlib [`contract_graph.py`](file:///f:/Coding/audit-driven-development/scripts/contract_graph.py) + `guards.yml` 的 `contract` 子对象 + **图完整性哨兵** + kill switch `ADD_CONTRACT_DISABLE`；**零新增依赖**（ADR-028，不引入 import-linter）；TDD **37/37** |
 | **T12** | Benchmark 扩展到 5000+ findings | 修复 G9，验证泛化能力 | 中 | **提升优先级**: T6 已提供数据基础，benchmark 规模是验证泛化能力的前提 |
 | **T11** | Tier 2 AST CFG 扩展到 Java | 提升多语言验证精度 | 中 | 保持 |
 | **T8'** | 深化 Joern 跨文件验证 (修复 import_related 误判) | 修复 G4 残余 + v2.7.3 已知局限 | 中 | **重构**: 原 T8 是"自建 import graph"，改为"深化 Joern"，避免与 Joern 重复 |
@@ -663,7 +664,7 @@ These constraints were derived from the V1 post-mortem and govern all P2/P3 impl
 
 | Date / 日期 | Version / 版本 | Change / 变更 |
 |---|---|---|
-| 2026-10-20 | v3.0 T9' Phase 1 | Taint 验证能力 (Joern MVP) 交付: `_verify_l5_taint` (Tier 1 Joern `reachableBy` → Tier 2 AST def-use → Tier 3 regex) + 双通道 claim 识别 (`TAINT_CWE_SET` 8 项 / `TAINT_PATTERNS`) + 三态 `taint_verified`/`taint_mode`/`taint_disproof_action`；kill switch `ADD_TAINT_DISABLE`；`verification_level` 保持 1..4 (ADR-026/027)。T0 实测 R1/R1b/R1c/R1d 全闭合；TDD 41/41；零回归 153/68/25/e2e。G2 从"仍存在"→"部分缓解"。 |
+| 2026-10-20 | v3.0 **T19** | 跨模块契约确定性验证交付: 新 claim 类型 `contract_related`（双通道识别，`classify_claim` 新增可选参数 `category`）+ `scripts/contract_graph.py`（Tier 2 纯 stdlib，复用 `ast_cfg.build_import_graph`）+ `docs/audit/guards.yml` 的 `contract` 子对象（`root` / `kind: layers` / `layers` / `allow` 反向例外）+ **图完整性哨兵**（0 边图 ⇒ 无裁决，防假 False）+ kill switch `ADD_CONTRACT_DISABLE`。**明确不引入 import-linter 依赖**（ADR-028，ADR-023 无例外条款）。TDD 37/37；零回归；A/B 逐位一致。**已知局限**: 哨兵会误杀「天然无内部依赖」的仓库；当前 882 条语料上触发面 = 0（休眠，能力由合成/真实 repo 用例覆盖）。
 | 2026-08-12 | v2.8 + v3.0+ Reassessment | v2.8 完成: 6 任务 (T1-T6) + 3 个 P3 修复. 491/491 TDD. 战略转向确认: ADD = SAST Findings Validator. v3.0+ 路线重新评估: 取消 T7 (AST detection), T9 重新定位 (检测→验证 taint), T8 重构 (自建→深化 Joern), T12 提升优先级, 新增 T17 (Spec-driven Audit) + T18 (Lean4 子集). Gap 闭合: 4/10 解决, 致命 Gap 从 2→1. |
 | 2026-08-05 | v2.4 Phase 2.4b | joern_cpg.py (633L) — Tier 1 Joern CPG 验证器. P1-5 实测验证 4 个 API: `cpg.method.lineNumber(N)`, `target.flatMap(_.caller.l)`, `cpg.imports.l + imp.importedEntity`, `--language pythonsrc`. CPG 缓存 (mtime hash, 24h TTL). verify_findings.py 三层降级 Tier 1→2→3. SKILL.md 增加 Tier 分层表. J1-J10 + V7-V9 TDD 全绿 (66/66). |
 | 2026-08-05 | v2.4 Phase 2.4a | ast_cfg.py (CFGBuilder + BFS 可达性 + 导入图 3-color DFS 环检测). verify_findings.py Tier 2 集成. P0-2 schema 统一 (verified 字段). P1-2 visit_Try except 分支可达性修复. 292/292 回归测试通过. |

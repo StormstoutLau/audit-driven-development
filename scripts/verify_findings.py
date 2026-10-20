@@ -108,6 +108,34 @@ def _taint_enabled():
     return os.environ.get(_TAINT_DISABLE_ENV) != "1"
 
 
+# v3.0 T19 (D-T19-1): contract 文本通道 —— 模块级预编译（禁函数内 re）
+# 实证收紧 (X-2): 禁用裸 `layers?` 与裸 `contract` —— F-4 实测二者在 882 条真实语料上
+# 仅命中标识符子串（如 msPostGISLayerSetTimeFilter 的 "Layer"），属纯噪声。
+CONTRACT_PATTERNS = [
+    re.compile(p, re.IGNORECASE) for p in [
+        r"\blayer violation\b",
+        r"\blayering\b",
+        r"\bcross-module dependency\b",
+        r"\barchitectural boundary\b",
+        r"层序",
+        r"分层契约",
+        r"反向依赖",
+        r"禁止依赖",
+        r"跨模块依赖",
+    ]
+]
+
+_CONTRACT_DISABLE_ENV = "ADD_CONTRACT_DISABLE"
+
+
+def _contract_enabled():
+    """v3.0 T19: contract 识别与分派的总开关 (kill switch, 对齐 _taint_enabled 风格).
+
+    ADD_CONTRACT_DISABLE=1 时返回 False ⇒ 全链路关闭 ⇒ 与 v3.0-T9' 现状逐位一致 (AC-1)。
+    """
+    return os.environ.get(_CONTRACT_DISABLE_ENV) != "1"
+
+
 def _resolve_taint_disproof(cli_value=None):
     """v3.0: 解析 taint 证伪动作. 优先级: CLI > env > 默认.
 
@@ -174,7 +202,7 @@ def _detect_language(file_path):
     return "unknown"
 
 
-def classify_claim(claim, evidence=None):
+def classify_claim(claim, evidence=None, category=None):
     """Classify the finding claim into a structural verification type.
 
     v2.7.3 断点③修复: 加载 rule_suggestions.json 中的反例规则,
@@ -189,6 +217,8 @@ def classify_claim(claim, evidence=None):
     Args:
         claim: str claim 文本。
         evidence: dict|None finding 的 evidence 字段（可选，向后兼容）。
+        category: str|None finding 的**顶层** category 字段（可选，v3.0 T19 新增，
+            向后兼容；默认 None 时行为与 v3.0-T9' 完全一致）。
 
     Returns:
         list[str]: 类型标签列表，非空时不含 "generic"。
@@ -215,6 +245,15 @@ def classify_claim(claim, evidence=None):
         # 通道 B（文本，兜底）—— 不依赖 evidence
         if structured_hit or any(p.search(claim) for p in TAINT_PATTERNS):
             types.append("taint")
+
+    # v3.0 T19 (D-T19-1): 双通道 contract 识别 —— 仅在总开关开启时激活
+    # 通道 A 的两条承载路径: category 经新增参数传入 / analysis_kind 经 evidence 传入
+    if _contract_enabled():
+        contract_hit = (category == "contract")
+        if isinstance(evidence, dict) and evidence.get("analysis_kind") == "contract":
+            contract_hit = True
+        if contract_hit or any(p.search(claim) for p in CONTRACT_PATTERNS):
+            types.append("contract_related")
 
     # v2.7.3 断点③: 检查反例规则 — 匹配到 → 添加 "hallucination_pattern" 标记
     # 调用方 (verify_single_finding) 可据此降级 severity 或加强审查
@@ -515,6 +554,14 @@ def verify_l4_structural(lines, line_num, claim, claim_types,
         else:
             checks["import_related"] = result
 
+    # v3.0 T19: contract 分支 (Tier 2, 纯 stdlib) — 无裁决 => 不落 check (D-T19-4 / AC-4)
+    if "contract_related" in claim_types and _contract_enabled():
+        import contract_graph
+        contract_check = contract_graph.verify_contract(
+            repo_root, claim, evidence=evidence, language=language)
+        if contract_check is not None:
+            checks["contract"] = contract_check
+
     # v3.0 T9' Phase 1: taint 分支 (L5 语义层, ADR-026) — 无裁决 => 不落 check (D-T9'-5)
     if "taint" in claim_types and _taint_enabled():
         taint_check = _verify_l5_taint(claim, claim_types, repo_root, file_path,
@@ -536,9 +583,10 @@ def verify_l4_structural(lines, line_num, claim, claim_types,
         checks["violates"] = _verify_violates(claim, context_text)
         checks["violates"]["tier"] = 3
         checks["violates"]["verified"] = checks["violates"]["confirmed"]  # P0-2
-    # v3.0 (E-5): taint 已产出裁决 => 抑制 generic（原意图）;
-    #             taint 无裁决   => 仍回落 generic（恢复 v2.8 行为, 忠实实现 D-T9'-5）
-    if not checks and ("generic" in claim_types or "taint" in claim_types):
+    # v3.0 (E-5) / v3.0 T19: taint 或 contract 已产出裁决 => 抑制 generic（原意图）;
+    #            二者无裁决 => 仍回落 generic（恢复 v2.8 行为, 忠实实现 D-T9'-5 / D-T19-4）
+    if not checks and ("generic" in claim_types or "taint" in claim_types
+                       or "contract_related" in claim_types):
         checks["generic"] = _verify_generic(claim, context_text)
         checks["generic"]["tier"] = 3
         checks["generic"]["verified"] = checks["generic"]["confirmed"]  # P0-2
@@ -967,7 +1015,7 @@ def verify_single_finding(finding, repo_root, taint_disproof=None):
 
     # L4: Structural verification (Tier 2 fallback needs repo_root + file_path)
     # v3.0: 结构化通道 A 需要 evidence ⇒ 必须同步传参, 否则通道 A 永不命中 (死代码)
-    claim_types = classify_claim(claim, evidence)
+    claim_types = classify_claim(claim, evidence, finding.get("category"))
     l4 = verify_l4_structural(l1l2["lines"], line_num, claim, claim_types,
                               repo_root=repo_root, file_path=file_path,
                               language=language,
@@ -983,6 +1031,14 @@ def verify_single_finding(finding, repo_root, taint_disproof=None):
         result["taint_verified"] = tc.get("verified") if tc else None
         result["taint_mode"] = tc.get("taint_mode") if tc else None
         result["taint_disproof_action"] = tc.get("disproof_action") if tc else None
+
+    # v3.0 T19 (D-T19-5): 同一模式 —— 仅在 contract_related 分类时写入
+    #   ⇒ 关闭态键集合与 v3.0-T9' 逐位一致 (AC-1 / AC-16)
+    if "contract_related" in claim_types:
+        cc = (l4.get("checks") or {}).get("contract")
+        result["contract_verified"] = cc.get("verified") if cc else None
+        result["contract_kind"] = cc.get("kind") if cc else None
+        result["contract_rule_id"] = cc.get("rule_id") if cc else None
 
     if l4["confirmed"]:
         result["action"] = "verified"

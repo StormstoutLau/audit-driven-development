@@ -1,0 +1,35 @@
+# ADD 自身跨模块契约声明（v3.0 T19 真实用例）
+#
+# 来源: 本仓库 scripts/ 的**实测依赖边**（Step 2 补测 F-2），非虚构。
+#   实测实边: verify_findings -> {_script_utils, ast_cfg, joern_cpg}
+#             joern_cpg -> _script_utils ; ast_cfg -> _script_utils
+#             run_phase8_benchmark -> {joern_cpg, verify_findings}
+#             detect_cycle(graph) = None（无环）
+#
+# 语义（见 docs/superpowers/specs/2026-10-20-v3.0-T19-contract-design.md D-T19-2）:
+#   layers 顺序 = 高 -> 低；layers[i] 可依赖 layers[j] (j > i)，反向禁止。
+#   间接依赖（传递路径）同样违规。
+#   未命中任何层的模块（如 test_* / spec_graph / rule_index）=> 忽略，不受约束。
+#   allow = **反向例外白名单**（显式允许特定低->高边）；此处 ADD 自身无例外，故为空。
+#
+# 本契约经实测校验为**成立**（无违规），可作为回归哨兵：一旦出现反向依赖即被检出。
+
+version: "1.0"
+description: "ADD 自身 scripts/ 生产链单向依赖契约（T19 真实用例）"
+
+guards:
+  - id: "G101"
+    description: "scripts/ 生产链单向依赖：上层可依赖下层，反向禁止"
+    scope: "scripts/**/*.py"
+    severity: "critical"
+    check: "Free-form (供 AI 使用): 检查 scripts/ 内新增的跨模块 import 是否符合 contract.layers 声明的方向；机械校验由 contract 字段承担"
+    contract:
+      root: "scripts"
+      kind: "layers"
+      layers:
+        - "run_phase8_benchmark"
+        - "verify_findings"
+        - "joern_cpg"
+        - "ast_cfg"
+        - "_script_utils"
+      allow: []
